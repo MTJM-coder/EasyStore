@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary: 124 58 237;
+    --primary-dark: 109 40 217;
+    --primary-darker: 91 33 182;
+    --secondary: 243 244 246;
+    --accent: 245 158 11;
+    --success: 16 185 129;
+    --text-dark: 31 41 55;
+    --text-medium: 107 114 128;
+    --text-light: 156 163 175;
+
+}
