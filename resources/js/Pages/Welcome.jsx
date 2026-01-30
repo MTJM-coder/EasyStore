@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { FiBarChart, FiBox, FiUsers,FiAlertTriangle, FiSmartphone, FiShield } from "react-icons/fi";
+import { FiBarChart, FiBox, FiUsers, FiAlertTriangle, FiSmartphone, FiShield, FiCheckCircle, FiPhoneCall, FiMail } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 
 const Welcome = () => {
@@ -87,7 +88,7 @@ const Welcome = () => {
                 {/* les cards de fonctionnalités */}
                 {/* premiere partie */}
                 <div className='p-5 flex md:flex-row flex-col gap-4'>
-                    <div className=' p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl'>
+                    <div className=' p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl hover:border-t-[8px] shadow:border-purple-300 hover:shadow-lg transition-all duration-300'>
                         <div className='rounded-lg max-w-max p-7 bg-primary-dark flex justify-center items-center'>
                             <FiBox size={24} className='text-white'></FiBox>
                         </div>
@@ -96,7 +97,7 @@ const Welcome = () => {
                             <p className='text-text-medium text-xl'>Visualisez l'état de votre stock instantanément avec des mises à jour automatiques à chaque mouvement.</p>
                         </div>
                     </div>
-                    <div className='p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl'>
+                    <div className=' p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl hover:border-t-[8px] shadow:border-purple-300 hover:shadow-lg transition-all duration-300'>
                         <div className='rounded-lg max-w-max p-7 bg-primary-dark flex justify-center items-center'>
                             <FiBarChart size={24} className='text-white'></FiBarChart>
                         </div>
@@ -105,7 +106,7 @@ const Welcome = () => {
                             <p className='text-text-medium text-xl'>Générez des rapports détaillés et prenez des décisions éclairées basées sur des données précises.</p>
                         </div>
                     </div>
-                    <div className='p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl'>
+                    <div className=' p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl hover:border-t-[8px] shadow:border-purple-300 hover:shadow-lg transition-all duration-300'>
                         <div className='rounded-lg max-w-max p-7 bg-primary-dark flex justify-center items-center'>
                             <FiAlertTriangle size={24} className='text-white'></FiAlertTriangle>
                         </div>
@@ -115,9 +116,9 @@ const Welcome = () => {
                         </div>
                     </div>
                 </div>
-                    {/* deuxieme partie */}
-                 <div className='p-5 flex md:flex-row flex-col gap-4'>
-                    <div className=' p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl'>
+                {/* deuxieme partie */}
+                <div className='p-5 flex md:flex-row flex-col gap-4'>
+                    <div className=' p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl hover:border-t-[8px] shadow:border-purple-300 hover:shadow-lg transition-all duration-300'>
                         <div className='rounded-lg max-w-max p-7 bg-primary-dark flex justify-center items-center'>
                             <FiUsers size={24} className='text-white'></FiUsers>
                         </div>
@@ -126,8 +127,8 @@ const Welcome = () => {
                             <p className='text-text-medium text-xl'>Gérez plusieurs employés avec des permissions personnalisées et une traçabilité complète.</p>
                         </div>
                     </div>
-                   
-                    <div className='p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl'>
+
+                    <div className=' p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl hover:border-t-[8px] shadow:border-purple-300 hover:shadow-lg transition-all duration-300'>
                         <div className='rounded-lg max-w-max p-7 bg-primary-dark flex justify-center items-center'>
                             <FiSmartphone size={24} className='text-white'></FiSmartphone>
                         </div>
@@ -136,7 +137,7 @@ const Welcome = () => {
                             <p className='text-text-medium text-xl'>Accédez à votre stock depuis votre ordinateur, tablette ou smartphone, où que vous soyez.</p>
                         </div>
                     </div>
-                     <div className='p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl'>
+                    <div className=' p-5 flex flex-col bg-secondary shadow-sm border-[1px] border-purple-300 rounded-2xl hover:border-t-[8px] shadow:border-purple-300 hover:shadow-lg transition-all duration-300'>
                         <div className='rounded-lg max-w-max p-7 bg-primary-dark flex justify-center items-center'>
                             <FiShield size={24} className='text-white'></FiShield>
                         </div>
@@ -145,6 +146,169 @@ const Welcome = () => {
                             <p className='text-text-medium text-xl'>Vos données sont protégées avec un chiffrement de niveau bancaire et des sauvegardes quotidiennes.</p>
                         </div>
                     </div>
+                </div>
+            </div>
+            {/* section tarifs */}
+            <div className='bg-purple-50 pb-36 md:px-10 px-4'>
+                <div className='m-auto justify-center text-center md:w-max px-10 py-3'>
+                    <div className='m-auto bg-purple-200 font-bold text-center w-max px-10 py-3 mb-4 rounded-3xl text-primary justify-center'>
+                        <p>Tarifs</p>
+                    </div>
+                    <p className='md:text-6xl m-auto font-bold mb-4 text-4xl'>Choisissez votre formule</p>
+                    <p className='text-text-medium md:text-xl text-[17px] inline-block md:w-3/4'>Des plan adaptés à la taille de votre commerce.</p>
+                </div>
+
+                {/* les cards des plans */}
+                <div className='flex md:flex-row flex-col  gap-10 mt-10 items-stretch'>
+
+                    {/* plan debutant */}
+                    <div className='bg-white p-10 rounded-2xl border-2 flex-1'>
+                        <div className='mb-10'>
+                            <h1 className='text-4xl font-bold mb-2'>Starter</h1>
+                            <p className='text-text-medium'>Parfait our les petits commerces</p>
+                        </div>
+                        <p className='mb-10'>
+                            FCFA<span className='text-6xl font-bold text-primary'> 5K </span>/mois
+                        </p>
+                        <div className=''>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Jusqu'à 100 produits</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>2 utilisateurs</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Rapports mensuels</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Support par email</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Historique 3 mois</p></div>
+                        </div>
+
+                        <button className='border-2 border-primary-dark px-4 py-2 text-xl w-full rounded-2xl text-primary'>Commencer</button>
+                    </div>
+
+                    {/* plan business */}
+
+                    <div className='relative bg-white p-10 rounded-2xl border-2 border-primary hover:scale-105 hover:shadow-lg flex-1'>
+                        <div className='absolute -top-4 left-2/3 -translate-x-1/2 px-8 py-2 rounded-3xl bg-orange-400 font-bold shadow'>
+                            Populaire
+                        </div>
+
+
+                        <div className='mb-10'>
+                            <h1 className='text-4xl font-bold mb-2'>Business</h1>
+                            <p className='text-text-medium'>Idéal pour les PME</p>
+                        </div>
+                        <p className='mb-10'>
+                            FCFA<span className='text-6xl font-bold text-primary'> 12K </span>/mois
+                        </p>
+                        <div className=''>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Produits illimités</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>5 utilisateurs</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Rapports personnalisés</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Historique illimité</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Gestion fournisseurs</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Alertes SMS</p></div>
+                        </div>
+
+                        <button className='border-2 border-primary-dark px-4 py-2 bg-primary text-xl w-full rounded-2xl text-white'>Commencer</button>
+                    </div>
+
+                    {/* pour entreprise */}
+
+                    <div className='bg-white p-10 rounded-2xl border-2 flex-1'>
+
+                        <div className='mb-10'>
+                            <h1 className='text-4xl font-bold mb-2'>Entreprise</h1>
+                            <p className='text-text-medium'>Pour les grandes structures</p>
+                        </div>
+                        <p className='mb-10'>
+                            FCFA<span className='text-6xl font-bold text-primary'> 25K </span>/mois
+                        </p>
+                        <div className=''>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Tout de Business +</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Utilisateurs illimitéss</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Multi-boutiques</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Formation équipe</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Support 24/7</p></div>
+                            <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Manager dédié</p></div>
+                        </div>
+
+                        <button className='border-2 border-primary-dark px-4 py-2 text-xl w-full rounded-2xl text-primary'>Commencer</button>
+                    </div>
+
+                </div>
+            </div>
+            {/* la section pour la prise de contact */}
+            <div className='bg-primary-dark md:h-[100vh] max-h-max px-10 py-64'>
+                <div className='mb-16 flex flex-col justify-center m-auto items-center'>
+                    <p className='text-white font-bold text-center mb-6 md:text-6xl text-4xl inline-block md:w-2/4'>Prêt à révolutionner votre gestion ?</p>
+                    <p className='text-white text-center text-xl inline-block md:w-2/4'>Rejoignez les centaines de commerces qui ont déjà transformé leur activité avec EasyStore. Essai gratuit 14 jours</p>
+                </div>
+                <div className=' flex md:flex-row flex-col justify-center m-auto items-center gap-10'>
+                    <button className='border px-7 text-primary-dark md:uppercase  bg-white rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl'>Comencer gratuitement</button>
+                    <button className='border border-white px-7 md:uppercase text-purple-400 bg-transparent  rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl'>Parler à un expert </button>
+                </div>
+            </div>
+
+            {/* footer */}
+            <div className='bg-black px-10 py-10'>
+                <div className='flex md:flex-row flex-col gap-16'>
+                    <div className='md:w-1/4'>
+                        <p className='mb-6 text-primary-darker font-bold text-4xl'>EASYSTORE</p>
+                        <p className='mb-10 text-text-medium text-xl'>La plateforme SaaS qui propulse les PME africaines vers le futur. Gestion de stock intelligente, sécurisée et accessible.</p>
+
+                        <div className='flex gap-10'>
+                            <a href="tel:650090589">
+                            <div className='w-16 h-16 flex items-center justify-center rounded-lg bg-gradient-to-tr from-purple-900 via-black to-purple-950 hover:scale-110 transition-transform duration-300'>
+                                <FiPhoneCall className='text-secondary text-2xl' />
+                            </div>
+                            </a>
+                            <a href="https://wa.me/652766351">
+                            <div className='w-16 h-16 flex items-center justify-center rounded-lg bg-gradient-to-tr from-purple-900 via-black to-purple-950 hover:scale-110 transition-transform duration-300'>
+                                <FaWhatsapp className='text-secondary text-2xl' />
+                            </div>
+                            </a>
+                            <a href="mailto:EasyStore@contact.com">
+                                <div className='w-16 h-16 flex items-center justify-center rounded-lg bg-gradient-to-tr from-purple-900 via-black to-purple-950 hover:scale-110 transition-transform duration-300'>
+                                    <FiMail className='text-secondary text-2xl'/>
+                                </div>
+                                
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <div className='md:w-1/4'>
+                        <p className='mb-6 text-white font-bold text-2xl'>Produit</p>
+
+
+                        <div className='flex flex-col gap-7 text-text-medium text-xl'>
+                            <a href="">Fonctionnalités</a>
+                            <a href="">Tarifs</a>
+                            <a href="">Demo</a>
+                            <a href="">Integration</a>
+                        </div>
+                    </div>
+
+                    <div className='md:w-1/4'>
+                        <p className='mb-6 text-white font-bold text-2xl'>Entreprise</p>
+
+                        <div className='flex flex-col gap-7 text-text-medium text-xl'>
+                            <a href="">A propos</a>
+                            <a href="">Carrieres</a>
+                            <a href="">Contact</a>
+
+                        </div>
+                    </div>
+
+                    <div className='md:w-1/4'>
+                        <p className='mb-6 text-white font-bold text-2xl'>Support</p>
+
+                        <div className='flex flex-col gap-7 text-text-medium text-xl'>
+                            <a href="">Centre d'aide</a>
+                            <a href="">Documentation</a>
+                            <a href="">Statut</a>
+                            <a href="">COnfidentialité</a>
+                        </div>
+                    </div>
+                </div>
+                <div className='mt-10 text-text-medium border-t-[1px] py-10 m-auto text-center text-xl'>
+                    &copy; 2026 EasyStore Technologies. Tous droits réservés. Conçu avec passion pour l'Afrique.
                 </div>
             </div>
         </div>
