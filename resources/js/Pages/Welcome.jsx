@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { FiBarChart, FiBox, FiUsers, FiAlertTriangle, FiSmartphone, FiShield, FiCheckCircle, FiPhoneCall, FiMail } from "react-icons/fi";
+import { FiBarChart, FiBox, FiUsers, FiAlertTriangle, FiSmartphone, FiShield, FiCheckCircle, FiPhoneCall, FiMail, FiXOctagon, FiMenu, FiLogIn } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 
 
@@ -18,7 +18,7 @@ const Welcome = () => {
         <div className=''>
             <div className='flex md:justify-between px-7 items-center  bg-gray-50 top-0 left-0 z-50 w-full fixed h-28 py-5 '>
                 <div className="md:hidden text-2xl cursor-pointer" onClick={() => setShowMenu(!showMenu)}>
-                    {showMenu ? "X" : "☰"}
+                    {showMenu ? <FiXOctagon></FiXOctagon> : <FiMenu></FiMenu>}
                 </div>
                 <div className='md:text-3xl text-2xl font-bold md:ml-0 ml-14'>
                     <span className='text-primary-dark font-bold'>Easy</span>Store
@@ -35,20 +35,21 @@ const Welcome = () => {
                     <button className='px-6 py-3  border-2 border-purple-500 rounded-lg font-bold text-primary hover:bg-primary-dark hover:text-white'>Se connecter</button>
                     <button className='px-6 py-3 border-2 bg-primary-darker text-white border-primary-darker rounded-lg font-bold'>Essai gratuit</button>
                 </div>
-
+ 
                 {/* menu responsive */}
                 {showMenu && (
-                    <div className="fixed top-28 left-0 w-full bg-white shadow-lg md:hidden">
-                        <ul className="flex flex-col items-center gap-8 py-10 text-xl font-bold">
-                            <li><a onClick={() => setShowMenu(false)} href="#accueil">Accueil</a></li>
-                            <li><a onClick={() => setShowMenu(false)} href="#fonctionnalites">Fonctionnalités</a></li>
-                            <li><a onClick={() => setShowMenu(false)} href="#tarifs">Tarifs</a></li>
-                            <li><a onClick={() => setShowMenu(false)} href="#contact">Contact</a></li>
+                    <div className="fixed top-28 left-0 max-w-max pl-5 pr-20 bg-white shadow-lg md:hidden rounded-br-lg">
+                        <ul className="flex flex-col items-start gap-4 py-10  font-bold">
+                            <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#accueil">Accueil</a></li>
+                            <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#fonctionnalites">Fonctionnalités</a></li>
+                            <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#tarifs">Tarifs</a></li>
+                            <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#contact">Contact</a></li>
+                            <li className='border  inline-block text-primary px-6 py-4 rounded-lg'><a className='flex items-center gap-3' onClick={() => setShowMenu(false)} href="#contact"><FiLogIn></FiLogIn>Connexion</a></li>
                         </ul>
                     </div>
                 )}
             </div>
-            <div className='flex md:flex-row flex-col bg-gradient-to-r from-pink-50 to-orange-50 lg:w-full md:h-[100vh] max-h-max pt-36 px-10'>
+            <div id='accueil' className='flex md:flex-row flex-col bg-gradient-to-r from-pink-50 to-orange-50 lg:w-full md:h-[100vh] max-h-max pt-36 px-10'>
                 <div className='lg:w-1/2 md:text-left text-center'>
                     <div className='md:mb-20 mb-10 border-2 border-primary-darker w-max py-2 px-4 bg-purple-100 text-primary-darker font-bold  rounded-3xl '>solution SAAS pour PME</div>
                     <h1 className='md:text-6xl text-3xl font-bold mb-9'>Gérez votre stock <span className='text-primary'>en toute simplicité</span></h1>
@@ -77,7 +78,7 @@ const Welcome = () => {
             </div>
 
             {/* fonctionnalités */}
-            <div className='mt-10'>
+            <div id='fonctionnalites' className='mt-10'>
                 <div className='m-auto justify-center text-center md:w-max px-10 py-3'>
                     <div className='m-auto bg-purple-200 font-bold text-center w-max px-10 py-3 mb-4 rounded-3xl text-primary justify-center'>
                         <p>Fonctionnalités</p>
@@ -149,7 +150,7 @@ const Welcome = () => {
                 </div>
             </div>
             {/* section tarifs */}
-            <div className='bg-purple-50 pb-36 md:px-10 px-4'>
+            <div id='tarifs' className='bg-purple-50 pb-36 md:px-10 px-4'>
                 <div className='m-auto justify-center text-center md:w-max px-10 py-3'>
                     <div className='m-auto bg-purple-200 font-bold text-center w-max px-10 py-3 mb-4 rounded-3xl text-primary justify-center'>
                         <p>Tarifs</p>
@@ -234,7 +235,7 @@ const Welcome = () => {
                 </div>
             </div>
             {/* la section pour la prise de contact */}
-            <div className='bg-primary-dark md:h-[100vh] max-h-max px-10 py-64'>
+            <div id='contact' className='bg-primary-dark  max-h-max px-8 md:px-10 md:py-64 py-24'>
                 <div className='mb-16 flex flex-col justify-center m-auto items-center'>
                     <p className='text-white font-bold text-center mb-6 md:text-6xl text-4xl inline-block md:w-2/4'>Prêt à révolutionner votre gestion ?</p>
                     <p className='text-white text-center text-xl inline-block md:w-2/4'>Rejoignez les centaines de commerces qui ont déjà transformé leur activité avec EasyStore. Essai gratuit 14 jours</p>
@@ -250,7 +251,7 @@ const Welcome = () => {
                 <div className='flex md:flex-row flex-col gap-16'>
                     <div className='md:w-1/4'>
                         <p className='mb-6 text-primary-darker font-bold text-4xl'>EASYSTORE</p>
-                        <p className='mb-10 text-text-medium text-xl'>La plateforme SaaS qui propulse les PME africaines vers le futur. Gestion de stock intelligente, sécurisée et accessible.</p>
+                        <p className='mb-10 text-text-medium'>La plateforme SaaS qui propulse les PME africaines vers le futur. Gestion de stock intelligente, sécurisée et accessible.</p>
 
                         <div className='flex gap-10'>
                             <a href="tel:650090589">
@@ -277,21 +278,21 @@ const Welcome = () => {
                         <p className='mb-6 text-white font-bold text-2xl'>Produit</p>
 
 
-                        <div className='flex flex-col gap-7 text-text-medium text-xl'>
-                            <a href="">Fonctionnalités</a>
-                            <a href="">Tarifs</a>
-                            <a href="">Demo</a>
-                            <a href="">Integration</a>
+                        <div className='flex flex-col gap-5 text-text-medium '>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Fonctionnalités</a>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Tarifs</a>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Demo</a>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Integration</a>
                         </div>
                     </div>
 
                     <div className='md:w-1/4'>
                         <p className='mb-6 text-white font-bold text-2xl'>Entreprise</p>
 
-                        <div className='flex flex-col gap-7 text-text-medium text-xl'>
-                            <a href="">A propos</a>
-                            <a href="">Carrieres</a>
-                            <a href="">Contact</a>
+                        <div className='flex flex-col gap-5 text-text-medium '>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">A propos</a>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Carrieres</a>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Contact</a>
 
                         </div>
                     </div>
@@ -299,11 +300,11 @@ const Welcome = () => {
                     <div className='md:w-1/4'>
                         <p className='mb-6 text-white font-bold text-2xl'>Support</p>
 
-                        <div className='flex flex-col gap-7 text-text-medium text-xl'>
-                            <a href="">Centre d'aide</a>
-                            <a href="">Documentation</a>
-                            <a href="">Statut</a>
-                            <a href="">COnfidentialité</a>
+                        <div className='flex flex-col gap-5 text-text-medium'>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Centre d'aide</a>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Documentation</a>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Statut</a>
+                            <a href="" className="hover:text-primary-dark transition-color duration-300">Confidentialité</a>
                         </div>
                     </div>
                 </div>
