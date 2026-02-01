@@ -2,10 +2,12 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { FiBarChart, FiBox, FiUsers, FiAlertTriangle, FiSmartphone, FiShield, FiCheckCircle, FiPhoneCall, FiMail, FiXOctagon, FiMenu, FiLogIn } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
+import Register from './Auth/Register';
 
 
 const Welcome = () => {
-    const [showFirst, setShowFirst] = useState(false)
+    const [showFirst, setShowFirst] = useState(false);
+    const [showRegister,setShowRegister]=useState(false);
     useEffect(() => {
         const interval = setInterval(() => {
             setShowFirst(prev => !prev);
@@ -13,7 +15,8 @@ const Welcome = () => {
         return clearInterval(interval);
     }, [])
 
-    const [showMenu, setShowMenu] = useState(true);
+    
+    const [showMenu, setShowMenu] = useState(false);
     return (
         <div className=''>
             <div className='flex md:justify-between px-7 items-center  bg-gray-50 top-0 left-0 z-50 w-full fixed h-28 py-5 '>
@@ -33,9 +36,9 @@ const Welcome = () => {
                 </div>
                 <div className='hidden md:flex gap-5 '>
                     <button className='px-6 py-3  border-2 border-purple-500 rounded-lg font-bold text-primary hover:bg-primary-dark hover:text-white'>Se connecter</button>
-                    <button className='px-6 py-3 border-2 bg-primary-darker text-white border-primary-darker rounded-lg font-bold'>Essai gratuit</button>
+                    <button className='px-6 py-3 border-2 bg-primary-darker text-white border-primary-darker rounded-lg font-bold' onClick={()=>setShowRegister(true)}> Essai gratuit </button>
                 </div>
- 
+                
                 {/* menu responsive */}
                 {showMenu && (
                     <div className="fixed top-28 left-0 max-w-max pl-5 pr-20 bg-white shadow-lg md:hidden rounded-br-lg">
@@ -55,7 +58,7 @@ const Welcome = () => {
                     <h1 className='md:text-6xl text-3xl font-bold mb-9'>Gérez votre stock <span className='text-primary'>en toute simplicité</span></h1>
                     <p className='text-text-medium text-xl'>EasyStore transforme la gestion de votre inventaire avec une plateforme intuitive, sécurisée et accessible depuis n'importe quel appareil. Dites adieu aux erreurs et aux ruptures de stock.</p>
                     <div className='mt-10 flex gap-8 md:flex-row flex-col mb-10'>
-                        <button className='px-6 py-3 border-2 bg-primary-darker text-white border-primary-darker rounded-lg font-bold'>Commencer gratuitement</button>
+                        <button className='px-6 py-3 border-2 bg-primary-darker text-white border-primary-darker rounded-lg font-bold' onClick={()=>setShowRegister(true)}>Commencer gratuitement</button>
                         <button className='px-6 py-3  border-2 border-purple-500 rounded-lg font-bold text-primary hover:bg-primary-dark hover:text-white'>Voir la démo</button>
                     </div>
                 </div>
@@ -76,7 +79,7 @@ const Welcome = () => {
                     </div>
                 </div>
             </div>
-
+            
             {/* fonctionnalités */}
             <div id='fonctionnalites' className='mt-10'>
                 <div className='m-auto justify-center text-center md:w-max px-10 py-3'>
@@ -234,6 +237,10 @@ const Welcome = () => {
 
                 </div>
             </div>
+            {showRegister && (
+                <Register showRegister={showRegister} setShowRegister={setShowRegister}></Register>
+            )}
+            
             {/* la section pour la prise de contact */}
             <div id='contact' className='bg-primary-dark  max-h-max px-8 md:px-10 md:py-64 py-24'>
                 <div className='mb-16 flex flex-col justify-center m-auto items-center'>
@@ -241,7 +248,7 @@ const Welcome = () => {
                     <p className='text-white text-center text-xl inline-block md:w-2/4'>Rejoignez les centaines de commerces qui ont déjà transformé leur activité avec EasyStore. Essai gratuit 14 jours</p>
                 </div>
                 <div className=' flex md:flex-row flex-col justify-center m-auto items-center gap-10'>
-                    <button className='border px-7 text-primary-dark md:uppercase  bg-white rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl'>Comencer gratuitement</button>
+                    <button className='border px-7 text-primary-dark md:uppercase  bg-white rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl' onClick={()=>setShowRegister(true)}>Commencer gratuitement</button>
                     <button className='border border-white px-7 md:uppercase text-purple-400 bg-transparent  rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl'>Parler à un expert </button>
                 </div>
             </div>
@@ -267,8 +274,7 @@ const Welcome = () => {
                             <a href="mailto:EasyStore@contact.com">
                                 <div className='w-16 h-16 flex items-center justify-center rounded-lg bg-gradient-to-tr from-purple-900 via-black to-purple-950 hover:scale-110 transition-transform duration-300'>
                                     <FiMail className='text-secondary text-2xl'/>
-                                </div>
-                                
+                                </div> 
                             </a>
 
                         </div>
