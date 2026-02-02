@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react'
 import { FiBarChart, FiBox, FiUsers, FiAlertTriangle, FiSmartphone, FiShield, FiCheckCircle, FiPhoneCall, FiMail, FiXOctagon, FiMenu, FiLogIn } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 import Register from './Auth/Register';
+import Login from './Auth/Login';
 
 
 const Welcome = () => {
     const [showFirst, setShowFirst] = useState(false);
     const [showRegister,setShowRegister]=useState(false);
+    const [showLogin,setShowLogin]=useState(false);
     useEffect(() => {
         const interval = setInterval(() => {
             setShowFirst(prev => !prev);
@@ -35,7 +37,7 @@ const Welcome = () => {
                     </ul>
                 </div>
                 <div className='hidden md:flex gap-5 '>
-                    <button className='px-6 py-3  border-2 border-purple-500 rounded-lg font-bold text-primary hover:bg-primary-dark hover:text-white'>Se connecter</button>
+                    <button className='px-6 py-3  border-2 border-purple-500 rounded-lg font-bold text-primary hover:bg-primary-dark hover:text-white' onClick={()=>{setShowLogin(true),setShowRegister(false)}}>Se connecter</button>
                     <button className='px-6 py-3 border-2 bg-primary-darker text-white border-primary-darker rounded-lg font-bold' onClick={()=>setShowRegister(true)}> Essai gratuit </button>
                 </div>
                 
@@ -47,7 +49,7 @@ const Welcome = () => {
                             <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#fonctionnalites">Fonctionnalités</a></li>
                             <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#tarifs">Tarifs</a></li>
                             <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#contact">Contact</a></li>
-                            <li className='border  inline-block text-primary px-6 py-4 rounded-lg'><a className='flex items-center gap-3' onClick={() => setShowMenu(false)} href="#contact"><FiLogIn></FiLogIn>Connexion</a></li>
+                            <li className='border  inline-block text-primary px-6 py-4 rounded-lg'><a className='flex items-center gap-3' onClick={() => {setShowLogin(true),setShowMenu(false),setShowRegister(false)}} href="#contact"><FiLogIn></FiLogIn>Connexion</a></li>
                         </ul>
                     </div>
                 )}
@@ -58,7 +60,7 @@ const Welcome = () => {
                     <h1 className='md:text-6xl text-3xl font-bold mb-9'>Gérez votre stock <span className='text-primary'>en toute simplicité</span></h1>
                     <p className='text-text-medium text-xl'>EasyStore transforme la gestion de votre inventaire avec une plateforme intuitive, sécurisée et accessible depuis n'importe quel appareil. Dites adieu aux erreurs et aux ruptures de stock.</p>
                     <div className='mt-10 flex gap-8 md:flex-row flex-col mb-10'>
-                        <button className='px-6 py-3 border-2 bg-primary-darker text-white border-primary-darker rounded-lg font-bold' onClick={()=>setShowRegister(true)}>Commencer gratuitement</button>
+                        <button className='px-6 py-3 border-2 bg-primary-darker text-white border-primary-darker rounded-lg font-bold' onClick={()=>{setShowRegister(true),setShowLogin(false)}}>Commencer gratuitement</button>
                         <button className='px-6 py-3  border-2 border-purple-500 rounded-lg font-bold text-primary hover:bg-primary-dark hover:text-white'>Voir la démo</button>
                     </div>
                 </div>
@@ -238,7 +240,11 @@ const Welcome = () => {
                 </div>
             </div>
             {showRegister && (
-                <Register showRegister={showRegister} setShowRegister={setShowRegister}></Register>
+                <Register showRegister={showRegister} setShowRegister={setShowRegister} showLogin={showLogin} setShowLogin={setShowLogin}></Register>
+            )}
+
+            {showLogin &&(
+                <Login showLogin={showLogin} setShowLogin={setShowLogin} showRegister={showRegister} setShowRegister={setShowRegister}></Login>
             )}
             
             {/* la section pour la prise de contact */}
@@ -248,7 +254,7 @@ const Welcome = () => {
                     <p className='text-white text-center text-xl inline-block md:w-2/4'>Rejoignez les centaines de commerces qui ont déjà transformé leur activité avec EasyStore. Essai gratuit 14 jours</p>
                 </div>
                 <div className=' flex md:flex-row flex-col justify-center m-auto items-center gap-10'>
-                    <button className='border px-7 text-primary-dark md:uppercase  bg-white rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl' onClick={()=>setShowRegister(true)}>Commencer gratuitement</button>
+                    <button className='border px-7 text-primary-dark md:uppercase  bg-white rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl' onClick={()=>{setShowRegister(true),setShowLogin(false)}}>Commencer gratuitement</button>
                     <button className='border border-white px-7 md:uppercase text-purple-400 bg-transparent  rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl'>Parler à un expert </button>
                 </div>
             </div>

@@ -1,100 +1,87 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import React from 'react'
+import { FaKey } from 'react-icons/fa'
+import { FiHome, FiKey, FiLock, FiMail, FiPhone, FiShoppingCart, FiUser, FiXOctagon } from 'react-icons/fi'
+import { useEffect } from 'react'
 
-export default function Login({ status, canResetPassword }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
-        remember: false,
-    });
+const Login = ({ showLogin, setShowLogin,showRegister,setShowRegister }) => {
+    useEffect(() => {
+        if (showLogin) {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+            //   document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = 'auto'
+        }
 
-    const submit = (e) => {
-        e.preventDefault();
+        return () => {
+            document.body.style.overflow = 'auto'
+        }
+    }, [showLogin])
 
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
-    };
+    if (!showLogin) return null
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white w-full max-w-md rounded-2xl shadow-lg relative">
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
+                <button
+                    onClick={() => setShowLogin(false)}
+                    className="absolute top-4 right-4 text-red-600 text-2xl"
+                >
+                    <FiXOctagon />
+                </button>
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                <div className="flex flex-col gap-4 px-10 py-8">
+                    <h1 className="text-primary font-bold text-2xl">EasyStore</h1>
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                    <div>
+                        <h2 className="text-2xl font-bold">Bienvenue de retour</h2>
+                        <p className="text-text-medium">
+                            Connectez-vous à votre espace en sécurité
+                        </p>
+                    </div>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
+                    {/* Email */}
+                    <div className="flex flex-col gap-1">
+                        <label className="font-bold text-text-medium">Email</label>
+                        <div className="relative">
+                            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-text-medium" />
+                            <input
+                                className="w-full rounded-lg border pl-10 py-2 focus:border-primary"
+                                type="email"
+                            />
+                        </div>
+                    </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    {/* Password */}
+                    <div className="flex flex-col gap-1">
+                        <label className="font-bold text-text-medium">Mot de passe</label>
+                        <div className="relative">
+                            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-text-medium" />
+                            <input
+                                className="w-full rounded-lg border pl-10 py-2"
+                                type="password"
+                                placeholder="Minimum 8 caractères"
+                            />
+                        </div>
+                    </div>
 
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
+                    <span className="text-right text-primary cursor-pointer">
+                        Mot de passe oublié ?
+                    </span>
 
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
+                    <button className="bg-primary text-white py-3 rounded-lg font-bold">
+                        Se connecter
+                    </button>
 
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
-                        />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
+                    <p className="text-center">
+                        Pas de compte ?
+                        <span className="text-primary cursor-pointer ml-1" onClick={()=>{setShowLogin(false),setShowRegister(true)}}>
+                            Créer un compte
                         </span>
-                    </label>
+                    </p>
                 </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
-    );
+            </div>
+        </div>
+    )
 }
+export default Login
