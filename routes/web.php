@@ -7,8 +7,12 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
-    ]);
+    ]);   
 });
+
+Route::get('/header',function(){
+        return Inertia::render('Profile',[]);
+    });
 
 
 require __DIR__.'/auth.php';
