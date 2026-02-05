@@ -1,8 +1,14 @@
 import React, { useState } from 'react'
 import { FiBarChart2, FiBox, FiChevronsDown, FiChevronsUp, FiDatabase, FiLogOut, FiUser } from 'react-icons/fi'
+import Header from './Header'
 
 const SidebarEmploye = () => {
     const [active, setActive] = useState(1)
+    const handleLogout=function(){
+        if(confirm("Etes-vous sur de vouloir vous deconnecter?")){
+            alert("disconnected!")
+        }
+    }
 
     const liens = [
         { id: 1, nom: "Tableau de bord", icon: <FiBarChart2></FiBarChart2> },
@@ -15,9 +21,9 @@ const SidebarEmploye = () => {
     ]
 
     return (
-        <div className='relative'>
+        <div className='relative hidden md:inline-block'>
             <div className='fixed h-[100vh] w-64 bg-white z-50 border'>
-                <p className='text-primary text-2xl font-bold py-3'>EasyStore</p>
+                <p className='text-primary text-2xl font-bold py-3 ml-3'>EasyStore</p>
                 <hr />
 
 
@@ -49,7 +55,7 @@ const SidebarEmploye = () => {
                     <hr />
                 </div>
                 <div className='py-2 flex items-center justify-center'>
-                    <button className='rounded-lg text-text-medium bg-white  flex items-center gap-4 border-[1.5px] border-gray-300 py-2 px-5  hover:border-red-600 hover:bg-red-200 hover:text-red-600'><FiLogOut></FiLogOut> Déconnexion</button>
+                    <button onClick={()=>handleLogout()} className='rounded-lg text-text-medium bg-white  flex items-center gap-4 border-[1.5px] border-gray-300 py-2 px-5  hover:border-red-600 hover:bg-red-200 hover:text-red-600'><FiLogOut></FiLogOut> Déconnexion</button>
                 </div>
             </div>
         </div>
