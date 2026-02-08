@@ -1,12 +1,12 @@
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaFileExport } from 'react-icons/fa'
 import { FiSearch, FiBox, FiCheck, FiAlertTriangle } from 'react-icons/fi'
 import { MdEmergency } from 'react-icons/md'
 
 const StockEmploye = () => {
-
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const produits = [
         { nom: "Riz parfumé 2kg", reference: "riz-02", quantite: 2, seuil: 15, statut: 'critique' },
         { nom: "Huile de tournesol 1L", reference: "huile-01", quantite: 10, seuil: 20, statut: 'faible' },
@@ -39,22 +39,22 @@ const StockEmploye = () => {
         return "suffisant";
     };
 
-    const [search,setSearch]=useState('');
-    const [statusFilter,setStatusFilter]=useState('');
-    const [sortOption,setSortOption] = useState('');
+    const [search, setSearch] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
+    const [sortOption, setSortOption] = useState('');
 
     const nbrePages = Math.ceil(produits.length / 20);
     const nbreProduitsParPage = 20;
-    const [pagesActive,setPagesActive] = useState(1);
-    const numeroPages=[];
-    for(let i=1;i<=nbrePages;i++){
+    const [pagesActive, setPagesActive] = useState(1);
+    const numeroPages = [];
+    for (let i = 1; i <= nbrePages; i++) {
         numeroPages.push(i);
     }
 
     const produitFiltered = produits.filter(produit => {
         const matchesStatus = !statusFilter || produit.statut === statusFilter;
-        const matchesSearch = produit.nom.toLowerCase().includes(search.toLowerCase()) || 
-                            produit.reference.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = produit.nom.toLowerCase().includes(search.toLowerCase()) ||
+            produit.reference.toLowerCase().includes(search.toLowerCase());
         return matchesStatus && matchesSearch;
     });
 
@@ -69,7 +69,7 @@ const StockEmploye = () => {
         produitsTries.sort((a, b) => b.quantite - a.quantite);
     }
 
-    const produitsAffiches = produitsTries.slice((pagesActive-1)*nbreProduitsParPage, pagesActive*nbreProduitsParPage);
+    const produitsAffiches = produitsTries.slice((pagesActive - 1) * nbreProduitsParPage, pagesActive * nbreProduitsParPage);
 
     const totalProduits = produits.length;
     const stockSuffisant = produits.filter(p => p.statut == 'suffisant').length;
@@ -90,36 +90,92 @@ const StockEmploye = () => {
         // document.body.removeChild(link);
     };
 
+    useEffect(() => {
+        if (sidebarOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [sidebarOpen]);
+
+
+
     return (
         <div>
             <div className='flex bg-secondary'>
-                <SidebarEmploye></SidebarEmploye>
-                <div className='relative md:ml-64 bg-secondary max-w-max mb-20'>
+                {sidebarOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/40 z-40 md:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    ></div>
+                )}
+
+                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     {/* entete de la parle */}
-                    <div className='fixed flex flex-col gap-2 w-full bg-white p-5'>
-                        <div className='flex flex-col'>
-                            <h1 className='font-bold text-2xl'>Consultation du Stock</h1>
-                            <p className='text-text-medium'>Visualisez et gérez l'ensemble de vos produits</p>
-                        </div>
-                        <div className='flex gap-3'>
-                            <div className='w-1/3 relative'>
-                                <FiSearch className='absolute mt-3 ml-3 text-gray-400'></FiSearch>
-                                <input onChange={(e)=>setSearch(e.target.value)} type="text" className='border-[1.5px] border-gray-300 rounded-lg w-full pl-10' placeholder='Rechercher un produit par nom ou reference' />
+
+                    <div className='fixed flex gap-2 w-full bg-white p-5'>
+
+                        <div className='flex flex-col gap-2'>
+                            <div className='flex items-center gap-5'>
+                                <div className='flex items-center gap-4'>
+                                    <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>
+                                        <button className='bg-primary text-white px-4 py-2 rounded-lg'>☰</button>
+                                    </div>
+                                    <div className='flex flex-col'>
+                                        <h1 className='font-bold text-2xl'>Consultation du Stock</h1>
+                                        <p className='text-text-medium'>Visualisez et gérez l'ensemble de vos produits</p>
+                                    </div>
+                                </div>
+
                             </div>
-                            <select name="" id="" className='border-[1.5px] border-gray-300 rounded-lg' onChange={(e)=>setStatusFilter(e.target.value)}>
-                                <option value="">Tous les statuts</option>
-                                <option value="suffisant">Stock suffisant</option>
-                                <option value="faible">Stock faible</option>
-                                <option value="rupture">Rupture critique</option>
-                            </select>
-                            <select name="" id="" className='border-[1.5px] border-gray-300 rounded-lg' onChange={(e)=>setSortOption(e.target.value)}>
-                                <option value="">Trier par</option>
-                                <option value="nom_asc">Nom (A-Z)</option>
-                                <option value="nom_desc">Nom (Z-A)</option>
-                                <option value="qte_asc">Quantité (asc)</option>
-                                <option value="qte_desc">Quantité (desc)</option>
-                            </select>
-                            <button className='bg-primary text-white px-4 py-2 rounded-lg flex items-center gap-2' onClick={()=>handleExport()}><FaFileExport></FaFileExport> Exporter</button>
+                            <div className='flex flex-col md:flex-row md:gap-3 gap-1 w-full'>
+
+                                <div className='md:w-1/3 w-full relative'>
+                                    <FiSearch className='absolute mt-3 ml-3 text-gray-400' />
+                                    <input
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        type="text"
+                                        className='border-[1.5px] border-gray-300 rounded-lg w-full pl-10 py-2'
+                                        placeholder='Rechercher un produit par nom ou reference'
+                                    />
+                                </div>
+
+                                <select
+                                    className='md:w-1/4 w-full border-[1.5px] border-gray-300 rounded-lg py-2'
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                >
+                                    <option value="">Tous les statuts</option>
+                                    <option value="suffisant">Stock suffisant</option>
+                                    <option value="faible">Stock faible</option>
+                                    <option value="rupture">Rupture critique</option>
+                                </select>
+
+                                <select
+                                    className='md:w-1/4 w-full border-[1.5px] border-gray-300 rounded-lg py-2'
+                                    onChange={(e) => setSortOption(e.target.value)}
+                                >
+                                    <option value="">Trier par</option>
+                                    <option value="nom_asc">Nom (A-Z)</option>
+                                    <option value="nom_desc">Nom (Z-A)</option>
+                                    <option value="qte_asc">Quantité (asc)</option>
+                                    <option value="qte_desc">Quantité (desc)</option>
+                                </select>
+
+                                <button
+                                    className='md:w-auto w-full bg-primary text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2'
+                                    onClick={() => handleExport()}
+                                >
+                                    <FaFileExport />
+                                    Exporter
+                                </button>
+
+                            </div>
+
                         </div>
                     </div>
 
@@ -178,8 +234,9 @@ const StockEmploye = () => {
                             <div className=''>
                                 <h1 className='text-2xl font-bold'>Liste des produits</h1>
                             </div>
+
                             <hr />
-                            <div className='overflow-x-auto'>
+                            <div className='w-full'>
                                 <table className='w-full border-collapse'>
                                     <thead className='bg-gray-50 border-b-[2px]'>
                                         <tr className=''>
@@ -218,7 +275,7 @@ const StockEmploye = () => {
                                                     {getBadge(produit) == "rupture" && (
                                                         <div className='flex items-center gap-4 rounded border justify-center py-1 bg-red-200 text-red-800 font-bold max-w-max px-10'>
                                                             <span className='inline-block h-2 w-2 rounded-full bg-red-500'></span>
-                                                            <span>{produits.quantite ?? 0} unité</span>
+                                                            <span>{produit.quantite ?? 0} unité</span>
                                                         </div>
                                                     )}
 
@@ -234,12 +291,13 @@ const StockEmploye = () => {
                                 </table>
                                 <div className='flex gap-5 justify-end mt-5'>
                                     {/* les bouton pour les pages */}
-                                    {pagesActive > 1 && <button onClick={()=>setPagesActive(pagesActive-1)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'>&lt;</button>
+                                    {pagesActive > 1 && <button onClick={() => setPagesActive(pagesActive - 1)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'>&lt;</button>
                                     }
-                                    {numeroPages.map(num => (
-                                        <button onClick={()=>setPagesActive(num)} className={`border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark ${pagesActive == num && 'bg-purple-600 text-white'}`}>{num}</button>    
+                                    {numeroPages.map(num =>
+                                    (
+                                        <button key={num} onClick={() => setPagesActive(num)} className={`border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark ${pagesActive == num && 'border-primary text-primary border-2'}`}>{num}</button>
                                     ))}
-                                    {pagesActive < nbrePages && <button onClick={()=>setPagesActive(pagesActive+1)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'>&gt;</button>
+                                    {pagesActive < nbrePages && <button onClick={() => setPagesActive(pagesActive + 1)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'>&gt;</button>
                                     }
 
                                 </div>
