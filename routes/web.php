@@ -11,7 +11,7 @@ Route::get('/', function () {
 });
 
 Route::get('/header',function(){
-        return Inertia::render('EntreeStrockEmploye',[]);
+        return Inertia::render('SortieStockEmployee',[]);
     });
 
 
