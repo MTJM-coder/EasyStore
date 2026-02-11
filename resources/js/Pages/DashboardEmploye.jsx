@@ -1,7 +1,7 @@
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
 import React from 'react'
 import { FaCoins, FaMoneyBill, FaMoneyBillAlt, FaMoneyBillWave } from 'react-icons/fa'
-import { FiArrowUpRight, FiBox, FiCalendar, FiAlertTriangle, FiArrowDownRight, FiThumbsDown, FiDownloadCloud, FiUploadCloud, FiArchive } from 'react-icons/fi'
+import { FiArrowUpRight, FiBox, FiCalendar, FiAlertTriangle, FiArrowDownRight, FiThumbsDown, FiDownloadCloud, FiUploadCloud, FiArchive,FiMenu } from 'react-icons/fi'
 
 const DashboardEmploye = () => {
     const date = new Date()
@@ -13,18 +13,28 @@ const DashboardEmploye = () => {
     })
 
     const Alertes = [
-        { prodit: "Huile vegetal 1L", niveau: "Stock faible", Description: 'seuil de réapprovisionnement atteint', reste: 12 },
+        { produit: "Huile vegetal 1L", niveau: "Stock faible", Description: 'seuil de réapprovisionnement atteint', reste: 12 },
         { produit: "Riz parfumé 25kg", niveau: "Stock critique", Description: "en dessous du seuil minimum", reste: 8 },
         { produit: "Lait concentré NIDO 400g", niveau: "Stock faible", Description: "réapprovisionnement recommandé", reste: 8 },
         { produit: "Savon de Marseille", niveau: "", Description: "Proche du seuil de réapprovisionnement", reste: 15 },
         { produit: "Sucre en poudre 1kg", niveau: "Rupture imminente", Description: "Acton Urgente requise", reste: 1 }
     ]
+    const [sidebarOpen, setSidebarOpen] = useState(false)
     return (
         <div>
             <div className='flex bg-secondary'>
-                <SidebarEmploye></SidebarEmploye>
+                  {sidebarOpen && (
+                        <div
+                            className="fixed inset-0 bg-black/40 z-40 md:hidden"
+                            onClick={() => setSidebarOpen(false)}
+                        ></div>
+                    )}
+                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
                 <div className='relative md:ml-64 bg-secondary max-w-max mb-20'>
                     <div className='fixed flex items-center w-full gap-5 pl-5 md:pr-64 justify-between bg-white p-5'>
+                        <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>
+                            <button className='bg-primary text-white px-4 py-4 rounded-lg'><FiMenu></FiMenu></button>
+                        </div>
                         <div className='flex flex-col'>
                             <h1 className='font-bold text-2xl'>Tableau de bord</h1>
                             <p className='text-text-medium'>Vue d'ensemble de votre activité et du stock</p>
@@ -142,7 +152,7 @@ const DashboardEmploye = () => {
                         <div className='flex flex-col p-5 gap-4 bg-white mt-10 border mx-5 rounded-lg'>
                             <div className='flex justify-between'>
                                 <p className='ml-5 font-bold text-2xl'>Alertes actives</p>
-                                <p>{Alertes.length} {Alertes.length>1?'produits necessitent votre attention':'produit necessite votre attention'} </p>
+                                <p>{Alertes.length} {Alertes.length > 1 ? 'produits necessitent votre attention' : 'produit necessite votre attention'} </p>
                             </div>
                             {Alertes.map(alerte => (
                                 <div className={`border p-5 flex rounded-lg items-center justify-between hover:ml-3 duration-300 ${alerte.niveau == "Stock critique" || alerte.niveau == "Rupture imminente" ? 'bg-red-100 border-red-200' : 'bg-yellow-50 border-yellow-200'}`}>

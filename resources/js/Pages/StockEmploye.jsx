@@ -2,7 +2,7 @@ import SidebarEmploye from '@/Layouts/SidebarEmploye'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { FaFileExport } from 'react-icons/fa'
-import { FiSearch, FiBox, FiCheck, FiAlertTriangle } from 'react-icons/fi'
+import { FiSearch, FiBox, FiCheck, FiAlertTriangle,FiMenu } from 'react-icons/fi'
 import { MdEmergency } from 'react-icons/md'
 
 const StockEmploye = () => {
@@ -124,7 +124,7 @@ const StockEmploye = () => {
                             <div className='flex items-center gap-5'>
                                 <div className='flex items-center gap-4'>
                                     <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>
-                                        <button className='bg-primary text-white px-4 py-2 rounded-lg'>☰</button>
+                                        <button className='bg-primary text-white px-4 py-4 rounded-lg'><FiMenu></FiMenu></button>
                                     </div>
                                     <div className='flex flex-col'>
                                         <h1 className='font-bold text-2xl'>Consultation du Stock</h1>

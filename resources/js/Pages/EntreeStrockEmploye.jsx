@@ -1,7 +1,7 @@
 import React from 'react'
 import SidebarEmploye from '../Layouts/SidebarEmploye'
 import { useState } from 'react'
-import { FiInfo, FiRefreshCw, FiSave } from 'react-icons/fi'
+import { FiInfo, FiRefreshCw, FiSave,FiMenu } from 'react-icons/fi'
 
 const EntreeStrockEmploye = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -59,7 +59,7 @@ const EntreeStrockEmploye = () => {
                             <div className='flex flex-col gap-2'>
                                 <div className='flex items-center gap-4'>
                                     <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>
-                                        <button className='bg-primary text-white px-4 py-2 rounded-lg'>☰</button>
+                                        <button className='bg-primary text-white px-4 py-4 rounded-lg'><FiMenu></FiMenu></button>
                                     </div>
                                     <div className='flex flex-col'>
                                         <h1 className='font-bold text-2xl'>Entrée en stock</h1>
