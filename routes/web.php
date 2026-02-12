@@ -11,7 +11,7 @@ Route::get('/', function () {
 });
 
 Route::get('/header',function(){
-        return Inertia::render('GestFournisseur',[]);
+        return Inertia::render('GestEmployes',[]);
     });
 
 

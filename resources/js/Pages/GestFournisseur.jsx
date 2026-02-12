@@ -3,9 +3,6 @@ import React from 'react'
 import { FiPlus, FiSearch, FiMenu, FiBox, FiCheck, FiAlertTriangle, FiEdit, FiTrash2, FiSave, FiRefreshCcw, FiXCircle, FiMail, FiPhone, FiMapPin, FiTruck } from 'react-icons/fi';
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
-import { FaSupple } from 'react-icons/fa';
-
-
 
 const GestFournisseur = () => {
 
