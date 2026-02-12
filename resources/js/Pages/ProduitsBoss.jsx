@@ -7,6 +7,7 @@ import { router } from '@inertiajs/react';
 const ProduitsBoss = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedProduit, setSelectedProduit] = useState(null);
     const produits = [
         { nom: "Riz parfumé 2kg", reference: "riz-02", quantite: 2, seuil: 15, statut: 'critique', categorie: 'Alimentaire', prixUnitaire: 2500 },
         { nom: "Huile de tournesol 1L", reference: "huile-01", quantite: 10, seuil: 20, statut: 'faible', categorie: 'Alimentaire', prixUnitaire: 1500 },
@@ -68,6 +69,26 @@ const ProduitsBoss = () => {
             prixUnitaire:produit.prixUnitaire
         })
         setShowAddForm(true)
+    }
+
+    const handleSubmit=(e)=>
+    {
+        e.preventDefault();
+        if (formData.nom && formData.reference && formData.seuil && formData.quantite) {
+            if(selectedProduit){
+                router.put(`/produits/${selectedProduit.id}`, formData);
+            } else {
+                router.post('/produits', formData);
+            }
+            setShowAddForm(false);
+            setFormData({
+                nom:null,
+                reference:null,
+                seuil:null,
+                quantite:null,
+                prixUnitaire:null
+            })
+        }
     }
 
     return (
@@ -213,7 +234,7 @@ const ProduitsBoss = () => {
                                                 <span className={`${getBadge(produit) == "suffisant" ? "text-green-500" : getBadge(produit) == "faible" ? "text-yellow-500" : "text-red-500"} font-bold`}>{produit.statut}</span>
                                             </td>
                                             <td className='border-b-2 px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark '>
-                                                <button onClick={() => handleEdit(produit)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'><FiEdit className="text-primary-dark" /></button>
+                                                <button onClick={() => { setSelectedProduit(produit); handleEdit(produit) }} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'><FiEdit className="text-primary-dark" /></button>
                                             </td>
                                             <td className='border-b-2 px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark '>
                                                 <button onClick={() => handleDelete(produit.reference)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark ml-2'><FiTrash2 className="text-red-500" /></button>
@@ -249,7 +270,7 @@ const ProduitsBoss = () => {
                 <button className='w-full text-end  flex justify-end'>
                     <FiXCircle className='text-red-500 ' size={30} onClick={()=>setShowAddForm(false)}></FiXCircle>
                 </button>
-                <form action="">
+                <form action="" onSubmit={handleSubmit}>
                     <h1 className='my-5 text-xl font-bold '>Ajouter un produit</h1>
                     <div className='mb-3 flex flex-col'>
                         <label htmlFor="" className='text-text-medium font-bold uppercase'>Nom du produit <span className='text-red-500'>*</span></label>
