@@ -159,7 +159,7 @@ const GestEmployes = () => {
                     {/* liste des employes */}
                     <div className='md:mx-10 my-5 md:p-5 bg-white'>
                         <div className=''>
-                            <h1 className='text-2xl font-bold'>Liste des produits</h1>
+                            <h1 className='text-2xl font-bold'>Liste des employés</h1>
                         </div>
 
                         <hr />
