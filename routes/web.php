@@ -11,7 +11,7 @@ Route::get('/', function () {
 });
 
 Route::get('/header',function(){
-        return Inertia::render('Rapport',[]);
+        return Inertia::render('MonAbonnement',[]);
     });
 
 
