@@ -1,5 +1,6 @@
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
 import React from 'react'
+import { useState } from 'react'
 import { FaCoins, FaMoneyBill, FaMoneyBillAlt, FaMoneyBillWave } from 'react-icons/fa'
 import { FiArrowUpRight, FiBox, FiCalendar, FiAlertTriangle, FiArrowDownRight, FiThumbsDown, FiDownloadCloud, FiUploadCloud, FiArchive,FiMenu } from 'react-icons/fi'
 
@@ -20,6 +21,7 @@ const DashboardEmploye = () => {
         { produit: "Sucre en poudre 1kg", niveau: "Rupture imminente", Description: "Acton Urgente requise", reste: 1 }
     ]
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [active, setActive] = useState(1)
     return (
         <div>
             <div className='flex bg-secondary'>
@@ -29,7 +31,7 @@ const DashboardEmploye = () => {
                             onClick={() => setSidebarOpen(false)}
                         ></div>
                     )}
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SidebarEmploye>
                 <div className='relative md:ml-64 bg-secondary max-w-max mb-20'>
                     <div className='fixed flex items-center w-full gap-5 pl-5 md:pr-64 justify-between bg-white p-5'>
                         <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>

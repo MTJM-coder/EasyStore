@@ -1,11 +1,12 @@
-import SidebarEmploye from '@/Layouts/SidebarEmploye'
 import React from 'react'
 import { FiMenu, FiBox, FiCheck,FiX} from 'react-icons/fi';
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
+import SideBarBoss from '@/Layouts/SideBarBoss';
 
 const MonAbonnement = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [active, setActive] = useState(11);
 
     const abonnements=[
         {id:1,date:"15 Jan 2026",montant:12000,methode:"mobile money",statut:"payé"},
@@ -25,7 +26,7 @@ const MonAbonnement = () => {
                     ></div>
                 )}
 
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     {/* entete de la parle */}
 

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { FiBarChart2, FiBox, FiChevronsDown, FiChevronsUp, FiDatabase, FiLogOut, FiUser } from 'react-icons/fi'
+import { FiBarChart2, FiBell, FiBookmark, FiBox, FiChevronsDown, FiChevronsUp, FiCreditCard, FiDatabase, FiLogOut, FiSettings, FiUser } from 'react-icons/fi'
 import Header from './Header'
+import { FaStore } from 'react-icons/fa'
 
-const SidebarEmploye = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
-    // const [active, setActive] = useState(1)
+const SideBarAdmin = ({ sidebarOpen, setSidebarOpen,active,setActive }) => {
+    
     const handleLogout = function () {
         if (confirm("Etes-vous sur de vouloir vous deconnecter?")) {
             alert("disconnected!")
@@ -11,12 +12,12 @@ const SidebarEmploye = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
     }
 
     const liens = [
-        { id: 1, nom: "Tableau de bord", icon: <FiBarChart2></FiBarChart2>},
-        { id: 2, nom: "Consulter le stock", icon: <FiBox></FiBox> },
-        { id: 3, nom: "Entrée en stock", icon: <FiChevronsDown></FiChevronsDown> },
-        { id: 4, nom: "Sortie de stock", icon: <FiChevronsUp></FiChevronsUp> },
-        { id: 5, nom: "Historique", icon: <FiDatabase></FiDatabase> },
-        { id: 6, nom: "Mon Profil", icon: <FiUser></FiUser> }
+        { id: 1, nom: "Tableau de bord", type: "administration", icon: <FiBarChart2></FiBarChart2> },
+        { id: 2, nom: "Commercants", type: "administration", icon: <FaStore></FaStore> },
+        { id: 3, nom: "Abonnements", type: "administration", icon: <FiCreditCard></FiCreditCard> },
+        { id: 4, nom: "Notifications", type: "systeme", icon: <FiBell></FiBell> },
+        { id: 5, nom: "Log & Audits", type: "systeme", icon: <FiBookmark></FiBookmark> },
+        { id: 6, nom: "Parametres", type: "systeme", icon: <FiSettings></FiSettings> }
 
     ]
 
@@ -38,7 +39,23 @@ const SidebarEmploye = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
 
 
                 <div className='flex flex-col gap-1 mt-4'>
-                    {liens.map(element =>
+                    {/* Administration */}
+                    <div className='w-full flex items-center gap-3  px-5 py-4 text-text-medium cursor-pointer '>Administration</div>
+                    {liens.filter(l => l.type == "administration").map(element =>
+                    (
+                        <div
+
+                            onClick={() => setActive(element.id)}
+                            key={element.id} className={`w-full flex items-center gap-3  px-5 py-4 text-text-medium cursor-pointer 
+                            ${element.id == active ? 'bg-purple-400 text-white border-r-[3px] border-primary' : 'hover:bg-purple-100 duration-300  transition-all hover:text-primary'}`} >
+                            <p className='text-2xl'>{element.icon}</p>
+                            <p>{element.nom}</p>
+                        </div>
+                    )
+                    )}
+                    {/* systeme */}
+                    <div className='w-full flex items-center gap-3  px-5 py-4 text-text-medium cursor-pointer '>Système</div>
+                    {liens.filter(l => l.type == "systeme").map(element =>
                     (
                         <div
 
@@ -60,4 +77,4 @@ const SidebarEmploye = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
     )
 }
 
-export default SidebarEmploye
+export default SideBarAdmin

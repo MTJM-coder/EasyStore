@@ -92,7 +92,7 @@ const HistoriqueEmploye = () => {
         console.log('Exporting data...');
     }
 
-
+const [active, setActive] = useState(5)
     return (
         <div>
             <div>
@@ -104,7 +104,7 @@ const HistoriqueEmploye = () => {
                         ></div>
                     )}
 
-                    <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                    <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SidebarEmploye>
                     <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                         {/* entete de la parle */}
 

@@ -1,4 +1,4 @@
-import SidebarEmploye from '@/Layouts/SidebarEmploye'
+import SideBarBoss from '@/Layouts/SideBarBoss'
 import React from 'react'
 import { FiPlus, FiSearch, FiMenu, FiBox, FiCheck, FiAlertTriangle, FiEdit, FiTrash2, FiSave, FiRefreshCcw, FiXCircle, FiMail, FiPhone, FiMapPin, FiTruck, FiCloudLightning, FiArrowDown, FiArrowUp, FiMove, FiSettings, FiDollarSign, FiUsers, FiBarChart, FiFile } from 'react-icons/fi';
 import { useState } from 'react';
@@ -8,6 +8,7 @@ import { router } from '@inertiajs/react';
 
 const Rapport = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [active, setActive] = useState(5);
     const [rapportSelect, setRapportSelect] = useState(null);
     const typeRapport = [
         { type: "Rapport du stock actuel", description: "Liste des produits, quantités disponibles, seuils de réapprovisionnement et produits en rupture.", icon: <FiBox size={40}></FiBox> },
@@ -36,7 +37,7 @@ const Rapport = () => {
                     ></div>
                 )}
 
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     {/* entete de la parle */}
 

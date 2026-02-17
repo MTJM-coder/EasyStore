@@ -1,3 +1,4 @@
+import SideBarAdmin from '@/Layouts/SideBarAdmin'
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
 import React from 'react'
 import { useState } from 'react'
@@ -37,6 +38,7 @@ const DashboardAdmin = () => {
         { id: 4, commerce: "Pharmacie de la Gare", plan: 'premium', date_expiration: "2025-08-10", statut: "Actif" }
     ]
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [active,setActive]=useState(1)
     return (
         <div>
             <div className='flex bg-secondary'>
@@ -46,7 +48,7 @@ const DashboardAdmin = () => {
                         onClick={() => setSidebarOpen(false)}
                     ></div>
                 )}
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <SideBarAdmin sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarAdmin>
                 <div className='relative md:ml-64 bg-secondary max-w-max mb-20'>
                     <div className='fixed flex items-center w-full gap-5 pl-5 md:pr-64 justify-between bg-white p-5'>
                         <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>

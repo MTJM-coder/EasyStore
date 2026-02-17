@@ -3,9 +3,11 @@ import React from 'react'
 import { FiPlus, FiSearch, FiMenu, FiBox, FiCheck, FiAlertTriangle, FiEdit, FiTrash2, FiSave, FiRefreshCcw, FiXCircle, FiMail, FiPhone, FiMapPin, FiTruck, FiUsers, FiShieldOff } from 'react-icons/fi';
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
+import SideBarBoss from '@/Layouts/SideBarBoss';
 
 const GestEmployes = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [active, setActive] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedEmploye, setSelectedEmploye] = useState(null);
     const employes = [
@@ -87,7 +89,7 @@ const GestEmployes = () => {
                     ></div>
                 )}
 
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     {/* entete de la parle */}
 

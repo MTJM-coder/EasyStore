@@ -4,9 +4,11 @@ import { FiPlus, FiSearch, FiMenu, FiBox, FiCheck, FiAlertTriangle, FiEdit, FiTr
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import { FaStore } from 'react-icons/fa';
+import SideBarAdmin from '@/Layouts/SideBarAdmin';
 
 const GestCommerce = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [active,setActive]=useState(2);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCommerce, setSelectedCommerce] = useState(null);
     const comercants = [
@@ -92,7 +94,7 @@ const GestCommerce = () => {
                     ></div>
                 )}
 
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <SideBarAdmin sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarAdmin>
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     {/* entete de la parle */}
 

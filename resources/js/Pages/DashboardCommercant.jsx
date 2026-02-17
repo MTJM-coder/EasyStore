@@ -4,6 +4,7 @@ import { FiAlertTriangle, FiArrowDownRight, FiArrowUpRight, FiCalendar, FiDownlo
 import { FaCoins } from 'react-icons/fa'
 import { MdEmergency } from 'react-icons/md'
 import { useState } from 'react'
+import SideBarBoss from '@/Layouts/SideBarBoss'
 const DashboardCommercant = () => {
 
     const date = new Date()
@@ -43,6 +44,7 @@ const DashboardCommercant = () => {
     ]
 
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [active, setActive] = useState(1)
     
 
     return (
@@ -55,7 +57,7 @@ const DashboardCommercant = () => {
                             onClick={() => setSidebarOpen(false)}
                         ></div>
                     )}
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
                 <div className='relative md:ml-64 bg-secondary max-w-max mb-20'>
                     <div className='fixed z-40 flex items-center w-full gap-5 pl-5 md:pr-64 justify-between bg-white p-5'>
                         <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>

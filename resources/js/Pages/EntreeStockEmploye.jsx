@@ -40,6 +40,7 @@ const EntreeStrockEmploye = () => {
         {id:5,produit:"Produit 5",fournisseur:"Fournisseur 5",quantite:10,date:"2024-06-20 13:10",commentaire:"Livraison partielle, facture numéro 7890"},
 
     ]
+    const [active, setActive] = useState(3)
     return (
         <div>
             <div>
@@ -51,7 +52,7 @@ const EntreeStrockEmploye = () => {
                         ></div>
                     )}
 
-                    <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                    <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SidebarEmploye>
                     <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                         {/* entete de la parle */}
 

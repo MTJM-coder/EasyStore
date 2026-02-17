@@ -1,4 +1,4 @@
-import SidebarEmploye from '@/Layouts/SidebarEmploye'
+import SideBarAdmin from '@/Layouts/SideBarAdmin'
 import { router } from '@inertiajs/react'
 import React from 'react'
 import { useState } from 'react'
@@ -8,6 +8,7 @@ import { FiMenu, FiCheck, FiPlus, FiEdit, FiPause, FiPlay,FiX, FiInfo ,FiXCircle
 
 const Abonnement = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [active , setActive] = useState(3)
     const [showAddForm, setShowAddForm] = useState(false)
     const [selectedAbonnement, setSelectedAbonnement] = useState(null)
     const [formData, setFormData] = useState({
@@ -52,7 +53,7 @@ const Abonnement = () => {
                         onClick={() => setSidebarOpen(false)}
                     ></div>
                 )}
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                <SideBarAdmin sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarAdmin>
                 <div className='relative md:ml-64 bg-secondary max-w-max mb-20'>
                     <div className='fixed flex items-center w-full gap-5 pl-5 md:pr-64 justify-between bg-white p-5'>
                         <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>
