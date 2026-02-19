@@ -10,9 +10,3 @@ Route::get('/', function () {
     ]);   
 });
 
-Route::get('/header',function(){
-        return Inertia::render('Abonnement',[]);
-    });
-
-
-require __DIR__.'/auth.php';
