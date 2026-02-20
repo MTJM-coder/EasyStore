@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -24,12 +25,13 @@ class User extends Authenticatable
         'telephone',
         'role',
         'actif',
+        'commerce_id',
 
     ];
 
-    public function commerces()
+    public function commerce()
     {
-        return $this->belongsTo(Commerce::class, 'commercant_id');
+        return $this->hasOne(Commerce::class, 'commercant_id');
     }
 
     public function audits()
