@@ -8,26 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Commerce;
 use Illuminate\Support\Facades\Auth;
-
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     //
-    public function createCommerce(String $name, User $commercant, $abonnement_id)
-    {
-        try {
-            $commerce = new Commerce();
-            $commerce->name = $name;
-            $commerce->commercant_id = $commercant->id;
-            $commerce->abonnement_id = $abonnement_id;
-            $commerce->save();
-            return response()->json([201, 'message' => 'Commerce created successfully']);
-        } catch (Exception $e) {
-            return response()->json([500, 'message' => $e->getMessage()]);
-        };
-    }
-
-
     public function register(Request $req)
     {
         $validateData = $req->validate([
@@ -47,7 +33,16 @@ class AuthController extends Controller
             $user->password = Hash::make($validateData['password']);
             $user->actif = true;
             $user->save();
-            $this->createCommerce($validateData['nom_commerce'], $user, null);
+
+            $commerce = new Commerce();
+            $commerce->name = $validateData['nom_commerce'];
+            $commerce->commercant_id = $user->id;
+            $commerce->save();
+
+            $user->commerce_id = $commerce->id;
+            $user->save();
+            
+            
             return response()->json([201, 'message' => 'User registered successfully']);
         } catch (Exception $e) {
             return response()->json([500, 'message' => $e->getMessage()]);
@@ -98,6 +93,29 @@ class AuthController extends Controller
         }
         catch(Exception $e){
             return response()->json([500, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function updatedPassword(Request $req){
+        $validateData=$req->validate([
+            'passwordActuel'=>'required',
+            'password'=>'required|confirmed',
+            'password_confirmation'=>'required'
+        ]);
+        try{
+            $user=Auth::user()->id;
+            $user=User::find($user);
+            if(!Hash::check($validateData['passwordActuel'], $user->password)){
+                return response()->json([400,'Message'=>'Current password is incorrect']);
+            }
+            else{
+            $user->password=Hash::make($validateData['password']);
+             $user->save();
+             return response()->json([200,'Message'=>'Password updated successfully']);
+        }
+        }   
+        catch(Exception $e){
+            return response()->json([500,'Message'=>$e->getMessage()]);
         }
     }
 }

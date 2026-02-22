@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('initialQuantity')->default(0);
             $table->unsignedBigInteger('commerce_id');
             $table->foreign('commerce_id')->references('id')->on('commerces')->onDelete('cascade');
-            $table->unsignedBigInteger('fournisseur_id');
+            $table->unsignedBigInteger('fournisseur_id')->nullable();
             $table->foreign('fournisseur_id')->references('id')->on('fournisseurs')->onDelete('cascade');
 
         });
