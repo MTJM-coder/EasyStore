@@ -12,36 +12,28 @@ class FournisseurController extends Controller
 {
     //
     public function getSuppliers(){
-        try{
-           $user=Auth::user();
-        }catch(Exception $e){
-            return Response()->json([401,"Message"=>$e->getMessage()]);
-        }
+        $user=Auth::user();
         
         if($user->role !=="commerce"){
-            return Response()->json([403,"Message"=>"unhautorized"]);
+            return Response()->json(["Message"=>"unhautorized"],403);
         }
        
         $suppliers=Fournisseurs::where('commerce_id',$user->commerce_id)->get();
-        return Response()->json([200,"suppliers"=>$suppliers]);
+        return Response()->json(["suppliers"=>$suppliers],200);
 
     }
 
     public function getSupplier($id){
 
-         try{
-           $user=Auth::user();
-        }catch(Exception $e){
-            return Response()->json([401,"Message"=>$e->getMessage()]);
-        }
+       $user=Auth::user();
         if($user->role !=="commerce"){
-            return Response()->json([403,"Message"=>"unhautorized"]);
+            return Response()->json(["Message"=>"unhautorized"],403);
         }
         $supplier=Fournisseurs::where('id',$id)->where('commerce_id',$user->commerce_id)->first();
        if(!$supplier){
-            return response()->json([401,"Message"=>"Supplier not found"]);
+            return response()->json(["Message"=>"Supplier not found"],404);
         }
-        return Response()->json([200,"supplier"=>$supplier]);
+        return Response()->json(["supplier"=>$supplier],200);
 
     }
 
@@ -51,13 +43,9 @@ class FournisseurController extends Controller
             "telephone"=>"required"
 
         ]);
-        try{
-            $user=Auth::user();
-        }catch(Exception $e){
-            return Response()->json([401,"Message"=>$e->getMessage()]);
-        }
+        $user=Auth::user();
         if($user->role !=="commerce"){
-            return Response()->json([403,"Message"=>"unhautorized"]);
+            return Response()->json(["Message"=>"unhautorized"],403);
         }
 
         $fournisseur=new Fournisseurs();
@@ -66,7 +54,7 @@ class FournisseurController extends Controller
         $fournisseur->commerce_id=$user->commerce_id;
         $fournisseur->save();
 
-        return response()->json([200,"Message"=>"Supplier created successfully","supplier"=>$fournisseur]);
+        return response()->json(["Message"=>"Supplier created successfully","supplier"=>$fournisseur],200);
 
     }
 
@@ -77,42 +65,34 @@ class FournisseurController extends Controller
 
         ]);
 
-         try{
-            $user=Auth::user();
-        }catch(Exception $e){
-            return Response()->json([401,"Message"=>$e->getMessage()]);
-        }
+          $user=Auth::user();
         if($user->role !=="commerce"){
-            return Response()->json([403,"Message"=>"unhautorized"]);
+            return Response()->json(["Message"=>"unhautorized"],403);
         }
 
         $fournisseur=Fournisseurs::where('id',$id)->where("commerce_id",$user->commerce_id)->first();
         if(!$fournisseur){
-            return response()->json([401,"Message"=>"Supplier not found"]);
+            return response()->json(["Message"=>"Supplier not found"],404);
         }
         $fournisseur->name=$validatedata['name'];
         $fournisseur->telephone=$validatedata['telephone'];
         $fournisseur->save();
 
-        return response()->json([200,"Message"=>"supplier updated successfully","supllier"=>$fournisseur]);
+        return response()->json(["Message"=>"supplier updated successfully","supplier"=>$fournisseur],200);
     }
 
     public function deleteSupplier($id){
-         try{
-            $user=Auth::user();
-        }catch(Exception $e){
-            return Response()->json([401,"Message"=>$e->getMessage()]);
-        }
+        $user=Auth::user();
         if($user->role !=="commerce"){
-            return Response()->json([403,"Message"=>"unhautorized"]);
+            return Response()->json(["Message"=>"unhautorized"],403);
         }
 
         $fournisseur=Fournisseurs::where('id',$id)->where("commerce_id",$user->commerce_id)->first();
         if(!$fournisseur){
-            return response()->json([401,"Message"=>"Supplier not found"]);
+            return response()->json(["Message"=>"Supplier not found"],404);
         }
         $fournisseur->delete();
 
-        return response()->json([200,"Message"=>"Supplier deleted successfully"]);
+        return response()->json(["Message"=>"Supplier deleted successfully"],200);
     }
 }

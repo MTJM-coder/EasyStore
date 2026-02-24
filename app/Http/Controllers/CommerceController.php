@@ -13,37 +13,27 @@ class CommerceController extends Controller
 {
     //
     public function getCommerces(){
-        try{
-            $user=Auth::user();
-        }
-        catch(Exception $e){
-            return response()->json([401,'Message'=>$e->getMessage()]);
-        }
+       $user=Auth::user();
         if($user->role !== "admin"){
-            return response()->json([403,'Unhautorized']);
+            return response()->json(["Message"=>"Unhautorized"],403);
         }
         $commerces=Commerce::all();
-        return response()->json([200,"Message"=>"list of commerces found successfully","commerces"=>$commerces]);
+        return response()->json(["Message"=>"list of commerces found successfully","commerces"=>$commerces],200);
     }
 
     public function getCommerce($id){
-        try{
-            $user=Auth::user();
-        }
-        catch(Exception $e){
-            return response()->json([401,'Message'=>$e->getMessage()]);
-        }
+       $user=Auth::user();
         if($user->role !== "admin"){
-            return response()->json([403,'Unhautorized']);
+            return response()->json(["Message"=>"Unhautorized"],403);
         }
 
         $commerce=Commerce::find($id);
         if(!$commerce){
-            return response()->json([404,"Message"=>"commerce not found"]);
+            return response()->json(["Message"=>"commerce not found"],404);
         }
         else{
            
-            return response()->json([200,"Message"=>"commerce found successfully","commerce"=>$commerce]);
+            return response()->json(["Message"=>"commerce found successfully","commerce"=>$commerce],200);
         }
     }
 
@@ -51,48 +41,38 @@ class CommerceController extends Controller
         $validateData=$req->validate([
             'name'=>'required'
         ]);
-         try{
-            $user=Auth::user();
-        }
-        catch(Exception $e){
-            return response()->json([401,'Message'=>$e->getMessage()]);
-        }
+        $user=Auth::user();
         if($user->role !== "commerce" ){
-            return response()->json([403,'Unhautorized']);
+            return response()->json(["Message"=>"Unhautorized"],403);
         }
 
         $commerce=Commerce::where('id',$id)->where('commercant_id',$user->id)->first();
         if(!$commerce){
-            return response()->json([404,"Message"=>"commerce not found"]);
+            return response()->json(["Message"=>"commerce not found"],404);
         }
         else{
             
             $commerce->name=$validateData['name'];
             $commerce->save();
-            return response()->json([200,"Message"=>"commerce updated successfully"]);
+            return response()->json(["Message"=>"commerce updated successfully"],200);
 
         }
 
     }
 
     public function deleteCommerce($id){
-        try{
-            $user=Auth::user();
-        }
-        catch(Exception $e){
-            return response()->json([401,'Message'=>$e->getMessage()]);
-        }
+       $user=Auth::user();
         if($user->role !== "admin"){
-            return response()->json([403,'Unhautorized']);
+            return response()->json(["Message"=>"Unhautorized"],403);
         }
 
         $commerce=Commerce::find($id);
         if(!$commerce){
-            return response()->json([404,"Message"=>"commerce not found"]);
+            return response()->json(["Message"=>"commerce not found"],404);
         }
         else{
             $commerce->delete();
-            return response()->json([200,"Message"=>"commerce deleted successfully"]);
+            return response()->json(["Message"=>"commerce deleted successfully"],200);
         }
 
     }

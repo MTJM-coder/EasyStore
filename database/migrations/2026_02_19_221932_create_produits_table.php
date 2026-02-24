@@ -16,10 +16,10 @@ return new class extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('ref');
-            $table->decimal('price', 8, 2)->nullable();
+            $table->decimal('purchasing_price', 8, 2)->nullable();
             $table->text('description')->nullable();
             $table->integer('seuil')->default(0);
-            $table->integer('initialQuantity')->default(0);
+            $table->integer('current_quantity')->default(0);
             $table->unsignedBigInteger('commerce_id');
             $table->foreign('commerce_id')->references('id')->on('commerces')->onDelete('cascade');
             $table->unsignedBigInteger('fournisseur_id')->nullable();

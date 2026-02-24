@@ -14,10 +14,15 @@ return new class extends Migration
         Schema::create('abonnements', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('name');
+            $table->string('name'); // Gratuit, Basic, Pro
             $table->decimal('price', 8, 2);
             $table->text('description')->nullable();
-            $table->integer('duration'); // Durée en mois
+            $table->integer('duration'); // durée en jours 
+            $table->integer('max_produits')->default(50); // limite de produits
+            $table->integer('max_users')->default(1); // limite d'utilisateurs
+            $table->boolean('export_pdf')->default(false);
+            $table->boolean('rapports_avances')->default(false);
+            $table->boolean('multi_boutique')->default(false);
         });
     }
 

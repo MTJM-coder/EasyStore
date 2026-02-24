@@ -38,15 +38,15 @@ class UserController extends Controller
         }
 
         if($user->role!=='admin'){
-            return Response()->json([403,'Message'=>'Unauthorized']);
+            return Response()->json(["Message"=>"Unauthorized"],403);
         }
 
         $user=User::find($id);
         if($user){
-            return Response()->json([200,'Message'=>'User found successfully', 'data'=>$user]);
+            return Response()->json(["Message"=>"User found successfully", 'data'=>$user],200);
         }
         else{
-            return Response()->json([404,'Message'=>'User not found']);
+            return Response()->json(["Message"=>"User not found"],404);
         }
 
 
@@ -57,10 +57,10 @@ class UserController extends Controller
             $user=Auth::user();
         }
         catch(Exception $e){
-            return Response()->json([401,'Message'=>$e->getMessage()]);
+            return Response()->json(["Message"=>$e->getMessage()],401);
         }
         if($user->role!=='admin'){
-            return Response()->json([403,'Message'=>'Unauthorized']);
+            return Response()->json(["Message"=>"Unauthorized"],403);
         }
         
         $validateData=$req->validate([
@@ -80,7 +80,7 @@ class UserController extends Controller
         $user->save();
         
 
-        return Response()->json([201,'Message'=>'User created successfully', 'data'=>$user]);
+        return Response()->json(["Message"=>"User created successfully", 'data'=>$user],201);
 
     }
 
@@ -89,10 +89,10 @@ class UserController extends Controller
                 $user=Auth::user();
             }
             catch(Exception $e){
-                return Response()->json([401,'Message'=>$e->getMessage()]);
+                return Response()->json(["Message"=>$e->getMessage()],401);
             }
             if($user->role!=='admin'){
-                return Response()->json([403,'Message'=>'Unauthorized']);
+                return Response()->json(["Message"=>"Unauthorized"],403);
             }
             
             $validateData=$req->validate([
@@ -103,7 +103,7 @@ class UserController extends Controller
             ]);
             $user=User::find($id);
             if(!$user){
-                return Response()->json([404,'Message'=>'User not found']);
+                return Response()->json(["Message"=>"User not found"],404);
             }
             $user->name=$validateData['name'];
             $user->email=$validateData['email'];
@@ -112,7 +112,7 @@ class UserController extends Controller
             $user->save();
             
     
-            return Response()->json([200,'Message'=>'User updated successfully', 'data'=>$user]);
+            return Response()->json(["Message"=>"User updated successfully", 'data'=>$user],200);
     }
 
     public function deleteUser($id){
@@ -120,17 +120,17 @@ class UserController extends Controller
             $user=Auth::user();
         }
         catch(Exception $e){
-            return Response()->json([401,'Message'=>$e->getMessage()]);
+            return Response()->json(["Message"=>$e->getMessage()],401);
         }
         if($user->role!=='admin'){
-            return Response()->json([403,'Message'=>'Unauthorized']);
+            return Response()->json(["Message"=>"Unauthorized"],403);
         }
         $user=User::find($id);
         if(!$user){
-            return Response()->json([404,'Message'=>'User not found']);
+            return Response()->json(["Message"=>"User not found"],404);
         }
         $user->delete();
-        return Response()->json([200,'Message'=>'User deleted successfully']);
+        return Response()->json(["Message"=>"User deleted successfully"],200);
 
        
     }

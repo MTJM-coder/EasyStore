@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommerceController;
+use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Container\Attributes\Auth;
 use App\Http\Controllers\EmployeController;
@@ -78,6 +79,9 @@ Route::post('/abonnements',[AbonnementController::class,"addAbonnement"]);
 Route::put('/abonnements/{id}',[AbonnementController::class,"updateAbonnement"]);
 Route::delete('/abonnements/{id}',[AbonnementController::class,"deleteAbonnement"]);
 
+Route::get('/commerce/dashboad',[DashBoardController::class,'getDashboard']);
+Route::get('/employe/dashboad',[DashBoardController::class,'getDashboardEmploye']);
+Route::get('/admin/dashboad',[DashBoardController::class,'getDashboardAdmin']);
 });
 
 
