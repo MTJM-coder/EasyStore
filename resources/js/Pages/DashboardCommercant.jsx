@@ -5,8 +5,10 @@ import { FaCoins } from 'react-icons/fa'
 import { MdEmergency } from 'react-icons/md'
 import { useState } from 'react'
 import SideBarBoss from '@/Layouts/SideBarBoss'
-const DashboardCommercant = () => {
 
+const DashboardCommercant = (props) => {
+    const { totalProduits, totalProduitsRupture, dernieresMouvements, ProduitCritique, totalvaleurStock, alertes, statsWeek } = props
+    const totalSousSeuil = ProduitCritique.filter(p => p.current_quantity <= p.seuil).length
     const date = new Date()
     const dateFormatee = date.toLocaleDateString('fr-FR', {
         weekday: "long",
@@ -15,48 +17,45 @@ const DashboardCommercant = () => {
         year: "numeric",
     })
 
-    const produitsCritiques = [
-        { id: 0, produit: "riz 25kg", reste: 10, seuil: 15 },
-        { id: 1, produit: "Huile 5L", reste: 2, seuil: 10 },
-        { id: 2, produit: "Savon 1kg", reste: 6, seuil: 10 },
-        { id: 3, produit: "lait nido 150f", reste: 3, seuil: 12 },
-        { id: 4, produit: "Lame de rasoir", reste: 7, seuil: 20 },
-    ]
+    const joursLabels = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
+    const statWeek = joursLabels.map((jour, index) => {
+        const date = new Date()
+        date.setDate(date.getDate() - (6 - index))
+        const dateStr = date.toISOString().split('T')[0]
 
-    const statWeek = [
-        { jour: 'lundi', entree: 1, sortie: 80 },
-        { jour: 'mardi', entree: 150, sortie: 90 },
-        { jour: 'mercredi', entree: 130, sortie: 75 },
-        { jour: 'jeudi', entree: 140, sortie: 85 },
-        { jour: 'vendredi', entree: 160, sortie: 100 },
-        { jour: 'samedi', entree: 170, sortie: 95 },
-        { jour: 'dimanche', entree: 180, sortie: 110 }
+        const entree = statsWeek.find(s => s.jour === dateStr && s.type === 'in')
+        const sortie = statsWeek.find(s => s.jour === dateStr && s.type === 'out')
 
-    ]
-    const maxValue = Math.max(...statWeek.map(s => Math.max(s.entree, s.sortie)));
+        return {
+            jour,
+            entree: entree?.total ?? 0,
+            sortie: sortie?.total ?? 0,
+        }
+    })
+     // Formater la valeur du stock
+    const formatMontant = (montant) => {
+        if (montant >= 1000000) return (montant / 1000000).toFixed(1) + 'M'
+        if (montant >= 1000) return (montant / 1000).toFixed(0) + 'K'
+        return montant
+    }
 
-    const Alertes = [
-        { produit: "Huile vegetal 1L", niveau: "Stock faible", Description: 'seuil de réapprovisionnement atteint', reste: 12 },
-        { produit: "Riz parfumé 25kg", niveau: "Stock critique", Description: "en dessous du seuil minimum", reste: 8 },
-        { produit: "Lait concentré NIDO 400g", niveau: "Stock faible", Description: "réapprovisionnement recommandé", reste: 8 },
-        { produit: "Savon de Marseille", niveau: "", Description: "Proche du seuil de réapprovisionnement", reste: 15 },
-        { produit: "Sucre en poudre 1kg", niveau: "Rupture imminente", Description: "Acton Urgente requise", reste: 1 }
-    ]
+    const maxValue = Math.max(...statsWeek.map(s => Math.max(s.entree, s.sortie)));
+
 
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [active, setActive] = useState(1)
-    
+
 
     return (
 
         <div>
             <div className='flex bg-secondary'>
-                  {sidebarOpen && (
-                        <div
-                            className="fixed inset-0 bg-black/40 z-40 md:hidden"
-                            onClick={() => setSidebarOpen(false)}
-                        ></div>
-                    )}
+                {sidebarOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/40 z-40 md:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    ></div>
+                )}
                 <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
                 <div className='relative md:ml-64 bg-secondary max-w-max mb-20'>
                     <div className='fixed z-40 flex items-center w-full gap-5 pl-5 md:pr-64 justify-between bg-white p-5'>
@@ -76,7 +75,7 @@ const DashboardCommercant = () => {
                     {/* corps du dashboard */}
                     <div className=''>
                         {/* card */}
-                        <div className='flex md:flex-row flex-col md:justify-between gap-3 mt-28 px-5'>
+                        <div className='flex md:flex-row flex-col md:justify-between gap-3 md:mt-28 mt-38 px-5'>
                             <div className='bg-white rounded-lg px-5 py-5 flex gap-4 items-center border'>
 
                                 <div className='flex flex-col gap-1'>
@@ -85,9 +84,9 @@ const DashboardCommercant = () => {
                                         <div className='w-14 h-14 bg-purple-200 flex justify-center items-center rounded-lg'><FiBox size={20} className='text-text-dark'></FiBox></div>
                                     </div>
                                     <p>
-                                        <span className='inline-block text-3xl font-bold my-3'>240</span>
-                                        <span className='flex items-center text-green-500 text-xs'><FiArrowUpRight></FiArrowUpRight> +3 </span>
-                                        <span className='text-green-500 text-sm'>Aujourd'hui</span>
+                                        <span className='inline-block text-3xl font-bold my-3'>{totalProduits}</span>
+                                        {/* <span className='flex items-center text-green-500 text-xs'><FiArrowUpRight></FiArrowUpRight> +3 </span>
+                                        <span className='text-green-500 text-sm'>Aujourd'hui</span> */}
                                     </p>
                                 </div>
                             </div>
@@ -103,8 +102,8 @@ const DashboardCommercant = () => {
                                     </div>
 
                                     <p>
-                                        <span className='text-3xl font-bold'>2.4M</span>
-                                        <span className='flex items-center text-green-500'><FiArrowUpRight></FiArrowUpRight> +8.5% </span>
+                                        <span className='text-3xl font-bold'>{formatMontant(totalvaleurStock)}  FCFA</span>
+                                        {/* <span className='flex items-center text-green-500'><FiArrowUpRight></FiArrowUpRight> +8.5% </span> */}
                                         {/* <span className='text-green-500'>Aujourd'hui</span> */}
                                     </p>
                                 </div>
@@ -121,11 +120,11 @@ const DashboardCommercant = () => {
                                     </div>
 
                                     <p>
-                                        <span className='text-3xl font-bold'>5</span>
+                                        <span className='text-3xl font-bold'>{totalSousSeuil}</span>
                                         {/* <span className='flex items-center text-green-500'><FiArrowUpRight></FiArrowUpRight> +3 </span>
                                                     <span className='text-green-500'>Aujourd'hui</span> */}
-                                        <span className='flex items-center text-red-500'><FiArrowDownRight></FiArrowDownRight> -3 </span>
-                                        <span className='text-red-500'>Depuis hier</span>
+                                        {/* <span className='flex items-center text-red-500'><FiArrowDownRight></FiArrowDownRight> -3 </span>
+                                        <span className='text-red-500'>Depuis hier</span> */}
                                     </p>
                                 </div>
                             </div>
@@ -135,8 +134,6 @@ const DashboardCommercant = () => {
                             <div className='bg-white rounded-lg px-5 py-5 flex gap-4 items-center border'>
                                 <div className='flex flex-col gap-1'>
                                     <div className='flex gap-1'>
-
-
                                         <span className='text-text-medium'>Rupture de stock</span>
                                         <div className='w-14 h-14 bg-red-200 flex justify-center items-center rounded-lg'>
                                             <MdEmergency size={20} className='text-red-500'></MdEmergency>
@@ -144,9 +141,9 @@ const DashboardCommercant = () => {
                                     </div>
 
                                     <p>
-                                        <span className='text-3xl font-bold'>18</span>
-                                        <span className='flex items-center text-green-500'><FiArrowUpRight></FiArrowUpRight> +3 </span>
-                                        <span className='text-green-500'>vs hier</span>
+                                        <span className='text-3xl font-bold'>{totalProduitsRupture}</span>
+                                        {/* <span className='flex items-center text-green-500'><FiArrowUpRight></FiArrowUpRight> </span>
+                                        <span className='text-green-500'>vs hier</span> */}
                                     </p>
                                 </div>
                             </div>
@@ -207,10 +204,10 @@ const DashboardCommercant = () => {
                             </div>
                             <div className='border rounded-lg md:w-1/3 w-full bg-white p-5'>
                                 <h1 className='font-bold text-xl mb-5'>Produits critiques</h1>
-                                {produitsCritiques.map(pc => (
+                                {ProduitCritique.map(pc => (
                                     <div key={pc.id} className='flex items-center justify-between p-5'>
-                                        <p className='font-bold'>{pc.produit}</p>
-                                        <p className={`font-bold ${pc.reste < pc.seuil - 5 ? 'text-red-500' : 'text-orange-700'}`}>{pc.reste}</p>
+                                        <p className='font-bold'>{pc.name}</p>
+                                        <p className={`font-bold ${pc.current_quantity < pc.seuil - 5 ? 'text-red-500' : 'text-orange-700'}`}>{pc.current_quantity}</p>
                                     </div>
                                 ))}
 
@@ -222,29 +219,47 @@ const DashboardCommercant = () => {
                         <div className='flex flex-col p-5 gap-4 bg-white mt-10 border mx-5 rounded-lg'>
                             <div className='flex justify-between'>
                                 <p className='ml-5 font-bold text-2xl'>Alertes et notifications</p>
-                                <p>{Alertes.length} {Alertes.length > 1 ? 'Alertes actives' : 'Alerte active'} </p>
+                                <p>{alertes.length} {alertes.length > 1 ? 'Alertes actives' : 'Alerte active'} </p>
                             </div>
-                            {Alertes.map(alerte => (
-                                <div className={`border p-5 flex rounded-lg items-center justify-between hover:ml-3 duration-300 ${alerte.niveau == "Stock critique" || alerte.niveau == "Rupture imminente" ? 'bg-red-100 border-red-200' : 'bg-yellow-50 border-yellow-200'}`}>
-                                    <div className='flex items-center gap-4'>
-                                        <div className={`w-10 h-10 flex justify-center items-center rounded-lg ${alerte.niveau == "Stock critique" || alerte.niveau == "Rupture imminente" ? 'bg-red-200 text-red-600' : 'bg-yellow-200 text-yellow-600'}`}>
-                                            {alerte.niveau == "Stock critique" || alerte.niveau == "Rupture imminente" ? '🚨' : <FiAlertTriangle></FiAlertTriangle>}
-                                        </div>
-                                        <div>
-                                            <p className='font-bold'>{alerte.produit}</p>
-                                            <p className='flex items-center gap-3 text-text-medium'>
-                                                <span>{alerte.niveau}</span>
-                                                <span>-<span className='hidden md:inline-block'>--</span></span>
-                                                <span>{alerte.Description}</span>
-                                            </p>
-                                        </div>
-                                    </div>
+                            {alertes.map(alerte => {
+                                const enRupture = alerte.current_quantity === 0
+                                const critique = alerte.current_quantity < alerte.seuil / 2
 
-                                    <div className={`font-bold text-end ${alerte.niveau == "Stock critique" || alerte.niveau == "Rupture imminente" ? 'text-red-600' : ' text-yellow-600'} `}>
-                                        {alerte.reste} unité(s) restant
+                                const getNiveau = () => {
+                                    if (enRupture) return 'Rupture de stock'
+                                    if (critique) return 'Stock critique'
+                                    return 'Stock faible'
+                                }
+
+                                const getDescription = () => {
+                                    if (enRupture) return 'Produit en rupture, réapprovisionnez rapidement'
+                                    if (critique) return 'En dessous du seuil minimum de réapprovisionnement'
+                                    return 'Seuil de réapprovisionnement atteint'
+                                }
+
+                                const isDanger = enRupture || critique
+
+                                return (
+                                    <div key={alerte.id} className={`border p-5 flex rounded-lg items-center justify-between hover:ml-3 duration-300 ${isDanger ? 'bg-red-100 border-red-200' : 'bg-yellow-50 border-yellow-200'}`}>
+                                        <div className='flex items-center gap-4'>
+                                            <div className={`w-10 h-10 flex justify-center items-center rounded-lg ${isDanger ? 'bg-red-200 text-red-600' : 'bg-yellow-200 text-yellow-600'}`}>
+                                                {isDanger ? <MdEmergency /> : <FiAlertTriangle />}
+                                            </div>
+                                            <div>
+                                                <p className='font-bold'>{alerte.name}</p>
+                                                <p className='flex items-center gap-3 text-text-medium text-sm'>
+                                                    <span className='font-bold'>{getNiveau()}</span>
+                                                    <span>---</span>
+                                                    <span>{getDescription()}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className={`font-bold text-end ${isDanger ? 'text-red-600' : 'text-yellow-600'}`}>
+                                            {alerte.current_quantity} {alerte.unit}(s) restant
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
 
                         </div>
 
