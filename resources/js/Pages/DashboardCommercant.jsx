@@ -39,7 +39,9 @@ const DashboardCommercant = (props) => {
         return montant
     }
 
-    const maxValue = Math.max(...statsWeek.map(s => Math.max(s.entree, s.sortie)));
+   const maxValue = statWeek.length > 0 
+    ? Math.max(...statWeek.map(s => Math.max(s.entree, s.sortie))) 
+    : 1
 
 
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -75,7 +77,7 @@ const DashboardCommercant = (props) => {
                     {/* corps du dashboard */}
                     <div className=''>
                         {/* card */}
-                        <div className='flex md:flex-row flex-col md:justify-between gap-3 md:mt-28 mt-38 px-5'>
+                        <div className='flex md:flex-row flex-col md:justify-between gap-3 md:mt-28 mt-44 px-5'>    
                             <div className='bg-white rounded-lg px-5 py-5 flex gap-4 items-center border'>
 
                                 <div className='flex flex-col gap-1'>
@@ -168,10 +170,9 @@ const DashboardCommercant = (props) => {
 
 
                                                 <div
-                                                    style={{ width: `${sw.entree / maxValue * 100}%` }}
+                                                   style={{ width: `${maxValue > 0 ? (sw.entree / maxValue * 100) : 0}%` }}
                                                     className='h-8 bg-green-500 rounded'
                                                 ></div>
-
 
                                                 <span className='absolute inset-0 flex items-center justify-end pr-2 font-bold text-gray-500 whitespace-nowrap'>
                                                     Entrée: {sw.entree}

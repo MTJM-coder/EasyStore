@@ -20,7 +20,7 @@ const SideBarBoss = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
         { id: 5, nom: "Générer un rapport", type: "rapport", icon: <FiBarChart></FiBarChart>,lien:'/rapports' },
         { id: 6, nom: "Historique", type: "rapport", icon: <FiDatabase></FiDatabase>, },
         { id: 7, nom: "Parametre", type: "parametre", icon: <FiSettings></FiSettings>,lien:'/auth/me' },
-        { id: 8, nom: "Produit", type: "gestion", icon: <FiBox></FiBox>,lien:'/produits' },
+        { id: 8, nom: "Produit", type: "gestion", icon: <FiBox></FiBox>,lien:'/products'},
         { id: 9, nom: "Fournisseur", type: "gestion", icon: <FiTruck></FiTruck> ,lien:'/suppliers'},
         { id: 10, nom: "Employe", type: "gestion", icon: <FiUsers></FiUsers>,lien:'employes' },
         { id: 11, nom: "Abonnement", type: "parametre", icon: <FiCreditCard></FiCreditCard>,lien:'/abonnements' }

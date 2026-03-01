@@ -1,38 +1,26 @@
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
+import SideBarBoss from '@/Layouts/SidebarBoss'
 import React from 'react'
 import { FiPlus, FiSearch, FiMenu, FiBox, FiCheck, FiAlertTriangle, FiEdit, FiTrash2, FiSave, FiRefreshCcw, FiXCircle } from 'react-icons/fi';
 import { useState } from 'react';
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
+import FlashMessage from '@/Components/FlashMessage';
 
-const ProduitsBoss = () => {
+const ProduitsBoss = ({ produits }) => {
+    const { auth } = usePage().props;
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [active, setActive] = useState(8);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedProduit, setSelectedProduit] = useState(null);
-    const produits = [
-        { nom: "Riz parfumé 2kg", reference: "riz-02", quantite: 2, seuil: 15, statut: 'critique', categorie: 'Alimentaire', prixUnitaire: 2500 },
-        { nom: "Huile de tournesol 1L", reference: "huile-01", quantite: 10, seuil: 20, statut: 'faible', categorie: 'Alimentaire', prixUnitaire: 1500 },
-        { nom: "Pâtes penne 500g", reference: "pates-01", quantite: 50, seuil: 30, statut: 'suffisant', categorie: 'Alimentaire', prixUnitaire: 1000 },
-        { nom: "Lentilles corail 1kg", reference: "lentilles-01", quantite: 5, seuil: 10, statut: 'faible', categorie: 'Alimentaire', prixUnitaire: 4000 },
-        { nom: "Farine de blé 1kg", reference: "farine-01", quantite: 0, seuil: 20, statut: 'rupture', categorie: 'Alimentaire', prixUnitaire: 2800 },
-        { nom: "Sucre en poudre 1kg", reference: "sucre-01", quantite: 25, seuil: 30, statut: "suffisant", categorie: 'Alimentaire', prixUnitaire :3500 },
-        { nom: "Café moulu 250g", reference: "cafe-01", quantite: 8, seuil: 15, statut: "faible", categorie: 'Alimentaire', prixUnitaire :5000 },
-        { nom: "Thé vert 100g", reference: "the-01", quantite: 30, seuil: 20, statut: "suffisant", categorie: 'Alimentaire', prixUnitaire :2200 },
-        { nom: "Chocolat noir 100g", reference: "chocolat-01", quantite: 12, seuil: 15, statut: "faible", categorie: 'Alimentaire', prixUnitaire: 3800 },
-        { nom: "Biscuits sablés 200g", reference: "biscuits-01", quantite: 18, seuil: 25, statut: "suffisant", categorie: 'Alimentaire', prixUnitaire :4200 },
-        { nom: "Confiture fraise 250g", reference: "confiture-01", quantite: 4, seuil: 10, statut: "faible", categorie:'Alimentaire', prixUnitaire :6500 },
-        { nom: "Miel naturel 250g", reference: "miel-01", quantite: 22, seuil: 20, statut:"suffisant" , categorie:'Alimentaire', prixUnitaire :7800 },
-        { nom:"Jus d'orange 1L" ,reference:"jus-01" ,quantite:"4" ,seuil:"3" ,statut:"rupture" ,categorie:'Boisson', prixUnitaire :4500},
-    ]
 
     const getBadge = (produit) => {
         return produit.statut
     }
     const TotalProduits = produits.length
-    const TotalProduitsSuffisant = produits.filter(p => p.statut === "suffisant").length
-    const TotalAlertes = produits.filter(p => p.statut === "faible" || p.statut === "critique" || p.statut === "rupture" || p.statut == "critique").length
+    const TotalProduitsSuffisant = produits.filter(p => p.current_quantity > p.seuil).length
+    const TotalAlertes = produits.filter(p => p.current_quantity <= p.seuil && p.current_quantity > 0).length
 
-    const filteredProduits = produits.filter(p => p.nom.toLowerCase().includes(searchTerm.toLowerCase()) || p.reference.toLowerCase().includes(searchTerm.toLowerCase()))
+    const filteredProduits = produits.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.ref.toLowerCase().includes(searchTerm.toLowerCase()))
 
     const [pagesActive, setPagesActive] = useState(1)
     const nombreProduitParPage = 20
@@ -43,51 +31,65 @@ const ProduitsBoss = () => {
     }
 
     const produitsAfficher = filteredProduits.slice((pagesActive - 1) * nombreProduitParPage, (pagesActive * nombreProduitParPage))
-    const [showAddForm,setShowAddForm]=useState(false)
+    const [showAddForm, setShowAddForm] = useState(false)
 
-    const [formData,setFormData]=useState({
-        nom:null,
-        reference:null,
-        seuil:null,
-        quantite:null,
-        prixUnitaire:null
+    const [formData, setFormData] = useState({
+        name: null,
+        ref: null,
+        seuil: null,
+        current_quantity: null,
+        purchasing_price: null,
+        selling_price: null
     })
 
 
     const handleDelete = (produitId) => {
         if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
-            router.delete('');
+            router.delete(`/products/${produitId}`);
         }
     }
 
-    const handleEdit=(produit)=>
-    {
+    const handleEdit = (produit) => {
         setFormData({
-            nom:produit.nom,
-            reference:produit.reference,
-            seuil:produit.seuil,
-            quantite:produit.quantite,
-            prixUnitaire:produit.prixUnitaire
+            name: produit.name,
+            ref: produit.ref,
+            seuil: produit.seuil,
+            current_quantity: produit.current_quantity,
+            purchasing_price: produit.purchasing_price,
+            selling_price: produit.selling_price
         })
         setShowAddForm(true)
     }
 
-    const handleSubmit=(e)=>
-    {
+    const closeForm = () => {
+        setShowAddForm(false);
+        setSelectedProduit(null);
+        setFormData({
+            name: null,
+            ref: null,
+            seuil: null,
+            current_quantity: null,
+            purchasing_price: null,
+            selling_price: null
+        })
+    }
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (formData.nom && formData.reference && formData.seuil && formData.quantite) {
-            if(selectedProduit){
-                router.put(`/produits/${selectedProduit.id}`, formData);
+        if (formData.name && formData.ref && formData.seuil && formData.current_quantity) {
+            if (selectedProduit) {
+                router.put(`/products/${selectedProduit.id}`, formData);
             } else {
-                router.post('/produits', formData);
+                router.post('/products', formData);
             }
             setShowAddForm(false);
             setFormData({
-                nom:null,
-                reference:null,
-                seuil:null,
-                quantite:null,
-                prixUnitaire:null
+                name: null,
+                ref: null,
+                seuil: null,
+                current_quantity: null,
+                purchasing_price: null,
+                selling_price: null
             })
         }
     }
@@ -101,7 +103,14 @@ const ProduitsBoss = () => {
                         onClick={() => setSidebarOpen(false)}
                     ></div>
                 )}
-                <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
+
+                {auth.user.role === 'commerce' && (
+                    <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
+                )}
+
+                {auth.user.role === 'employee' && (
+                    <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SidebarEmploye>
+                )}
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     {/* entete de la parle */}
 
@@ -198,32 +207,32 @@ const ProduitsBoss = () => {
                                     {produitsAfficher.map(produit => (
                                         <tr key={produit.reference} className=''>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem]  flex flex-col items-center '>
-                                                <span className='text-text-dark font-bold'>{produit.nom}</span>
-                                                <span className='text-xs text-text-medium'>{produit.categorie}</span>
+                                                <span className='text-text-dark font-bold'>{produit.name}</span>
+                                                {/* <span className='text-xs text-text-medium'>{produit.categorie}</span> */}
                                             </td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-                                                <span className='text-text-medium'>{produit.reference}</span>
+                                                <span className='text-text-medium'>{produit.ref}</span>
                                             </td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
 
                                                 {getBadge(produit) == "suffisant" && (
                                                     <div className='flex items-center gap-4 rounded border justify-center py-1 bg-green-200 text-green-800 font-bold max-w-max px-10'>
 
-                                                        <span>{produit.quantite} unités</span>
+                                                        <span>{produit.current_quantity} unités</span>
                                                     </div>
                                                 )}
 
                                                 {getBadge(produit) == "faible" && (
                                                     <div className='flex items-center gap-4 rounded border justify-center py-1 bg-yellow-100 text-yellow-800 font-bold max-w-max px-10'>
 
-                                                        <span>{produit.quantite} unités</span>
+                                                        <span>{produit.current_quantity} unités</span>
                                                     </div>
                                                 )}
 
                                                 {getBadge(produit) == "rupture" || getBadge(produit) == "critique" && (
                                                     <div className='flex items-center gap-4 rounded border justify-center py-1 bg-red-200 text-red-800 font-bold max-w-max px-10'>
 
-                                                        <span>{produit.quantite ?? 0} unité</span>
+                                                        <span>{produit.current_quantity ?? 0} unité</span>
                                                     </div>
                                                 )}
 
@@ -238,7 +247,7 @@ const ProduitsBoss = () => {
                                                 <button onClick={() => { setSelectedProduit(produit); handleEdit(produit) }} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'><FiEdit className="text-primary-dark" /></button>
                                             </td>
                                             <td className='border-b-2 px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark '>
-                                                <button onClick={() => handleDelete(produit.reference)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark ml-2'><FiTrash2 className="text-red-500" /></button>
+                                                <button onClick={() => handleDelete(produit.id)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark ml-2'><FiTrash2 className="text-red-500" /></button>
                                             </td>
                                         </tr>
                                     ))}
@@ -246,7 +255,7 @@ const ProduitsBoss = () => {
                             </table>
 
                             <div className='flex gap-5 justify-end mt-5'>
-                                
+
 
                                 {pagesActive > 1 && <button onClick={() => setPagesActive(pagesActive - 1)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'>&lt;</button>
                                 }
@@ -267,66 +276,85 @@ const ProduitsBoss = () => {
 
             {showAddForm && (
 
-            <div className='bg-white mx-auto p-5 w-1/2 z-50 fixed top-0 left-0 border rounded-lg'>
-                <button className='w-full text-end  flex justify-end'>
-                    <FiXCircle className='text-red-500 ' size={30} onClick={()=>setShowAddForm(false)}></FiXCircle>
-                </button>
-                <form action="" onSubmit={handleSubmit}>
-                    <h1 className='my-5 text-xl font-bold '>Ajouter un produit</h1>
-                    <div className='mb-3 flex flex-col'>
-                        <label htmlFor="" className='text-text-medium font-bold uppercase'>Nom du produit <span className='text-red-500'>*</span></label>
-                        <input type="text" name="nom" id="nom" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.nom} required onChange={(e)=>setFormData({...formData,nom:e.target.value})} />
-                    </div>
-                    <div className='flex md:flex-row flex-col md:gap-5 md:mb-3 '>
-                        <div className='mb-3 flex flex-col md:w-1/2'>
-                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Reference <span className='text-red-500'>*</span></label>
-                            <input type="text" name="reference" id="reference" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.reference} required onChange={(e)=>setFormData({...formData,reference:e.target.value})} />
+                <div className='bg-white mx-auto p-5 w-1/2 z-50 fixed top-0 left-0 border rounded-lg'>
+                    <button className='w-full text-end  flex justify-end'>
+                        <FiXCircle className='text-red-500 ' size={30} onClick={() => closeForm()}></FiXCircle>
+                    </button>
+                    <form action="" onSubmit={handleSubmit}>
+                        <h1 className='my-5 text-xl font-bold '>Ajouter un produit</h1>
+                        <div className='mb-3 flex flex-col'>
+                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Nom du produit <span className='text-red-500'>*</span></label>
+                            <input type="text" name="name" id="name" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.name} required onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                         </div>
-                        <div className='mb-3 flex flex-col md:w-1/2'>
-                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Categorie</label>
-                            <select name="categorie" id="categorie" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.categorie} onChange={(e)=>setFormData({...formData,categorie:e.target.value})}>
-                                <option value="alimentaire">Alimentaire</option>
-                                <option value="electromenager">Electroménager</option>
-                                <option value="informatique">Informatique</option>
-                                <option value="textile">Textile</option>
-                                <option value="Hygiene">Hygiene</option>
-                                <option value="Autres">Autres</option>
+                        <div className='flex md:flex-row flex-col md:gap-5 md:mb-3 '>
+                            <div className='mb-3 flex flex-col md:w-1/2'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Reference <span className='text-red-500'>*</span></label>
+                                <input type="text" name="ref" id="ref" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.ref} required onChange={(e) => setFormData({ ...formData, ref: e.target.value })} />
+                            </div>
+                            <div className='mb-3 flex flex-col md:w-1/2'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Categorie</label>
+                                <select name="categorie" id="categorie" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.categorie} onChange={(e) => setFormData({ ...formData, categorie: e.target.value })}>
+                                    <option value="alimentaire">Alimentaire</option>
+                                    <option value="electromenager">Electroménager</option>
+                                    <option value="informatique">Informatique</option>
+                                    <option value="textile">Textile</option>
+                                    <option value="Hygiene">Hygiene</option>
+                                    <option value="Autres">Autres</option>
 
-                            </select>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div className='flex flex-col md:flex-row md:gap-5 md:mb-3'>
-                        <div className='mb-3 flex flex-col md:w-1/2'>
-                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Quantite initiale <span className='text-red-500'>*</span></label>
-                            <input type="number" name="quantiteInitiale" id="quantiteInitiale" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.quantite} onChange={(e)=>setFormData({...formData,quantite:e.target.value})} required />
-                        </div>
-                        <div className='mb-3 flex flex-col md:w-1/2'>
-                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Seuil de réapprovisionnement <span className='text-red-500'>*</span></label>
-                            <input type="number" name="seuilReapprovisionnement" id="seuilReapprovisionnement" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.seuil} onChange={(e)=>setFormData({...formData,seuil:e.target.value})} required />
-                        </div>
+                        {selectedProduit?(
+                            <div className='mb-3 flex flex-col'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Seuil de réapprovisionnement <span className='text-red-500'>*</span></label>
+                                <input type="number" name="seuilReapprovisionnement" id="seuilReapprovisionnement" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.seuil} onChange={(e) => setFormData({ ...formData, seuil: e.target.value })} required />
+                            </div>
 
-                    </div>
-                    <div className='mb-3 flex flex-col'>
-                        <label htmlFor="" className='text-text-medium font-bold uppercase'>Prix unitaire(FCFA) </label>
-                        <input type="number" name="prixUnitaire" id="prixUnitaire" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.prixUnitaire} onChange={(e)=>setFormData({...formData,prixUnitaire:e.target.value})} />
-                    </div>
-
-                    <div className='mt-5 flex gap-10'>
-                        <button type="submit" className='bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex gap-2 items-center'>
-                            <FiSave></FiSave>
-                            Enregistrer
-                        </button>
-                        <button type="reset" className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg ml-2 flex gap-2 items-center'>
-                            <FiRefreshCcw></FiRefreshCcw>
-                            Réinitialiser
-                        </button>
-                    </div>
-
-                </form>
-
-            </div >
+                        ) :
+                        (
+                            <div className='flex flex-col md:flex-row md:gap-5 md:mb-3'>
+                                <div className='mb-3 flex flex-col md:w-1/2'>
+                                    <label htmlFor="" className='text-text-medium font-bold uppercase'>Quantite initiale <span className='text-red-500'>*</span></label>
+                                    <input type="number" name="quantiteInitiale" id="quantiteInitiale" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.current_quantity} onChange={(e) => setFormData({ ...formData, current_quantity: e.target.value })} required />
+                                </div>
+                                <div className='mb-3 flex flex-col md:w-1/2'>
+                                    <label htmlFor="" className='text-text-medium font-bold uppercase'>Seuil de réapprovisionnement <span className='text-red-500'>*</span></label>
+                                    <input type="number" name="seuilReapprovisionnement" id="seuilReapprovisionnement" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.seuil} onChange={(e) => setFormData({ ...formData, seuil: e.target.value })} required />
+                                </div>
+                            </div>
             )}
+            
+            
 
+                        <div className='flex flex-col md:flex-row md:gap-5 md:mb-3'>
+                            <div className='mb-3 flex flex-col md:w-1/2'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Prix unitaire d'achat(FCFA) </label>
+                                <input type="number" name="prixUnitaireAchat" id="prixUnitaireAchat" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.purchasing_price} onChange={(e) => setFormData({ ...formData, purchasing_price: e.target.value })} />
+                            </div>
+                            <div className='mb-3 flex flex-col md:w-1/2'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Prix unitair de vente </label>
+                                <input type="number" name="prixUnitaireVente" id="prixUnitaireVente" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.selling_price} onChange={(e) => setFormData({ ...formData, selling_price: e.target.value })} />
+                            </div>
+                        </div>
+
+
+                        <div className='mt-5 flex gap-10'>
+                            <button type="submit" className='bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex gap-2 items-center'>
+                                <FiSave></FiSave>
+                                Enregistrer
+                            </button>
+                            <button type="reset" className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg ml-2 flex gap-2 items-center'>
+                                <FiRefreshCcw></FiRefreshCcw>
+                                Réinitialiser
+                            </button>
+                        </div>
+
+                    </form>
+
+
+                </div >
+            )}
+            <FlashMessage></FlashMessage>
         </div >
     )
 }

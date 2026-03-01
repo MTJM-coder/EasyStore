@@ -141,12 +141,12 @@ class MouvementStockController extends Controller
                 $mouvement->motif = $validateData['motif'];
                 $mouvement->user_id = $user->id;
                 $mouvement->save();
-                
+
                 $produit = Produit::find($validateData['produit_id']);  
                 $produit->current_quantity -= $validateData['quantite'];
                 $produit->save();
             });
-
+         
             return redirect()->back()->with('success', 'Sortie de stock enregistrée avec succès');
         } catch (Exception $e) {
             return response()->json([500, "Message" => $e->getMessage()]);
