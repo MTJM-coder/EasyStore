@@ -4,81 +4,86 @@ import { FiPlus, FiSearch, FiMenu, FiBox, FiCheck, FiAlertTriangle, FiEdit, FiTr
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import SideBarBoss from '@/Layouts/SideBarBoss';
+import FlashMessage from '@/Components/FlashMessage';
 
-const GestFournisseur = () => {
+const GestFournisseur = ({ fournisseurs, totalFournisseursActifs }) => {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [active, setActive] = useState(9);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedFournisseur, setSelectedFournisseur] = useState(null);
-    const fournisseurs = [
-        { id: 1, nom: "Riz parfumé 2kg", type: "riz-02", telephone: 2, email: "contact@gmail.com", Adresse: 'blablabla', ville: 'Douala', pays: "cameroun", statut: "actif" },
-        { id: 2, nom: "Huile de tournesol 1L", type: "huile-01", telephone: 10, email: "contact@gmail.com", Adresse: "blablabla", ville: 'Buea', pays: "cameroun", statut: "actif" },
-        { id: 3, nom: "Pâtes penne 500g", type: "pates-01", telephone: 50, email: "contact@gmail.com", Adresse: "blablablant", ville: 'Edea', pays: "Cameroun", statut: "inactif" },
-        { id: 4, nom: "Lentilles corail 1kg", type: "lentilles-01", telephone: 5, email: "contact@gmail.com", Adresse: 'blablabla', ville: 'Guanzhoug', pays: "chine", statut: "actif" },
-
-    ]
+    const [selectedFournisseur, setSelectedFournisseur] = useState(null)
 
 
-    const TotalFournisseurs = fournisseurs.length
-    const TotalFournissursActifs = fournisseurs.filter(f => f.statut === "actif").length
-
-    const filteredFournisseurs = fournisseurs.filter(f => f.nom.toLowerCase().includes(searchTerm.toLowerCase()) || f.ville.toLowerCase().includes(searchTerm.toLowerCase()))
+    const TotalFournisseurs = fournisseurs.length;
+    const filteredFournisseurs = fournisseurs.filter(f => f.name?.toLowerCase().includes(searchTerm.toLowerCase()) || f.ville?.toLowerCase().includes(searchTerm.toLowerCase()))
 
 
     const [showAddForm, setShowAddForm] = useState(false)
 
     const [formData, setFormData] = useState({
-        nom: null,
-        type: null,
+        name: null,
         telephone: null,
-        email:null,
+        email: null,
         quantite: null,
         ville: null,
         pays: null,
-        adresse: null
+        adresse: null,
+        type: null
     })
 
+    const closeForm = () => {
+        setShowAddForm(false);
+        setSelectedFournisseur(null);
+        setFormData({
+            name: null,
+            telephone: null,
+            email: null,
+            ville: null,
+            pays: null,
+            adresse: null,
+            type: null
+        })
+    }
     const handleDelete = (fournisseurId) => {
         if (confirm("Êtes-vous sûr de vouloir supprimer ce fournisseur ?")) {
-            router.delete('');
+            router.delete(`/suppliers/${fournisseurId}`);
         }
     }
 
     const handleEdit = (fournisseur) => {
         setFormData({
-            nom: fournisseur.nom,
-            type: fournisseur.type,
+            name: fournisseur.name,
             telephone: fournisseur.telephone,
             ville: fournisseur.ville,
             pays: fournisseur.pays,
-            adresse: fournisseur.adresse,
-            email: fournisseur.email
+            // adresse: fournisseur.adresse,
+            email: fournisseur.email,
+            type: fournisseur.type
         })
+        setSelectedFournisseur(fournisseur)
         setShowAddForm(true)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (formData.nom && formData.type && formData.telephone ) {
 
-            if(selectedFournisseur){
-                router.put(`/fournisseurs/${selectedFournisseur.id}`, formData);
-            } else {
-                router.post('/fournisseurs', formData);
-            }
-            setShowAddForm(false);
-            setFormData({
-                nom: null,
-                type: null,
-                telephone: null,
-                email:null,
-                quantite: null,
-                ville: null,
-                pays: null,
-                adresse: null
-            })
+        if (selectedFournisseur) {
+            router.put(`/suppliers/${selectedFournisseur.id}`, formData);
+        } else {
+            router.post('/suppliers', formData);
         }
+        setShowAddForm(false);
+        setFormData({
+            name: null,
+            telephone: null,
+            email: null,
+            quantite: null,
+            ville: null,
+            pays: null,
+            // adresse: null
+
+        })
+
     }
 
     return (
@@ -90,7 +95,7 @@ const GestFournisseur = () => {
                         onClick={() => setSidebarOpen(false)}
                     ></div>
                 )}
-               
+
                 <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive} ></SideBarBoss>
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     {/* entete de la parle */}
@@ -147,18 +152,12 @@ const GestFournisseur = () => {
                         <div className='bg-white rounded-lg px-5 py-5 flex gap-4 items-center border md:w-1/3 w-full'>
                             <div className='w-12 h-12 bg-green-200 flex justify-center items-center rounded-lg'><FiCheck size={30} className='text-green-600'></FiCheck></div>
                             <div className='flex flex-col'>
-                                <span className='text-text-medium'>Fournisseurs actifs</span>
-                                <span className='text-3xl font-bold'>{TotalFournissursActifs}</span>
+                                <span className='text-text-medium'>Fornisseurs avec produits actifs</span>
+                                <span className='text-3xl font-bold'>{totalFournisseursActifs?.total ?? 0}</span>
                             </div>
                         </div>
 
-                        <div className='bg-white rounded-lg px-5 py-5 flex gap-4 items-center border md:w-1/3 w-full'>
-                            <div className='w-12 h-12 bg-yellow-100 flex justify-center items-center rounded-lg'><FiAlertTriangle size={30} className='text-yellow-600'></FiAlertTriangle></div>
-                            <div className='flex flex-col'>
-                                <span className='text-text-medium'>Dernieres commande</span>
-                                <span className='text-3xl font-bold'>{ }</span>
-                            </div>
-                        </div>
+
                     </div>
 
                     {/* liste des fournisseurs */}
@@ -172,11 +171,11 @@ const GestFournisseur = () => {
                                     </div>
                                     <div className="flex gap-2">
                                         <button className="bg-orange-400 text-white px-5 py-1 rounded-lg" onClick={() => { setSelectedFournisseur(f); handleEdit(f) }}>Modifier</button>
-                                        <button className="bg-red-600 text-white px-5 py-1 rounded-lg"onClick={()=>handleDelete(f.id)}>Supprimer</button>
+                                        <button className="bg-red-600 text-white px-5 py-1 rounded-lg" onClick={() => handleDelete(f.id)}>Supprimer</button>
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-2 mb-5">
-                                    <p className="text-xl font-bold">{f.nom}</p>
+                                    <p className="text-xl font-bold">{f.name} </p>
                                     <p className="border text-primary-darker text-sm py-1 px-5 max-w-max bg-purple-50 rounded">{f.type}</p>
                                 </div>
                                 <div className="flex flex-col gap-4">
@@ -196,13 +195,13 @@ const GestFournisseur = () => {
 
                 <div className='bg-white mx-auto p-5 md:w-1/2 w-full z-50 fixed md:top-1 top-0 left-0 md:left-1/2 md:transform md:-translate-x-1/2 border rounded-lg max-h-[100vh] overflow-auto'>
                     <button className='w-full text-end  flex justify-end'>
-                        <FiXCircle className='text-red-500 ' size={30} onClick={() => setShowAddForm(false)}></FiXCircle>
+                        <FiXCircle className='text-red-500 ' size={30} onClick={() => closeForm()}></FiXCircle>
                     </button>
                     <form action="" onSubmit={handleSubmit}>
                         <h1 className='mb-5 text-xl font-bold '>Ajouter un fourniseur</h1>
                         <div className='mb-3 flex flex-col'>
                             <label htmlFor="" className='text-text-medium font-bold uppercase'>Nom du fournisseur<span className='text-red-500'>*</span></label>
-                            <input type="text" name="nom" id="nom" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.nom} required onChange={(e) => setFormData({ ...formData, nom: e.target.value })} />
+                            <input type="text" name="name" id="nom" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.name} required onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                         </div>
                         <div className='mb-3 flex flex-col'>
                             <label htmlFor="" className='text-text-medium font-bold uppercase'>Type de fournisseur <span className='text-red-500'>*</span></label>
@@ -210,7 +209,7 @@ const GestFournisseur = () => {
                                 <option value="alimentaire">Alimentaire</option>
                                 <option value="electromenager">Electroménager</option>
                                 <option value="informatique">Informatique</option>
-                                <option value="textile">Textile</option>
+                                <option value="textile">Mode et textile</option>
                                 <option value="Hygiene">Hygiene</option>
                                 <option value="Autres">Autres</option>
 
@@ -226,10 +225,10 @@ const GestFournisseur = () => {
                                 <input type="number" name="telephone" id="telephone" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.telephone} onChange={(e) => setFormData({ ...formData, telephone: e.target.value })} required />
                             </div>
                         </div>
-                        <div className='mb-3 flex flex-col'>
+                        {/* <div className='mb-3 flex flex-col'>
                             <label htmlFor="" className='text-text-medium font-bold uppercase'>Adresse complete </label>
                             <input type="text" name="adresseComplete" id="adresseComplete" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.adresseComplete} onChange={(e) => setFormData({ ...formData, adresseComplete: e.target.value })} />
-                        </div>
+                        </div> */}
                         <div className='flex flex-col md:flex-row md:gap-5 md:mb-1'>
                             <div className='mb-3 flex flex-col md:w-1/2'>
                                 <label htmlFor="" className='text-text-medium font-bold uppercase'>Ville </label>
@@ -259,6 +258,7 @@ const GestFournisseur = () => {
                 </div >
             )}
 
+            <FlashMessage></FlashMessage>
         </div >
     )
 }
