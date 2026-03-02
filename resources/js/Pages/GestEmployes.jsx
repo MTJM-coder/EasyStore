@@ -4,42 +4,56 @@ import { FiPlus, FiSearch, FiMenu, FiBox, FiCheck, FiAlertTriangle, FiEdit, FiTr
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import SideBarBoss from '@/Layouts/SideBarBoss';
+import FlashMessage from '@/Components/FlashMessage';
 
-const GestEmployes = () => {
+const GestEmployes = ({ employes }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [active, setActive] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedEmploye, setSelectedEmploye] = useState(null);
-    const employes = [
-        { id: 1, nom: "joe lapoubelle", poste: "vendeur", telephone: 22222222, email: "joelapoubelle@gmail.com", ville: 'Douala', pays: "cameroun", permissions: [{ consultation: true, entree: true, sortie: true, historique: true }], statut: "actif" },
-        { id: 2, nom: "paul sam", poste: "Magasinier", telephone: 33333333, email: "paulsam@gmail.com", ville: 'Yaoundé', pays: "cameroun", permissions: [{ consultation: true, entree: true, sortie: true, historique: true }], statut: "actif" },
-        { id: 3, nom: "parie bodd", poste: "Caissiere", telephone: 44444444, email: "pb@gmail.com", ville: 'Buea', pays: "cameroun", permissions: [{ consultation: false, entree: false, sortie: true, historique: false }], statut: "inactif" },
-        { id: 4, nom: "marie tchou", poste: "Secrétaire", telephone: 55555555, email: "mt@gmail.com", ville: 'Edea', pays: "cameroun", permissions: [{ consultation: true, entree: false, sortie: false, historique: true }], statut: "actif" },
-        { id: 5, nom: "jean pierre", poste: "Chef de magasin", telephone: 66666666, email: "jp@gmail.com", ville: 'Bafoussam', pays: "cameroun", permissions: [{ consultation: true, entree: true, sortie: true, historique: true }], statut: "actif" },
-        { id: 6, nom: "marie tchou", poste: "Vendeur", telephone: 77777777, email: "mt@gmail.com", ville: 'Bafoussam', pays: "cameroun", permissions: [{ consultation: true, entree: true, sortie: true, historique: true }], statut: "actif" },
-        { id: 7, nom: "jean marc", poste: "Vendeur", telephone: 88888888, email: "jm@gmail.com", ville: 'Bafoussam', pays: "cameroun", permissions: [{ consultation: true, entree: false, sortie: true, historique: true }], statut: "actif" },
-
-    ]
+   
 
 
     const TotalEmployes = employes.length
-    const TotalEmployesActifs = employes.filter(e => e.statut === "actif").length
-    const TotalEmployesInactifs = employes.filter(e => e.statut === "inactif").length
+    const TotalEmployesActifs = employes.filter(e => e.actif === 1).length
+    const TotalEmployesInactifs = employes.filter(e => e.actif === 0).length
 
-    const filteredEmployes = employes.filter(f => f.nom.toLowerCase().includes(searchTerm.toLowerCase()) || f.ville.toLowerCase().includes(searchTerm.toLowerCase()))
+    const filteredEmployes = employes.filter(f => f.name.toLowerCase().includes(searchTerm.toLowerCase()) || f.ville.toLowerCase().includes(searchTerm.toLowerCase()))
 
 
     const [showAddForm, setShowAddForm] = useState(false)
 
     const [formData, setFormData] = useState({
-        nom: null,
+        name: null,
+        poste: null,
         telephone: null,
         email: null,
         ville: null,
         pays: null,
-        permissions: { consultation: false, entree: false, sortie: false, historique: false }
+        entree_stock: false,
+        sortie_stock: false,
+        consultation: false,
+        historique: false
     })
 
+    const closeForm = () => {
+        setShowAddForm(false)
+        setFormData({
+            name: null,
+            poste: null,
+            telephone: null,
+            email: null,
+            ville: null,
+            pays: null,
+            entree_stock: false,
+            sortie_stock: false,
+            consultation: false,
+            historique: false
+        })
+        setSelectedEmploye(null)
+
+    }
+    
     const handleDelete = (emploId) => {
         if (confirm("Êtes-vous sûr de vouloir supprimer cet employé ?")) {
             router.delete(`/employes/${emploId}`);
@@ -48,33 +62,41 @@ const GestEmployes = () => {
 
     const handleEdit = (emplo) => {
         setFormData({
-            nom: emplo.nom,
+            name: emplo.name,
+            poste: emplo.employe?.poste || '',
             telephone: emplo.telephone,
             email: emplo.email,
             ville: emplo.ville,
             pays: emplo.pays,
-            permissions: emplo.permissions
+            entree_stock: emplo.employe?.entree_stock || false,
+            sortie_stock: emplo.employe?.sortie_stock || false,
+            consultation: emplo.employe?.consultation_stock || false,
+            historique: emplo.employe?.historique || false
         })
         setShowAddForm(true)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (formData.nom && formData.type && formData.telephone) {
+        if (formData.name && formData.telephone) {
 
-            if (selectedFournisseur) {
-                router.put(`/employes/${selectedFournisseur.id}`, formData);
+            if (selectedEmploye) {
+                router.put(`/employes/${selectedEmploye.id}`, formData);
             } else {
                 router.post('/employes', formData);
             }
             setShowAddForm(false);
             setFormData({
-                nom: null,
+                name: null,
+                poste: null,
                 telephone: null,
                 email: null,
                 ville: null,
                 pays: null,
-                permissions: { consultation: false, entree: false, sortie: false, historique: false }
+                entree_stock: false,
+                sortie_stock: false,
+                consultation: false,
+                historique: false
             })
         }
     }
@@ -183,11 +205,11 @@ const GestEmployes = () => {
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem]  flex items-center gap-2'>
 
                                                 <div className='w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-2'>
-                                                    <span className='text-text-dark font-bold'>{emploi.nom.charAt(0)}</span>
+                                                    <span className='text-text-dark font-bold'>{emploi.name.charAt(0)}</span>
                                                 </div>
                                                 <div className='flex flex-col items-center'>
-                                                    <span className='text-text-dark font-bold'>{emploi.nom}</span>
-                                                    <span className='text-xs text-text-medium'>{emploi.poste}</span>
+                                                    <span className='text-text-dark font-bold'>{emploi.name}</span>
+                                                    <span className='text-xs text-text-medium'>{emploi.employe?.poste || 'Employé sans poste'}</span>
                                                 </div>
                                             </td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
@@ -195,12 +217,15 @@ const GestEmployes = () => {
                                             </td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
                                                 <div className='flex items-center gap-4 rounded border justify-center py-1 bg-blue-100 border-blue-500 font-bold max-w-max px-10'>
-
+                                                    {emploi.employe?.consultation_stock && <span className='flex items-center gap-1 text-green-600'><FiCheck />Consultation</span>}
+                                                    {emploi.employe?.entree_stock && <span className='flex items-center gap-1 text-green-600'><FiCheck />Entrée stock</span>}
+                                                    {emploi.employe?.sortie_stock && <span className='flex items-center gap-1 text-green-600'><FiCheck />Sortie stock</span>}
+                                                    {emploi.employe?.historique && <span className='flex items-center gap-1 text-green-600'><FiCheck />Historique</span>}
 
                                                 </div>
                                             </td>
 
-                                            <td className={`border-b-2 py-[1.25rem] px-[1.5rem] text-sm text-text-medium capitalize font-bold ${emploi.statut === 'actif' ? 'text-green-600' : 'text-red-600'}`}>{emploi.statut}</td>
+                                            <td className={`border-b-2 py-[1.25rem] px-[1.5rem] text-sm text-text-medium capitalize font-bold ${emploi.actif ? 'text-green-600' : 'text-red-600'}`}>{emploi.statut}</td>
                                             <td className='border-b-2 px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark '>
                                                 <button onClick={() => { setSelectedEmploye(emploi); handleEdit(emploi) }} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'><FiEdit className="text-primary-dark" /></button>
                                             </td>
@@ -222,7 +247,7 @@ const GestEmployes = () => {
 
                 <div className='bg-white mx-auto p-5 w-1/2 z-50 fixed top-0 left-0 border rounded-lg'>
                     <button className='w-full text-end  flex justify-end'>
-                        <FiXCircle className='text-red-500 ' size={30} onClick={() => setShowAddForm(false)}></FiXCircle>
+                        <FiXCircle className='text-red-500 ' size={30} onClick={() => closeForm()}></FiXCircle>
                     </button>
                     <form action="" onSubmit={handleSubmit}>
                         <h1 className='my-5 text-xl font-bold '>Ajouter un employé</h1>
@@ -230,14 +255,14 @@ const GestEmployes = () => {
                         <div className='flex md:flex-row flex-col md:gap-5 md:mb-3 w-full'>
                             <div className='mb-3 flex flex-col w-full'>
                                 <label htmlFor="" className='text-text-medium font-bold uppercase'>Nom <span className='text-red-500'>*</span></label>
-                                <input type="text" name="nom" id="nom" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.nom} required onChange={(e) => setFormData({ ...formData, nom: e.target.value })} />
+                                <input type="text" name="name" id="name" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.name} required onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                             </div>
                             <div className='mb-3 flex flex-col '>
                                 <label htmlFor="" className='text-text-medium font-bold uppercase'>Poste</label>
-                                <select name="categorie" id="categorie" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.categorie} onChange={(e) => setFormData({ ...formData, categorie: e.target.value })}>
-                                    <option value="vendeur">vendeur</option>
-                                    <option value="caissier">caissier</option>
-                                    <option value="magasinier">magasinier</option>
+                                <select name="poste" id="poste" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.poste} onChange={(e) => setFormData({ ...formData, poste: e.target.value })}>
+                                    <option value="vendeur">vendeur(se)</option>
+                                    <option value="caissier">caissier(e)</option>
+                                    <option value="magasinier">magasinier(e)</option>
                                     <option value="administrateur">administrateur</option>
                                     <option value="autre">Autre</option>
                                 </select>
@@ -293,6 +318,8 @@ const GestEmployes = () => {
 
                 </div >
             )}
+
+            <FlashMessage></FlashMessage>
         </div>
 
     )
