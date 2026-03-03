@@ -50,4 +50,14 @@ class DashBoardController extends Controller
             "statsWeek" => $statsWeek,
         ]);
     }
+
+    public function getDashboardAdmin()
+    {
+        $user = Auth::user();
+        if ($user->role !== "admin") {
+            return Response()->json(["Message" => "unhautorized"], 403);
+        }
+    
+        return Inertia::render('DashboardAdmin');
+    }
 }

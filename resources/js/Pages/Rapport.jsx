@@ -22,10 +22,29 @@ const Rapport = () => {
         { type: "Rapport d'activité des employés", description: "Nombre d'opérations par employé, types d'actions effectuées et période d'activité.", icon: <FiUsers size={40}></FiUsers> },
         { type: "Rapport de valeur estimative du stock", description: "Valeur globale du stock et valeur des entrées/sorties à partir des prix unitaires.", icon: <FiDollarSign size={40}></FiDollarSign> }
     ]
-
-    const genererRapport = (type) => {
-        alert(`Génération du rapport ${type}...`);
+    const [formData, setFormData] = useState(
+        {
+            type: rapportSelect,
+            date_debut: '',
+            date_fin: '',
+            format: ''
+        }
+    )
+   const genererRapport = (format) => {
+    if (!rapportSelect) {
+        alert("Veuillez sélectionner un type de rapport.")
+        return
     }
+
+    const params = new URLSearchParams({
+        type: rapportSelect,
+        date_debut: formData.date_debut,
+        date_fin: formData.date_fin,
+        format
+    })
+
+    window.location.href = `/rapports/download?${params.toString()}`
+}
 
     return (
         <div>
@@ -79,7 +98,7 @@ const Rapport = () => {
                                     key={index}
                                     className={`p-7 hover:bg-purple-100 hover:border-[1.5px] hover:border-primary-dark hover:shadow-md cursor-pointer border-2 rounded-lg bg-white ${rapportSelect === rapport.type ? 'bg-purple-50 border-primary-dark' : ''
                                         }`}
-                                    onClick={() => setRapportSelect(rapport.type)}
+                                    onClick={() => { setFormData({ ...formData, type: rapport.type }), setRapportSelect(rapport.type) }}
                                 >
                                     <div className="flex items-center gap-3">
                                         {rapport.icon}
@@ -93,17 +112,16 @@ const Rapport = () => {
                         </div>
                     </div>
 
-
                     <div className='md:m-5 m-2  md:p-5 p-2 rounded-lg border bg-white'>
                         <h1 className='text-xl font-bold'>2. Définissez la période d'analyse</h1>
                         <div className='flex md:flex-row flex-col items-center  gap-4 mt-4'>
                             <div className='flex flex-col w-full'>
                                 <label className='text-sm font-medium uppercase text-text-medium'>Date de début</label>
-                                <input type="date" className='p-2 rounded-md bg-gray-50 border-[1.5px] border-gray-200' />
+                                <input type="date" className='p-2 rounded-md bg-gray-50 border-[1.5px] border-gray-200' value={formData.date_debut} onChange={(e) => setFormData({ ...formData, date_debut: e.target.value })} />
                             </div>
                             <div className='flex flex-col w-full'>
                                 <label className='text-sm font-medium uppercase text-text-medium'>Date de fin</label>
-                                <input type="date" className='p-2 rounded-md bg-gray-50 border-[1.5px] border-gray-200' />
+                                <input type="date" className='p-2 rounded-md bg-gray-50 border-[1.5px] border-gray-200' value={formData.date_fin} onChange={(e) => setFormData({ ...formData, date_fin: e.target.value })} />
                             </div>
                         </div>
                     </div>
@@ -111,8 +129,8 @@ const Rapport = () => {
                     <div className='md:m-5 m-2 md:p-5 p-2 rounded-lg border bg-white'>
                         <h1 className='text-xl font-bold'>3. Choisissez le format d'export</h1>
                         <div className='flex items-center gap-4 mt-4'>
-                            <button className='flex items-center gap-3 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark' onClick={()=>genererRapport('pdf')}><FiFile className='mr-2'></FiFile>Générer en PDF</button>
-                            <button className='flex items-center gap-3 bg-secondary text-primary px-4 py-2 rounded-md hover:bg-secondary-dark' onClick={()=>genererRapport('excel')}><FiBarChart className='mr-2'></FiBarChart>Générer en Excel</button>
+                            <button className='flex items-center gap-3 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary-dark' onClick={() => { genererRapport('pdf') }}><FiFile className='mr-2'></FiFile>Générer en PDF</button>
+                            <button className='flex items-center gap-3 bg-secondary text-primary px-4 py-2 rounded-md hover:bg-secondary-dark' onClick={() => genererRapport('excel')}><FiBarChart className='mr-2'></FiBarChart>Générer en Excel</button>
                         </div>
                     </div>
                 </div>

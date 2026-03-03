@@ -54,7 +54,7 @@ class AuthController extends Controller
 
     public function login(Request $req)
     {
-        // dd(0);
+        
         $validateData = $req->validate([
             'email' => "required|email",
             'password' => "required",
@@ -69,17 +69,14 @@ class AuthController extends Controller
 
         // Regénérer la session pour la sécurité
         $req->session()->regenerate();
-        
-        if($user->role==="commerce"){
-            
+
+        if ($user->role === "commerce") {
+
             return Inertia::location(route('commerce.dashboard'));
-            
-        }
-        else if($user->role==="employe"){
+        } else if ($user->role === "employe") {
             return redirect()->route('employe.dashboard');
-        }
-        else if($user->role==="admin"){
-            return redirect()->route('admin.dashboard');
+        } else if ($user->role === "admin") {
+            return Inertia::location(route('admin.dashboard'));
         }
     }
 
@@ -88,7 +85,7 @@ class AuthController extends Controller
     {
         Auth::logout();
         session()->invalidate();
-        session()->regenerateToken(); 
+        session()->regenerateToken();
         return response()->json([
             'status' => 200,
             'message' => 'Logout successful'
@@ -99,36 +96,62 @@ class AuthController extends Controller
 
     public function getMe()
     {
-        try {
-            $user_id = Auth::user()->id;
-            $user = User::with('commerce')->find($user_id);
-            if ($user) {
-                return response()->json([200, 'message' => 'User retrieved successfully', 'user' => $user]);
-            }
-        } catch (Exception $e) {
-            return response()->json([500, 'message' => $e->getMessage()]);
+        $user_id = Auth::user()->id;
+        $user = User::with('commerce')->find($user_id);
+        if (!$user) {
+            return response()->json(["Message" => "Utilisateur introuvable"], 401);
         }
+
+        return Inertia::render('Profile', [
+            'user' => $user
+        ]);
     }
 
     public function updatedPassword(Request $req)
     {
+       
         $validateData = $req->validate([
             'passwordActuel' => 'required',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required'
         ]);
+         
+
+        $user = Auth::user()->id;
+        $user = User::find($user);
+        if (!Hash::check($validateData['passwordActuel'], $user->password)) {
+            return response()->json([400, 'Message' => 'Current password is incorrect']);
+        } else {
+            $user->password = Hash::make($validateData['password']);
+            $user->save();
+            return redirect()->back()->with('success', 'Mot de passe mis à jour avec succès');
+        }
+
+        return redirect()->back()->with('error', "Une erreur s'est produite lors de la mise à jour du mot de passe");
+    }
+
+    public function updateMe(Request $req)
+    {
+         
+        $user_id = Auth::user()->id;
+        
+        $validateData = $req->validate([
+            'email' => 'required',
+            'name' => 'required',
+            'telephone' => 'required',
+
+        ]);
+        
+       
+        $user = User::find($user_id);
         try {
-            $user = Auth::user()->id;
-            $user = User::find($user);
-            if (!Hash::check($validateData['passwordActuel'], $user->password)) {
-                return response()->json([400, 'Message' => 'Current password is incorrect']);
-            } else {
-                $user->password = Hash::make($validateData['password']);
-                $user->save();
-                return response()->json([200, 'Message' => 'Password updated successfully']);
-            }
+            $user->name = $validateData['name'];
+            $user->email = $validateData['email'];
+            $user->telephone = $validateData['telephone'];
+            $user->save();
+            return redirect()->back()->with('success', "Informations mises a jour");
         } catch (Exception $e) {
-            return response()->json([500, 'Message' => $e->getMessage()]);
+            return redirect()->back()->with('error', "Une erreur s'est produite lors de la mise a jour des informations");
         }
     }
 }

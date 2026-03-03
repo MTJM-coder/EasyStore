@@ -3,10 +3,32 @@ import Header from '../Layouts/Header'
 import { useState } from 'react'
 import { FiInfo, FiRefreshCcw, FiSave, FiUser, FiMenu } from 'react-icons/fi'
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
+import { router } from '@inertiajs/react'
+import FlashMessage from '@/Components/FlashMessage'
 
-const Profile = () => {
+const Profile = ({ user }) => {
     const [active, setActive] = useState(6)
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [formData, setFormData] = useState({
+        name: user?.name ?? null,
+        email: user?.email ?? null,
+        telephone: user?.telephone ?? null,
+        ville: user?.ville ?? null
+    })
+    const handleChangeInfos = (e) => {
+        e.preventDefault()
+        router.put('/auth/me', formData);
+    }
+
+    const handleChangeSecure = (e) => {
+        e.preventDefault()
+        router.put('/auth/password', secureData);
+    }
+    const [secureData, setSecureData] = useState({
+        passwordActuel: '',
+        password: '',
+        password_confirmation: ''
+    })
     return (
         <div>
             {/* <Header></Header> */}
@@ -18,7 +40,7 @@ const Profile = () => {
                         onClick={() => setSidebarOpen(false)}
                     ></div>
                 )}
-                
+
                 <SidebarEmploye active={active} setActive={setActive} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
 
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
@@ -30,7 +52,7 @@ const Profile = () => {
                             <h1 className='font-bold text-2xl'>Mon profil</h1>
                             <p className='text-text-medium'>Gérez vos informations personnelles et paramètres de compte</p>
                         </div>
-                       
+
                     </div>
 
                     <div className=' pt-32 flex md:flex-row flex-col w-full gap-5 md:px-10 px-2 mb-5'>
@@ -40,14 +62,14 @@ const Profile = () => {
                             </div>
 
                             <div className='flex flex-col gap-3 m-auto'>
-                                <p className='text-2xl font-bold'>Jaudel Merlando</p>
-                                <p className='max-w-max border-[1.7px] px-6 py-2 inline-block text-center rounded-2xl  bg-purple-100 border-primary font-bold text-primary'>Proprietaire</p>
-                                <p className='text-sm text-text-medium'>Jaudel@gmail.comoiidhdod</p>
+                                <p className='text-2xl font-bold'>{user?.name}</p>
+                                <p className='max-w-max border-[1.7px] px-6 py-2 inline-block text-center rounded-2xl  bg-purple-100 border-primary font-bold text-primary'>{user?.role === 'commerce' ? 'Proprietaire' : user.role}</p>
+                                <p className='text-sm text-text-medium'>{user?.email ?? 'Email non renseigné'}</p>
                             </div>
                             <hr />
                             <div className='flex flex-col gap-5'>
-                                <p className='justify-between flex'><span className='font-bold'>Compte créé</span><span className='text-text-medium'>01/02/2026</span> </p>
-                                <p className='justify-between flex'><span className='font-bold'>Derniere mise a jour</span><span className='text-text-medium'>01/02/2026</span> </p>
+                                <p className='justify-between flex'><span className='font-bold'>Compte créé</span><span className='text-text-medium'>{new Date(user?.created_at).toLocaleDateString()}</span> </p>
+                                <p className='justify-between flex'><span className='font-bold'>Derniere mise a jour</span><span className='text-text-medium'>{new Date(user?.updated_at).toLocaleDateString()}</span> </p>
                                 <p className='justify-between flex'><span className='font-bold'>Derniere connexion</span><span className='text-text-medium'>Aujord'hui</span></p>
 
                             </div>
@@ -57,32 +79,36 @@ const Profile = () => {
                         <div className='bg-white p-10 md:w-2/3 rounded-lg border'>
                             <h1 className='mb-5 text-2xl font-bold'>Informations personnelles</h1>
                             <hr />
-                            <div className='flex gap-5 pt-5 flex-col'>
-                                <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
-                                    <div className=' flex flex-col gap-2 mb-4'>
-                                        <label className='text-text-medium' htmlFor="">NOM*</label>
-                                        <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'valeur'} />
+                            <form action="" onSubmit={handleChangeInfos}>
+                                <div className='flex gap-5 pt-5 flex-col'>
+                                    <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
+                                        <div className=' flex flex-col gap-2 mb-4'>
+                                            <label className='text-text-medium' htmlFor="">NOM*</label>
+                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value })} />
+                                        </div>
+                                        <div className=' flex flex-col gap-2 mb-4'>
+                                            <label className='text-text-medium' htmlFor="">EMAIL*</label>
+                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value })} />
+                                        </div>
                                     </div>
-                                    <div className=' flex flex-col gap-2 mb-4'>
-                                        <label className='text-text-medium' htmlFor="">EMAIL*</label>
-                                        <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'valeur'} />
+                                    <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
+                                        <div className=' flex flex-col gap-2 mb-4'>
+                                            <label className='text-text-medium' htmlFor="">TELEPHONE*</label>
+                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.telephone} onChange={(e) => setFormData({...formData, telephone: e.target.value })} />
+                                        </div>
+                                        <div className=' flex flex-col gap-2 mb-4'>
+                                            <label className='text-text-medium' htmlFor="">VILLE</label>
+                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.ville} onChange={(e) => setFormData({...formData, ville: e.target.value })} />
+                                        </div>
                                     </div>
+
+                                    <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
+                                        <button className='bg-primary text-white px-5 py-3 rounded-lg flex items-center gap-4'> <FiSave></FiSave>Enregistrer les modifications</button>
+                                        <button className='bg-white text-text-medium font-bold px-5 py-3 rounded-lg flex items-center gap-4 border-[1.5px]'><FiRefreshCcw></FiRefreshCcw> Annuler</button>
+                                    </div>
+
                                 </div>
-                                <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
-                                    <div className=' flex flex-col gap-2 mb-4'>
-                                        <label className='text-text-medium' htmlFor="">TELEPHONE*</label>
-                                        <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'valeur'} />
-                                    </div>
-                                    <div className=' flex flex-col gap-2 mb-4'>
-                                        <label className='text-text-medium' htmlFor="">VILLE</label>
-                                        <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'valeur'} />
-                                    </div>
-                                </div>
-                                <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
-                                    <button className='bg-primary text-white px-5 py-3 rounded-lg flex items-center gap-4'> <FiSave></FiSave>Enregistrer les modifications</button>
-                                    <button className='bg-white text-text-medium font-bold px-5 py-3 rounded-lg flex items-center gap-4 border-[1.5px]'><FiRefreshCcw></FiRefreshCcw> Annuler</button>
-                                </div>
-                            </div>
+                            </form>
                         </div>
 
                     </div>
@@ -92,24 +118,26 @@ const Profile = () => {
                         <div className='bg-white flex flex-col gap-4 p-10 md:w-1/3 rounded-lg border'>
                             <h1 className='text-2xl font-bold'>Securité et mot de passe</h1>
                             <hr />
-                            <div className='flex flex-col gap-5'>
-                                <div className=' flex flex-col gap-2 mb-2'>
-                                    <label className='text-text-medium' htmlFor="">Mot de passe actuel *</label>
-                                    <input type="password" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'valeur'} />
-                                </div>
-                                <div className=' flex flex-col gap-2 mb-2'>
-                                    <label className='text-text-medium' htmlFor="">Nouveau mot de passe *</label>
-                                    <input type="password" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'valeur'} />
-                                </div>
+                            <form onSubmit={handleChangeSecure}>
+                                <div className='flex flex-col gap-5'>
+                                    <div className=' flex flex-col gap-2 mb-2'>
+                                        <label className='text-text-medium' htmlFor="">Mot de passe actuel *</label>
+                                        <input type="password" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={secureData.passwordActuel} onChange={(e) => setSecureData({ ...secureData, passwordActuel: e.target.value })} />
+                                    </div>
+                                    <div className=' flex flex-col gap-2 mb-2'>
+                                        <label className='text-text-medium' htmlFor="">Nouveau mot de passe *</label>
+                                        <input type="password" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={secureData.password} onChange={(e) => setSecureData({ ...secureData, password: e.target.value })} />
+                                    </div>
 
-                                <div className=' flex flex-col gap-2 mb-2'>
-                                    <label className='text-text-medium' htmlFor="">Confirmer le mot de passe *</label>
-                                    <input type="password" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'valeur'} />
+                                    <div className=' flex flex-col gap-2 mb-2'>
+                                        <label className='text-text-medium' htmlFor="">Confirmer le mot de passe *</label>
+                                        <input type="password" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={secureData.password_confirmation} onChange={(e) => setSecureData({ ...secureData, password_confirmation: e.target.value })} />
+                                    </div>
+                                    <div>
+                                        <button className='bg-primary text-white px-5 py-3 rounded-lg'>Changer de mot de passe</button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <button className='bg-primary text-white px-5 py-3 rounded-lg'>Changer de mot de passe</button>
-                                </div>
-                            </div>
+                            </form>
 
                         </div>
 
@@ -126,7 +154,7 @@ const Profile = () => {
 
                                 <div className=' flex flex-col gap-2 mb-2'>
                                     <label className='text-text-medium' htmlFor="">NOM DU COMMERCE *</label>
-                                    <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'valeur'} />
+                                    <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={user.commerce?.name} readOnly={user?.role !== 'commerce'} />
                                 </div>
 
                                 <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
@@ -145,22 +173,25 @@ const Profile = () => {
                                     </div>
                                     <div className=' flex flex-col gap-2 mb-2'>
                                         <label className='text-text-medium' htmlFor="">NUMERO D"IMMATRICULATION</label>
-                                        <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'BLABLABLABLABLA'} />
+                                        <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={user?.commerce?.immat} readOnly={user?.role !== 'commerce'} />
                                     </div>
                                 </div>
                                 <div className='flex flex-col gap-2 mb-2'>
                                     <label className='text-text-medium' htmlFor="">NUMERO D'IDENTIFIANT UNIQUE</label>
-                                    <input type="text" readOnly className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={'BLABLABLABLABLA'} />
+                                    <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={user?.commerce?.niu} readOnly={user?.role !== 'commerce'} />
                                 </div>
-                                <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
-                                    <button className='bg-primary text-white px-5 py-3 rounded-lg flex items-center gap-4'> <FiSave></FiSave>Mettre a jour</button>
-                                    <button className='bg-white text-text-medium font-bold px-5 py-3 rounded-lg flex items-center gap-4 border-[1.5px]'><FiRefreshCcw></FiRefreshCcw> Annuler</button>
-                                </div>
+                                {user?.role === 'commerce' && (
+                                    <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
+                                        <button className='bg-primary text-white px-5 py-3 rounded-lg flex items-center gap-4'> <FiSave></FiSave>Mettre a jour</button>
+                                        <button className='bg-white text-text-medium font-bold px-5 py-3 rounded-lg flex items-center gap-4 border-[1.5px]'><FiRefreshCcw></FiRefreshCcw> Annuler</button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <FlashMessage></FlashMessage>
         </div>
 
     )

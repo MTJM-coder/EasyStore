@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { FiBarChart2, FiBell, FiBookmark, FiBox, FiChevronsDown, FiChevronsUp, FiCreditCard, FiDatabase, FiLogOut, FiSettings, FiUser } from 'react-icons/fi'
 import Header from './Header'
 import { FaStore } from 'react-icons/fa'
+import { Link } from '@inertiajs/react'
 
 const SideBarAdmin = ({ sidebarOpen, setSidebarOpen,active,setActive }) => {
     
@@ -12,12 +13,12 @@ const SideBarAdmin = ({ sidebarOpen, setSidebarOpen,active,setActive }) => {
     }
 
     const liens = [
-        { id: 1, nom: "Tableau de bord", type: "administration", icon: <FiBarChart2></FiBarChart2> },
-        { id: 2, nom: "Commercants", type: "administration", icon: <FaStore></FaStore> },
-        { id: 3, nom: "Abonnements", type: "administration", icon: <FiCreditCard></FiCreditCard> },
-        { id: 4, nom: "Notifications", type: "systeme", icon: <FiBell></FiBell> },
-        { id: 5, nom: "Log & Audits", type: "systeme", icon: <FiBookmark></FiBookmark> },
-        { id: 6, nom: "Parametres", type: "systeme", icon: <FiSettings></FiSettings> }
+        { id: 1, nom: "Tableau de bord", type: "administration", icon: <FiBarChart2></FiBarChart2>,lien:'/admin/dashboard' },
+        { id: 2, nom: "Commercants", type: "administration", icon: <FaStore></FaStore>,lien:'/admin/commerces' },
+        { id: 3, nom: "Abonnements", type: "administration", icon: <FiCreditCard></FiCreditCard>,lien:'/admin/abonnements' },
+        { id: 4, nom: "Notifications", type: "systeme", icon: <FiBell></FiBell>,lien:'/admin/notifications'},
+        { id: 5, nom: "Log & Audits", type: "systeme", icon: <FiBookmark></FiBookmark>,lien:'/admin/logs' },
+        { id: 6, nom: "Parametres", type: "systeme", icon: <FiSettings></FiSettings>,lien:'/profile' }
 
     ]
 
@@ -43,28 +44,29 @@ const SideBarAdmin = ({ sidebarOpen, setSidebarOpen,active,setActive }) => {
                     <div className='w-full flex items-center gap-3  px-5 py-4 text-text-medium cursor-pointer '>Administration</div>
                     {liens.filter(l => l.type == "administration").map(element =>
                     (
-                        <div
-
+                        <Link
+                            href={element.lien}
                             onClick={() => setActive(element.id)}
                             key={element.id} className={`w-full flex items-center gap-3  px-5 py-4 text-text-medium cursor-pointer 
                             ${element.id == active ? 'bg-purple-400 text-white border-r-[3px] border-primary' : 'hover:bg-purple-100 duration-300  transition-all hover:text-primary'}`} >
                             <p className='text-2xl'>{element.icon}</p>
                             <p>{element.nom}</p>
-                        </div>
+                        </Link>
                     )
                     )}
                     {/* systeme */}
                     <div className='w-full flex items-center gap-3  px-5 py-4 text-text-medium cursor-pointer '>Système</div>
                     {liens.filter(l => l.type == "systeme").map(element =>
                     (
-                        <div
+                        <Link
 
+                            href={element.lien}
                             onClick={() => setActive(element.id)}
                             key={element.id} className={`w-full flex items-center gap-3  px-5 py-4 text-text-medium cursor-pointer 
                             ${element.id == active ? 'bg-purple-400 text-white border-r-[3px] border-primary' : 'hover:bg-purple-100 duration-300  transition-all hover:text-primary'}`} >
                             <p className='text-2xl'>{element.icon}</p>
                             <p>{element.nom}</p>
-                        </div>
+                        </Link>
                     )
                     )}
                     <hr />

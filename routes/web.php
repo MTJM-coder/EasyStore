@@ -19,6 +19,7 @@ use App\Http\Controllers\MouvementStockController;
 use App\Http\Controllers\ProduitController;
 use App\Models\Commerce;
 use App\Models\Produit;
+use App\Http\Controllers\RapportController;
 
 Route::get('/', fn() => Inertia::render('Welcome'))->name('login');
 
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function(){
 
 Route::post('/auth/logout',[AuthController::class, 'logout']);
 Route::get('/auth/me',[AuthController::class,'getMe']);
+Route::put('/auth/me',[AuthController::class, 'updateMe']);
 Route::put('/auth/password',[AuthController::class,'updatedPassword']);
 
 
@@ -51,7 +53,7 @@ Route::delete('/users/{id}',[UserController::class,'deleteUser']);
 
 //Endpoints commerces
 
-Route::get('/commerces',[CommerceController::class,'getCommerces']);
+Route::get('/admin/commerces',[CommerceController::class,'getCommerces']);
 Route::get('/commerces/{id}',[CommerceController::class,'getCommerce']);
 Route::put('/commerces/{id}',[CommerceController::class,'updateCommerce']);
 Route::put('/commerces/{id}/abonnement',[CommerceController::class,'abonnement']);
@@ -82,9 +84,13 @@ Route::post("/suppliers",[FournisseurController::class,"addSupplier"]);
 Route::put("/suppliers/{id}",[FournisseurController::class,"updateSupplier"]);
 Route::delete("/suppliers/{id}",[FournisseurController::class,"deleteSupplier"]);
 
+// Endpoints Rapport
+
+Route::get('/rapports',[RapportController::class,'index']);
+Route::get('/rapports/download',[RapportController::class,'createRapport']);
 // Edpoint Abonnement
 
-Route::get('abonnements',[AbonnementController::class,"getAbonnements"]);
+Route::get('/admin/abonnements',[AbonnementController::class,"getAbonnements"]);
 Route::get('/abonnements/{id}',[AbonnementController::class,"getAbonnement"]);
 Route::post('/abonnements',[AbonnementController::class,"addAbonnement"]);
 Route::put('/abonnements/{id}',[AbonnementController::class,"updateAbonnement"]);
