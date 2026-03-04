@@ -17,6 +17,10 @@ class commerce_abonnement extends Model
     ];
 
     public function commerce(){
+        return $this->belongsTo(Commerce::class);
+    }
 
+    public function abonnement(){
+        return $this->belongsTo(Abonnement::class);
     }
 }

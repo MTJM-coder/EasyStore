@@ -6,7 +6,7 @@ import { FaCoins, FaMoneyBill, FaMoneyBillAlt, FaMoneyBillWave, FaStore ,FaUser}
 import { FiArrowUpRight, FiBox, FiCalendar, FiAlertTriangle, FiArrowDownRight, FiThumbsDown, FiDownloadCloud, FiUploadCloud, FiArchive, FiMenu, FiCheck, FiPlus } from 'react-icons/fi'
 
 
-const DashboardAdmin = () => {
+const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsExpiré, revenuMensuel, activitesRecente, nouveauxCommerces, abonnementsCritiques}) => {
 
     const date = new Date()
     const dateFormatee = date.toLocaleDateString('fr-FR', {
@@ -15,13 +15,6 @@ const DashboardAdmin = () => {
         month: "long",
         year: "numeric",
     })
-
-    const commercants = [
-        { id: 1, nom: "Supermarché Central", created_at: "2024-01-15", abonnement: "actif" },
-        { id: 2, nom: "Boulangerie du Centre", created_at: "2024-02-10", abonnement: "essai" },
-        { id: 3, nom: "Librairie Saint-Michel", created_at: "2024-03-05", abonnement: "essai" },
-        { id: 4, nom: "Pharmacie de la Gare", created_at: "2024-04-20", abonnement: "actif" }
-    ]
 
     const activitesRecentes = [
         { id: 1, activite: "Nouvel abonnement", message: "Super Market Dupont a souscrit au plan Professionnel", date: "2025-01-15", icon: <FiCheck className="text-green-500" /> },
@@ -77,7 +70,7 @@ const DashboardAdmin = () => {
                                     </div>
 
                                     <p>
-                                        <span className='text-3xl font-bold block mb-3'>247</span>
+                                        <span className='text-3xl font-bold block mb-3'>{totalCommerces}</span>
                                         <span className='flex items-center text-green-500'><FiArrowUpRight></FiArrowUpRight> +8 </span>
                                         <span className='text-green-500'>ce mois</span>
                                     </p>
@@ -94,7 +87,7 @@ const DashboardAdmin = () => {
                                     </div>
 
                                     <p>
-                                        <span className='text-3xl font-bold'>218</span>
+                                        <span className='text-3xl font-bold'>{totalAbonnementsActif}</span>
                                         <span className='flex items-center text-green-500'><FiArrowUpRight></FiArrowUpRight> +8.5% </span>
                                         <span className='text-green-500'>du taux d'activité</span>
                                     </p>
@@ -111,7 +104,7 @@ const DashboardAdmin = () => {
                                     </div>
 
                                     <p>
-                                        <span className='text-3xl font-bold'>29</span>
+                                        <span className='text-3xl font-bold'>{totalAbonnementsExpiré}</span>
                                         <span className='flex items-center text-red-500'><FiArrowUpRight></FiArrowUpRight> -5 </span>
                                         <span className='text-red-500'>vs mois dernier</span>
                                     </p>
@@ -129,7 +122,7 @@ const DashboardAdmin = () => {
                                     </div>
 
                                     <p>
-                                        <span className='text-3xl font-bold'>2.4M</span>
+                                        <span className='text-3xl font-bold'>{revenuMensuel}</span>
                                         <span className='flex items-center text-green-500'><FiArrowUpRight></FiArrowUpRight> +8.5% </span>
                                         <span className='text-green-500'>ce mois</span>
                                     </p>
@@ -162,17 +155,17 @@ const DashboardAdmin = () => {
                             <div className='border rounded-lg bg-white  md:p-5 p-2 md:w-1/3'>
                                 <h1 className='font-bold text-xl'>Nouveaux commerçants</h1>
                                 <div className='mt-4'>
-                                    {commercants.map((commerçant) => (
-                                        <div key={commerçant.id} className='flex items-center gap-3 py-5 border-b'>
+                                    {nouveauxCommerces.map((commerce) => (
+                                        <div key={commerce.id} className='flex items-center gap-3 py-5 border-b'>
                                             <div className='w-10 h-10 bg-green-100 flex justify-center items-center rounded-lg'>
                                                 <FaUser size={20} className='text-green-700'></FaUser>
                                             </div>
                                             <div>
-                                                <p className='font-medium'>{commerçant.nom}</p>
-                                                <p className='text-sm text-text-medium'>inscrit le {commerçant.dateInscription}</p>
+                                                <p className='font-medium'>{commerce.name}</p>
+                                                <p className='text-sm text-text-medium'>inscrit le {new Date(commerce.created_at).toLocaleDateString('fr-FR')}</p>
                                             </div>
-                                            <span className={`px-2 py-1 rounded-lg text-xs font-medium ${commerçant.abonnement === 'actif' ? 'bg-green-100 text-green-800' : commerçant.abonnement === 'essai' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
-                                                {commerçant.abonnement}
+                                            <span className={`px-2 py-1 rounded-lg text-xs font-medium ${commerce.commerce_abonnement?.abonnement?.status === 'actif' ? 'bg-green-100 text-green-800' : commerce.commerce_abonnement?.abonnement?.status === 'essai' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                                                {commerce.commerce_abonnement?.abonnement?.name}
                                             </span>
                                         </div>
                                     ))}
@@ -200,25 +193,25 @@ const DashboardAdmin = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {abonnements.map(a => (
+                                        {abonnementsCritiques.map(a => (
                                             <tr key={a.id} className=''>
                                                 <td className='border-b-2 py-[1.25rem] px-[1.5rem]'>
-                                                    <span className='text-text-dark font-bold'>{a.commerce}</span>
+                                                    <span className='text-text-dark font-bold'>{a?.commerce?.name}</span>
                                                 </td>
                                                 <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-                                                    <span className='text-primary-dark font-bold'>{a.plan}</span>
+                                                    <span className='text-primary-dark font-bold'>{a?.abonnement?.name}</span>
                                                 </td>
                                                 <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-                                                    <span className='text-text-medium'>{a.date_expiration}</span>
+                                                    <span className='text-text-medium'>{new Date(a?.ends_at).toLocaleDateString()}</span>
                                                 </td>
                                                 <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-                                                    <span className={`rounded-lg flex gap-2 items-center px-2 py-1 max-w-max ${a.statut === "expiré" ? "bg-red-200 text-red-700" : "bg-blue-200 text-blue-700"}`}>
-                                                        {a.statut === "expiré" ? "Expiré" : "Expire bientôt"}
+                                                    <span className={`rounded-lg flex gap-2 items-center px-2 py-1 max-w-max ${a.status === "expiré" ? "bg-red-200 text-red-700" : "bg-blue-200 text-blue-700"}`}>
+                                                        {a.status === "expiré" ? "Expiré" : "Expire bientôt"}
                                                     </span>
                                                 </td>
                                                 <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-                                                    <button className='px-4 py-2 rounded-lg bg-primary-dark text-white' onClick={()=>a.statut=="expiré"?relancer():notifier()}>
-                                                        {a.statut === "expiré" ? "Relancer" : "Notifier"}
+                                                    <button className='px-4 py-2 rounded-lg bg-primary-dark text-white' onClick={()=>a.status=="expiré"?relancer():notifier()}>
+                                                        {a.status === "expiré" ? "Relancer" : "Notifier"}
                                                     </button>
                                                 </td>
                                             </tr>

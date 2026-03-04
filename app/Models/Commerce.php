@@ -21,6 +21,11 @@ class Commerce extends Model
     {
         return $this->belongsTo(Abonnement::class);
     }
+
+    public function commerce_abonnement()
+    {
+        return $this->hasOne(commerce_abonnement::class);
+    }
     public function produits()
     {
         return $this->hasMany(Produit::class); 
