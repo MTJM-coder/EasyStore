@@ -2,10 +2,12 @@ import React from 'react'
 import { useState } from 'react'
 import SidebarEmploye from '../Layouts/SidebarEmploye'
 import { FaFileExport } from 'react-icons/fa'
-import { FiBookOpen, FiClock, FiDownload, FiHome, FiUser, FiUpload, FiSearch,FiMenu } from 'react-icons/fi'
+import { FiBookOpen, FiClock, FiDownload, FiHome, FiUser, FiUpload, FiSearch, FiMenu } from 'react-icons/fi'
+import { usePage } from '@inertiajs/react'
+import SideBarBoss from '@/Layouts/SideBarBoss'
 
-const HistoriqueEmploye = () => {
-
+const HistoriqueEmploye = ({ historiqueMouvements }) => {
+    const { auth } = usePage().props
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [search, setSearch] = useState("")
     const [statusFilter, setStatusFilter] = useState("")
@@ -27,72 +29,22 @@ const HistoriqueEmploye = () => {
         return date.toLocaleDateString('fr-FR')
     }
 
-    const mouvements = [
-        {
-            id: 1,
-            nom: "Produit A",
-            type: "sortie",
-            motif: "Vente",
-            quantite: 10,
-            date: "2024-01-15 12:30:00",
-            acteur: "Jaudel merlando"
-        },
-        {
-            id: 2,
-            nom: "Produit B",
-            type: "entree",
-            fournisseur: "Fournisseur X",
-            quantite: 5,
-            date: "2024-01-16 14:45:00",
-            acteur: "Jaudel merlando"
-        },
-        {
-            id: 3,
-            nom: "Produit C",
-            type: "sortie",
-            motif: "Perte",
-            quantite: 8,
-            date: "2024-01-17 09:20:00",
-            acteur: "Jaudel merlando"
-        },
-        {
-            id: 4,
-            nom: "Produit D",
-            type: "entree",
-            fournisseur: "Fournisseur Y",
-            quantite: 15,
-            date: "2024-01-18 16:10:00",
-            acteur: "Jaudel merlando"
-        },
-        {
-            id: 5,
-            nom: "Produit E",
-            type: "sortie",
-            motif: "Vente",
-            quantite: 12,
-            date: "2024-01-19 11:05:00",
-            acteur: "Joe la banane"
-
-        }
-
-    ]
-
-    const filteredMouvements = mouvements.filter(m => {
-        const matchesSearch = m.nom.toLowerCase().includes(search.toLowerCase()) || (m.reference && m.reference.toLowerCase().includes(search.toLowerCase()));
+    const filteredMouvements = historiqueMouvements.filter(m => {
+        const matchesSearch = m.produit.name.toLowerCase().includes(search.toLowerCase()) || (m?.produit?.ref && m.produit?.ref.toLowerCase().includes(search.toLowerCase()));
         const matchesStatus = statusFilter ? m.type === statusFilter : true;
-        const matchesDate = dateFilter ? m.date.startsWith(dateFilter) : true;
+        const matchesDate = dateFilter ? m.date_mouvement.startsWith(dateFilter) : true;
         return matchesSearch && matchesStatus && matchesDate;
     })
 
-    const totalMouvement = mouvements.length;
-    const totalEntrees = mouvements.filter(m => m.type == "entree").length;
-    const totalSorties = mouvements.filter(m => m.type == "sortie").length;
+    const totalMouvement = historiqueMouvements.length;
+    const totalEntrees = historiqueMouvements.filter(m => m.type == "in").length;
+    const totalSorties = historiqueMouvements.filter(m => m.type == "out").length;
 
     const handleExport = () => {
         console.log('Exporting data...');
     }
 
-const [active, setActive] = useState(5)
+    const [active, setActive] = useState(6)
     return (
         <div>
             <div>
@@ -104,7 +56,12 @@ const [active, setActive] = useState(5)
                         ></div>
                     )}
 
-                    <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SidebarEmploye>
+                    {auth?.user?.role === 'employe' && (
+                        <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={5} setActive={setActive}></SidebarEmploye>
+                    )}
+                    {auth?.user?.role === 'commerce' && (
+                        <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
+                    )}
                     <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                         {/* entete de la parle */}
 
@@ -140,14 +97,14 @@ const [active, setActive] = useState(5)
                                         onChange={(e) => setStatusFilter(e.target.value)}
                                     >
                                         <option value="">Tous les mouvements</option>
-                                        <option value="entree">Entrées uniquement</option>
-                                        <option value="sortie">Sorties uniquement</option>
+                                        <option value="in">Entrées uniquement</option>
+                                        <option value="out">Sorties uniquement</option>
                                     </select>
 
                                     <input type="date" className='md:w-1/4 w-full border-[1.5px] border-gray-300 rounded-lg py-2'
                                         onChange={(e) => setDateFilter(e.target.value)}
                                     />
-
+{/* 
 
                                     <button
                                         className='md:w-auto w-full bg-primary text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2'
@@ -155,7 +112,7 @@ const [active, setActive] = useState(5)
                                     >
                                         <FaFileExport />
                                         Exporter
-                                    </button>
+                                    </button> */}
 
                                 </div>
 
@@ -209,37 +166,38 @@ const [active, setActive] = useState(5)
                                 <div className='w-full flex flex-col gap-10 rounded-lg mt-5'>
                                     {filteredMouvements.map(m => (
                                         <div key={m.id} className='flex gap-2 hover:ml-2 transition-all duration-300 w-full rounded-lg '>
-                                            <div className={`h-5 w-5 border-2 rounded-full p-2 flex justify-center items-center ${m.type === "sortie" ? "border-red-500 " : "border-green-500"}`}>
-                                                <div className={`h-4 w-4 rounded-full ${m.type === "sortie" ? "bg-red-500" : "bg-green-500"}`}></div>
+                                            <div className={`h-5 w-5 border-2 rounded-full p-2 flex justify-center items-center ${m.type === "out" ? "border-red-500 " : "border-green-500"}`}>
+                                                <div className={`h-4 w-4 rounded-full ${m.type === "out" ? "bg-red-500" : "bg-green-500"}`}></div>
                                             </div>
                                             <div className='border  shadow-sm p-5 w-full rounded-lg bg-gray-50'>
                                                 <p className='flex justify-between items-center'>
-                                                    <span className='font-bold text-text-dark text-xl'>{m.nom}</span>
-                                                    {m.type === "sortie" ? (
-                                                        <span className='text-red-500 font-bold text-2xl'>- {m.quantite}</span>
+                                                    <span className='font-bold text-text-dark text-xl'>{m?.produit?.name}</span>
+                                                    {m.type === "out" ? (
+                                                        <span className='text-red-500 font-bold text-2xl'>{m.quantity_change}</span>
                                                     ) : (
-                                                        <span className='text-green-500 font-bold text-2xl'>+ {m.quantite}</span>
+                                                        <span className='text-green-500 font-bold text-2xl'>+ {m.quantity_change}</span>
                                                     )}
                                                 </p>
                                                 <div className='flex md:flex-row flex-col md:gap-10 gap-3 md:items-center'>
-                                                    <p className={`mt-3 md:mb-1 capitalize inline-block max-w-max px-3 py-1 rounded ${m.type === "sortie" ? "bg-red-200 text-red-700" : "bg-green-200 text-green-700"}`}>{m.type}</p>
-                                                    {m.type === "sortie" ?
+                                                    <p className={`mt-3 md:mb-1 capitalize inline-block max-w-max px-3 py-1 rounded ${m.type === "out" ? "bg-red-200 text-red-700" : "bg-green-200 text-green-700"}`}>{m.type==='in'?'Entrée':'Sortie'}</p>
+                                                    {m.type === "out" ?
                                                         (
-                                                            <p className='inline-block max-w-max px-3 py-1 mt-2 border border-blue-300 text-blue-800 rounded '>{m.motif}</p>
+                                                            <p className='inline-block max-w-max px-3 py-1 mt-2 border border-blue-300 text-blue-800 rounded '>{m?.motif}</p>
                                                         ) :
                                                         (
                                                             <p className='flex gap-2 items-center text-text-medium'>
                                                                 <FiHome></FiHome>
-                                                                <span>{m.fournisseur}</span>
-                                                            </p>)}
+                                                                <span>{m?.fournisseur?.name}</span>
+                                                            </p>
+                                                        )}
 
                                                     <p className='flex gap-2 items-center text-text-medium'>
                                                         <FiUser></FiUser>
-                                                        <span>{m.acteur}</span>
+                                                        <span>{m?.user?.name}</span>
                                                     </p>
                                                     <p className='flex gap-2 items-center text-text-medium'>
                                                         <FiClock></FiClock>
-                                                        <span>{getRelativeTime(m.date)} </span>
+                                                        <span>{getRelativeTime(m.created_at)} </span>
                                                     </p>
                                                 </div>
                                             </div>

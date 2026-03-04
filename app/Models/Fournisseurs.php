@@ -16,4 +16,9 @@ class Fournisseurs extends Model
     {
         return $this->belongsTo(Commerce::class);
     }
+    
+    public function mouvements()
+    {
+        return $this->hasMany(MouvementStock::class, 'fournisseur_id');
+    }
 }

@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Container\Attributes\Auth;
 use App\Http\Controllers\EmployeController;
 use App\Http\Controllers\FournisseurController;
+use App\Http\Controllers\HistoriqueController;
 use App\Http\Controllers\MouvementStockController;
 use App\Http\Controllers\ProduitController;
 use App\Models\Commerce;
@@ -88,6 +89,7 @@ Route::delete("/suppliers/{id}",[FournisseurController::class,"deleteSupplier"])
 
 Route::get('/rapports',[RapportController::class,'index']);
 Route::get('/rapports/download',[RapportController::class,'createRapport']);
+Route::get('/historique',[HistoriqueController::class,'getHistorique']);
 // Edpoint Abonnement
 
 Route::get('/admin/abonnements',[AbonnementController::class,"getAbonnements"]);
