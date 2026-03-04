@@ -23,7 +23,7 @@ const SideBarBoss = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
         { id: 8, nom: "Produit", type: "gestion", icon: <FiBox></FiBox>,lien:'/products'},
         { id: 9, nom: "Fournisseur", type: "gestion", icon: <FiTruck></FiTruck> ,lien:'/suppliers'},
         { id: 10, nom: "Employe", type: "gestion", icon: <FiUsers></FiUsers>,lien:'employes' },
-        { id: 11, nom: "Abonnement", type: "parametre", icon: <FiCreditCard></FiCreditCard>,lien:'/abonnements' }
+        { id: 11, nom: "Abonnement", type: "parametre", icon: <FiCreditCard></FiCreditCard>,lien:'/commerce/abonnements' }
 
     ]
 

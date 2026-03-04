@@ -3,11 +3,15 @@ import Header from '../Layouts/Header'
 import { useState } from 'react'
 import { FiInfo, FiRefreshCcw, FiSave, FiUser, FiMenu } from 'react-icons/fi'
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
+import SideBarBoss from '@/Layouts/SideBarBoss'
+import SideBarAdmin from '@/Layouts/SideBarAdmin'
+import { usePage } from '@inertiajs/react'
 import { router } from '@inertiajs/react'
 import FlashMessage from '@/Components/FlashMessage'
 
 const Profile = ({ user }) => {
-    const [active, setActive] = useState(6)
+    const { auth } = usePage().props;
+    const [active, setActive] = useState(7)
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [formData, setFormData] = useState({
         name: user?.name ?? null,
@@ -41,7 +45,19 @@ const Profile = ({ user }) => {
                     ></div>
                 )}
 
-                <SidebarEmploye active={active} setActive={setActive} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                {auth.user.role === 'employe' && (
+                    <SidebarEmploye active={active} setActive={setActive} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SidebarEmploye>
+                )}
+                {
+                    auth.user.role === 'commerce' && (
+                        <SideBarBoss active={active} setActive={setActive} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SideBarBoss>
+                    )
+                }
+                {
+                    auth.user.role === 'admin' && (
+                        <SideBarAdmin active={active} setActive={setActive} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></SideBarAdmin>
+                    )
+                }
 
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     <div className='fixed flex items-center w-full gap-5 pl-5 md:pr-64 justify-between bg-white p-5'>
@@ -84,21 +100,21 @@ const Profile = ({ user }) => {
                                     <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
                                         <div className=' flex flex-col gap-2 mb-4'>
                                             <label className='text-text-medium' htmlFor="">NOM*</label>
-                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value })} />
+                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                                         </div>
                                         <div className=' flex flex-col gap-2 mb-4'>
                                             <label className='text-text-medium' htmlFor="">EMAIL*</label>
-                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value })} />
+                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                                         </div>
                                     </div>
                                     <div className='flex md:flex-row flex-col md:gap-10 gap-2'>
                                         <div className=' flex flex-col gap-2 mb-4'>
                                             <label className='text-text-medium' htmlFor="">TELEPHONE*</label>
-                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.telephone} onChange={(e) => setFormData({...formData, telephone: e.target.value })} />
+                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.telephone} onChange={(e) => setFormData({ ...formData, telephone: e.target.value })} />
                                         </div>
                                         <div className=' flex flex-col gap-2 mb-4'>
                                             <label className='text-text-medium' htmlFor="">VILLE</label>
-                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.ville} onChange={(e) => setFormData({...formData, ville: e.target.value })} />
+                                            <input type="text" className='rounded-lg bg-secondary border-[1.5px] border-gray-300' value={formData.ville} onChange={(e) => setFormData({ ...formData, ville: e.target.value })} />
                                         </div>
                                     </div>
 

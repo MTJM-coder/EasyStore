@@ -91,6 +91,7 @@ Route::get('/rapports/download',[RapportController::class,'createRapport']);
 // Edpoint Abonnement
 
 Route::get('/admin/abonnements',[AbonnementController::class,"getAbonnements"]);
+Route::get('/commerce/abonnements',[AbonnementController::class,"getAbonnementsCommerce"]);
 Route::get('/abonnements/{id}',[AbonnementController::class,"getAbonnement"]);
 Route::post('/abonnements',[AbonnementController::class,"addAbonnement"]);
 Route::put('/abonnements/{id}',[AbonnementController::class,"updateAbonnement"]);

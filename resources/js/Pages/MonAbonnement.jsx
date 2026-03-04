@@ -4,10 +4,20 @@ import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import SideBarBoss from '@/Layouts/SideBarBoss';
 
-const MonAbonnement = () => {
+const MonAbonnement = ({historiqueAbonnement,abonnementActuel}) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [active, setActive] = useState(11);
-
+    const dateFormatee = (dateString) => {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('fr-FR', options);
+    };
+    const joursRestants = (dateFin) => {
+        const today = new Date();
+        const endDate = new Date(dateFin);
+        const diffTime = endDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays > 0 ? `${diffDays} jours` : "Abonnement expiré";
+    };
     const abonnements=[
         {id:1,date:"15 Jan 2026",montant:12000,methode:"mobile money",statut:"payé"},
         {id:2,date:"15 Feb 2026",montant:12000,methode:"mobile money",statut:"payé"},
@@ -53,23 +63,24 @@ const MonAbonnement = () => {
                     <div className='md:mx-5 mx-2 p-1 md:p-5 md:mt-36 mt-40 flex flex-col gap-4 justify-between bg-primary rounded-lg'>
                         <div className='flex items-center justify-between'>
                             <p className='flex flex-col gap-2'>
-                                <h1 className='text-xl font-bold text-white'>Plan Proffessionnel</h1>
-                                <span className='text-gray-100 font-mono'>12 000 FCFA / mois</span>
+                                <h1 className='text-xl font-bold text-white'>{abonnementActuel?.abonnement?.name??'plan gratuit'}</h1>
+                                <span className='text-gray-100 font-mono'>{abonnementActuel?.abonnement?.price??'00'} FCFA / mois</span>
                             </p>
-                            <p className='flex items-center gap-1 rounded-2xl bg-green-500 text-white px-4 py-1'><FiCheck></FiCheck>Actif</p>
+
+                            <p className={`flex items-center gap-1 rounded-2xl ${abonnementActuel?.status === 'actif' ? 'bg-green-500' : 'bg-red-500'} text-white px-4 py-1`}><FiCheck></FiCheck>{abonnementActuel?.status??'Inactif'}</p>
                         </div>
                         <div className='mx-10 flex items-center justify-between'>
                             <p className='flex flex-col gap-2'>
                                 <span className='text-gray-100 font-mono'>Date Souscription</span>
-                                <h1 className='text-xl font-bold text-white'>15 Jan 2026</h1>
+                                <h1 className='text-xl font-bold text-white'>{dateFormatee(abonnementActuel?.starts_at)}</h1>
                             </p>
                             <p className='flex flex-col gap-2'>
                                 <span className='text-gray-100 font-mono'>Prochain paiement</span>
-                                <h1 className='text-xl font-bold text-white'>15 Mar 2026</h1>
+                                <h1 className='text-xl font-bold text-white'>{dateFormatee(abonnementActuel?.ends_at)}</h1>
                             </p>
                             <p className='flex flex-col gap-2'>
                                 <span className='flex flex-col gap-2 text-gray-100'>Jours restants</span>
-                                <h1 className='text-xl font-bold text-white'>29 jours</h1>
+                                <h1 className='text-xl font-bold text-white'>{joursRestants(abonnementActuel?.ends_at)}</h1>
                             </p>
                         </div>
                     </div>
@@ -101,20 +112,20 @@ const MonAbonnement = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {abonnements.map(a => (
+                                    {historiqueAbonnement.map(a => (
                                         <tr key={a.id} className=''>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem]'>
-                                                <span className='text-text-dark font-bold'>{a.date}</span>
+                                                <span className='text-text-dark font-bold'>{dateFormatee(a.created_at)}</span>
                                             </td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-                                                <span className='text-primary-dark font-bold'>{a.montant} FCFA</span>
+                                                <span className='text-primary-dark font-bold'>{a?.abonnement?.price} FCFA</span>
                                             </td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-                                                <span className='text-text-medium'>{a.methode}</span>
+                                                <span className='text-text-medium'>{'Mobile'}</span>
                                             </td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-                                                <span className={`rounded-lg flex gap-2 items-center px-2 py-1 max-w-max ${a.statut === "payé" ? "bg-green-200 text-green-700" : a.statut === "En attente" ? "bg-yellow-200 text-yellow-700" : "bg-red-200 text-red-700"}`}>
-                                                    {a.statut === "payé" ? <FiCheck className="" /> : <FiX className="" />}  {a.statut}
+                                                <span className={`rounded-lg flex gap-2 items-center px-2 py-1 max-w-max ${a.status === "actif" ? "bg-green-200 text-green-700" : a.status === "En attente" ? "bg-yellow-200 text-yellow-700" : "bg-red-200 text-red-700"}`}>
+                                                    {a.status === "payé" ? <FiCheck className="" /> : <FiX className="" />}  {a.status}
                                                 </span>
                                             </td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>

@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Abonnement;
 use Illuminate\Support\Facades\Auth;
-
+use Inertia\Inertia;
+use App\Models\commerce_abonnement;
 class AbonnementController extends Controller
 {
     //
@@ -29,6 +30,21 @@ class AbonnementController extends Controller
         }
         return Response()->json(["abonnement"=>$abonnement],200);
     }
+
+        public function getAbonnementsCommerce(){
+            $user=Auth::user();
+            if($user->role!=="commerce"){
+                return Response()->json(["Message"=>"unauthorized"],403);
+            }
+            $abonnements=Abonnement::all();
+            $abonnementActuel=commerce_abonnement::where('commerce_id',$user->commerce_id)->where('status','actif')->with('abonnement')->first();
+            $historiqueAbonnement=Commerce_abonnement::where('commerce_id',$user->commerce_id)->with('abonnement')->get();
+            return Inertia::render('MonAbonnement',[
+                'abonnements'=>$abonnements,
+                'abonnementActuel'=>$abonnementActuel,
+                'historiqueAbonnement'=>$historiqueAbonnement
+            ]);
+        }
 
     public function addAbonnement(Request $req){
         $validatedata=$req->validate([
