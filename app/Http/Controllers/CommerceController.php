@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Contracts\Support\ValidatedData;
+use Inertia\Inertia;
 
 class CommerceController extends Controller
 {
@@ -17,8 +18,8 @@ class CommerceController extends Controller
         if($user->role !== "admin"){
             return response()->json(["Message"=>"Unhautorized"],403);
         }
-        $commerces=Commerce::all();
-        return response()->json(["Message"=>"list of commerces found successfully","commerces"=>$commerces],200);
+        $commerces=Commerce::with(['commerce_abonnement.abonnement','commercant'])->get();
+        return Inertia::render('GestCommerce',["commerces"=>$commerces]);
     }
 
     public function getCommerce($id){

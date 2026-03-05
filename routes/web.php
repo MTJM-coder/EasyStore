@@ -75,6 +75,7 @@ Route::get('/mouvements/sorties',[MouvementStockController::class, 'getSorties']
 Route::get('/mouvements/{id}',[MouvementStockController::class,"getMouvement"]);
 Route::post('/mouvements/entree',[MouvementStockController::class,"addEntree"]);
 Route::post('/mouvements/sortie',[MouvementStockController::class,"addSortie"]);
+Route::get('/stocks',[MouvementStockController::class, 'getStock']);
 Route::put('/mouvements',[MouvementStockController::class,"updateMouvement"]);
 
 // Endpoint Fournisseurs

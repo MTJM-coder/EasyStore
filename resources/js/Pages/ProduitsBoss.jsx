@@ -14,7 +14,17 @@ const ProduitsBoss = ({ produits }) => {
     const [selectedProduit, setSelectedProduit] = useState(null);
 
     const getBadge = (produit) => {
-        return produit.statut
+       if(produit.current_quantity==0){
+        return "rupture"
+       }
+       else if(produit.current_quantity<=produit.seuil){
+        return "faible"
+       }
+       else{
+        return "suffisant"
+       }
+       
+        
     }
     const TotalProduits = produits.length
     const TotalProduitsSuffisant = produits.filter(p => p.current_quantity > p.seuil).length
@@ -216,22 +226,20 @@ const ProduitsBoss = ({ produits }) => {
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
 
                                                 {getBadge(produit) == "suffisant" && (
-                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-green-200 text-green-800 font-bold max-w-max px-10'>
+                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-green-200 text-green-800 font-bold max-w-max px-5'>
 
                                                         <span>{produit.current_quantity} unités</span>
                                                     </div>
                                                 )}
 
                                                 {getBadge(produit) == "faible" && (
-                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-yellow-100 text-yellow-800 font-bold max-w-max px-10'>
-
+                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-yellow-100 text-yellow-800 font-bold max-w-max px-5'>
                                                         <span>{produit.current_quantity} unités</span>
                                                     </div>
                                                 )}
 
-                                                {getBadge(produit) == "rupture" || getBadge(produit) == "critique" && (
-                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-red-200 text-red-800 font-bold max-w-max px-10'>
-
+                                                {getBadge(produit) == "rupture" && (
+                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-red-200 text-red-800 font-bold max-w-max px-5'>
                                                         <span>{produit.current_quantity ?? 0} unité</span>
                                                     </div>
                                                 )}
@@ -241,7 +249,7 @@ const ProduitsBoss = ({ produits }) => {
 
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem] text-sm text-text-medium '>{produit.seuil} unités</td>
                                             <td className='border-b-2 py-[1.25rem] px-[1.5rem]  '>
-                                                <span className={`${getBadge(produit) == "suffisant" ? "text-green-500" : getBadge(produit) == "faible" ? "text-yellow-500" : "text-red-500"} font-bold`}>{produit.statut}</span>
+                                                <span className={`${getBadge(produit) == "suffisant" ? "text-green-500" : getBadge(produit) == "faible" ? "text-yellow-500" : "text-red-500"} font-bold`}>{getBadge(produit)}</span>
                                             </td>
                                             <td className='border-b-2 px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark '>
                                                 <button onClick={() => { setSelectedProduit(produit); handleEdit(produit) }} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'><FiEdit className="text-primary-dark" /></button>

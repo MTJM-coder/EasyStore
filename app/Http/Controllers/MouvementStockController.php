@@ -152,4 +152,8 @@ class MouvementStockController extends Controller
             return response()->json([500, "Message" => $e->getMessage()]);
         }
     }
+
+    public function getStock(){
+        return Inertia::render('StockEmploye',[]);
+    }
 }

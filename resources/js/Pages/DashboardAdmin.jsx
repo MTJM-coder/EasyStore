@@ -16,20 +16,14 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
         year: "numeric",
     })
 
-    const activitesRecentes = [
-        { id: 1, activite: "Nouvel abonnement", message: "Super Market Dupont a souscrit au plan Professionnel", date: "2025-01-15", icon: <FiCheck className="text-green-500" /> },
-        { id: 2, activite: "Modification d'abonnement", message: "Boulangerie du Centre a modifié son abonnement", date: "2025-02-10", icon: <FiArrowUpRight className="text-blue-500" /> },
-        { id: 3, activite: "Expiration d'abonnement", message: "Librairie Saint-Michel a expiré son abonnement", date: "2025-03-05", icon: <FiAlertTriangle className="text-yellow-500" /> },
-        { id: 4, activite: "Nouveau commerçant", message: "Pharmacie de la Gare a été ajoutée à la plateforme", date: "2025-04-15", icon: <FiPlus className="text-purple-500" /> },
-        { id: 5, activite: "Compte suspendu", message: "Compte de Super Market Dupont suspendu pour non-paiement", date: "2025-05-10", icon: <FiThumbsDown className="text-red-500" /> }
-    ]
+    // const activitesRecentes = [
+    //     { id: 1, activite: "Nouvel abonnement", message: "Super Market Dupont a souscrit au plan Professionnel", date: "2025-01-15", icon: <FiCheck className="text-green-500" /> },
+    //     { id: 2, activite: "Modification d'abonnement", message: "Boulangerie du Centre a modifié son abonnement", date: "2025-02-10", icon: <FiArrowUpRight className="text-blue-500" /> },
+    //     { id: 3, activite: "Expiration d'abonnement", message: "Librairie Saint-Michel a expiré son abonnement", date: "2025-03-05", icon: <FiAlertTriangle className="text-yellow-500" /> },
+    //     { id: 4, activite: "Nouveau commerçant", message: "Pharmacie de la Gare a été ajoutée à la plateforme", date: "2025-04-15", icon: <FiPlus className="text-purple-500" /> },
+    //     { id: 5, activite: "Compte suspendu", message: "Compte de Super Market Dupont suspendu pour non-paiement", date: "2025-05-10", icon: <FiThumbsDown className="text-red-500" /> }
+    // ]
 
-    const abonnements = [
-        { id: 1, commerce: "Supermarché Central", plan: 'professionnel', date_expiration: "2025-06-30", statut: "Actif" },
-        { id: 2, commerce: "Boulangerie du Centre", plan: 'premium', date_expiration: "2025-07-15", statut: "expiré" },
-        { id: 3, commerce: "Librairie Saint-Michel", plan: 'standard', date_expiration: "2025-05-20", statut: "expiré" },
-        { id: 4, commerce: "Pharmacie de la Gare", plan: 'premium', date_expiration: "2025-08-10", statut: "Actif" }
-    ]
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [active,setActive]=useState(1)
     return (
@@ -137,7 +131,7 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
                             <div className='rounded-lg border bg-white  md:p-5 p-2 md:w-2/3'>
                                 <h1 className='font-bold text-xl'>Activité récente</h1>
                                 <div className='mt-4'>
-                                    {activitesRecentes.map((activite) => (
+                                    {/* {activitesRecentes.map((activite) => (
                                         <div key={activite.id} className='flex items-center gap-3 py-5 border-b'>
                                             <div className='w-10 h-10 bg-blue-100 flex justify-center items-center rounded-lg'>
                                                 {activite.icon}
@@ -148,7 +142,7 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
                                             </div>
                                         </div>
                                         
-                                    ))}
+                                    ))} */}
                                 </div>
 
                             </div>

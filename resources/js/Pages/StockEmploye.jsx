@@ -1,13 +1,16 @@
+import SideBarBoss from '@/Layouts/SideBarBoss'
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
+import { usePage } from '@inertiajs/react'
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { FaFileExport } from 'react-icons/fa'
-import { FiSearch, FiBox, FiCheck, FiAlertTriangle,FiMenu } from 'react-icons/fi'
+import { FiSearch, FiBox, FiCheck, FiAlertTriangle, FiMenu } from 'react-icons/fi'
 import { MdEmergency } from 'react-icons/md'
 
 const StockEmploye = () => {
+    const {auth}=usePage().props
     const [sidebarOpen, setSidebarOpen] = useState(false);
-   
+
     const produits = [
         { nom: "Riz parfumé 2kg", reference: "riz-02", quantite: 2, seuil: 15, statut: 'critique' },
         { nom: "Huile de tournesol 1L", reference: "huile-01", quantite: 10, seuil: 20, statut: 'faible' },
@@ -115,8 +118,13 @@ const StockEmploye = () => {
                         onClick={() => setSidebarOpen(false)}
                     ></div>
                 )}
+                {auth?.user?.role === 'employe' && (
+                    <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SidebarEmploye>
+                )}
+                {auth?.user?.role === 'commerce' && (
+                    <SideBarBoss sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarBoss>
 
-                <SidebarEmploye sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SidebarEmploye>
+                )}
                 <div className={`relative md:ml-64 w-full mb-20 md:bg-secondary bg-white md:text-sm text-xs ${sidebarOpen ? 'overflow-auto text-xs bg-white' : ''} `}>
                     {/* entete de la parle */}
 
