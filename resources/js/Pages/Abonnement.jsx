@@ -1,49 +1,64 @@
+import FlashMessage from '@/Components/FlashMessage'
 import SideBarAdmin from '@/Layouts/SideBarAdmin'
 import { router } from '@inertiajs/react'
 import React from 'react'
 import { useState } from 'react'
 import { FaCoins, FaMoneyBill, FaMoneyBillAlt, FaMoneyBillWave, FaStore, FaUser } from 'react-icons/fa'
-import { FiMenu, FiCheck, FiPlus, FiEdit, FiPause, FiPlay,FiX, FiInfo ,FiXCircle,FiSave,FiRefreshCcw} from 'react-icons/fi'
+import { FiMenu, FiCheck, FiPlus, FiEdit, FiPause, FiPlay, FiX, FiInfo, FiXCircle, FiSave, FiRefreshCcw } from 'react-icons/fi'
 
 
-const Abonnement = () => {
+const Abonnement = ({ abonnements }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const [active , setActive] = useState(3)
+    const [active, setActive] = useState(3)
     const [showAddForm, setShowAddForm] = useState(false)
     const [selectedAbonnement, setSelectedAbonnement] = useState(null)
     const [formData, setFormData] = useState({
-        nom: "",
-        prixMensuel: "",
+        name: "",
+        price: "",
+        duration: "",
         fonctionnalites: "",
+        max_produits: "",
+        max_users: "",
+        export_pdf: false,
+        rapports_avances: false,
+        multi_boutiques: false
     })
     const handleEdit = (abonnement) => {
         setFormData({
-            nom: abonnement.nom,
-            prixMensuel: abonnement.prixMensuel,
-            fonctionnalites: abonnement.fonctionnalites.join(', '),
+            name: abonnement.name,
+
+            price: abonnement.price,
+            duration: abonnement.duration || "",
+            fonctionnalites: abonnement.fonctionnalites,
+            max_produits: abonnement.max_produits || "",
+            max_users: abonnement.max_users || "",
+            export_pdf: abonnement.export_pdf || false,
+            rapports_avances: abonnement.rapports_avances || false,
+            multi_boutiques: abonnement.multi_boutiques || false
         })
         setShowAddForm(true)
     }
     const handleSubmit = (e) => {
         e.preventDefault();
         if (selectedAbonnement) {
-            router.post(`/abonnements/${selectedAbonnement.id}`, formData)
+            router.put(`/abonnements/${selectedAbonnement.id}`, formData)
         } else {
             router.post('/abonnements', formData)
         }
         setFormData({
-            nom: "",
-            prixMensuel: "",
+            name: "",
+            price: "",
+            duration: "",
             fonctionnalites: "",
+            max_produits: "",
+            max_users: "",
+            export_pdf: false,
+            rapports_avances: false,
+            multi_boutiques: false
         })
         setShowAddForm(false)
-        }
+    }
 
-    const abonnements = [
-        { id: 1, nom: "starter", prixMensuel: 5000, fonctionnalites: ["Jusqu'à 100 produits", "Gestion de stock basique", "1 utilisateur", "Support par email"], statut: "actif" },
-        { id: 2, nom: "professionnel", prixMensuel: 12000, fonctionnalites: ["produits illimités", "Gestion de stock avancée", "5 utilisateurs", "Rapports et statistiques", "Rapport prioritaire"], statut: "inactif" },
-        { id: 3, nom: "entreprise", prixMensuel: 25000, fonctionnalites: ["Toutes les fonctionnalités Pro", "Utilisateurs illimités", "Gestion multi-magasins", "Support téléphonique 24/7", "Formation personnalisée"], statut: "actif" },
-    ]
     return (
         <div>
             <div className='flex bg-secondary'>
@@ -63,7 +78,7 @@ const Abonnement = () => {
                             <h1 className='font-bold text-2xl'>Gestion des Abonnements</h1>
                             <p className='text-text-medium'>Gérez les offres et les tarifs de la plateforme</p>
                         </div>
-                        <button onClick={()=>setShowAddForm(true)} className='flex gap-3 items-center border border-primary-dark bg-purple-200 text-primary px-5 md:py-2 rounded-lg mr-4'>
+                        <button onClick={() => setShowAddForm(true)} className='flex gap-3 items-center border border-primary-dark bg-purple-200 text-primary px-5 md:py-2 rounded-lg mr-4'>
                             <FiPlus></FiPlus>
                             créer une offre
                         </button>
@@ -76,32 +91,43 @@ const Abonnement = () => {
                                         <div className='bg-primary-dark rounded-lg p-3 flex justify-center items-start'>
                                             <FaStore className='text-2xl text-white'></FaStore>
                                         </div>
-                                        <div className={`${ab.statut == "actif" ? "bg-green-400 text-green-700" : "bg-red-400 text-red-700"} px-4 py-1 max-h-max rounded-2xl flex items-center gap-2`}>
-                                            {ab.statut == "actif" ? <FiCheck></FiCheck> : <FiX></FiX>}
-                                            {ab.statut}
+                                        <div className={`${ab.actif == true ? "bg-green-400 text-green-700" : "bg-red-400 text-red-700"} px-4 py-1 max-h-max rounded-2xl flex items-center gap-2`}>
+                                            {ab.actif ? <FiCheck></FiCheck> : <FiX></FiX>}
+                                            {ab.actif ? 'Actif' : 'Inactif'}
                                         </div>
 
                                     </div>
-                                    <h2 className='font-bold text-xl'>Starter</h2>
-                                    <p className='flex flex-col gap-4'><span className='text-3xl font-bold text-primary'>5000</span> <span className='text-text-medium text-sm'>FCFA / mois</span></p>
+                                    <h2 className='font-bold text-xl'>{ab.name}</h2>
+                                    <p className='flex flex-col gap-4'><span className='text-3xl font-bold text-primary'>{parseInt(ab.price)}</span> <span className='text-text-medium text-sm'>FCFA / mois</span></p>
 
 
                                     <ul className='flex flex-col gap-2'>
-                                        {ab.fonctionnalites.map((f, index) => (
-                                            <li key={index} className='flex items-center gap-2 text-text-medium'><FiCheck className='text-green-500'></FiCheck> {f}</li>
+                                        <li className='flex items-center gap-2 text-text-medium'><FiCheck className='text-green-500'></FiCheck>{ab.max_produits} produits</li>
+                                        <li className='flex items-center gap-2 text-text-medium'><FiCheck className='text-green-500'></FiCheck>{ab.max_users} utilisateurs</li>
+                                        {ab.rapports_avances &&
+                                            <li className='flex items-center gap-2 text-text-medium'><FiCheck className='text-green-500'></FiCheck>Rapports avancés</li>
+                                        }
+                                        {
+                                            ab.export_pdf &&
+                                            (
+                                             <li className='flex items-center gap-2 text-text-medium'><FiCheck className='text-green-500'></FiCheck>Export en PDF</li>
+                                            )
+                                        }
+                                        {ab?.fonctionnalites?.split(',').map((f, index) => (
+                                            <li key={index} className='flex items-center gap-2 text-text-medium'><FiCheck className='text-green-500'></FiCheck> {f.trim()}</li>
                                         ))}
-                                       
+
                                     </ul>
                                     <div className='flex'>
                                         <button onClick={() => {
                                             handleEdit(ab);
                                             setSelectedAbonnement(ab);
-                                            
+
                                         }} className='flex gap-3 items-center border border-primary-dark bg-purple-200 text-primary px-5 md:py-2 rounded-lg mr-4'>
                                             <FiEdit></FiEdit>
 
                                         </button>
-                                        {ab.statut == "actif" ? <button className='flex gap-3 items-center border border-red-400 bg-red-200 text-red-700 px-5 md:py-2 rounded-lg mr-4'>
+                                        {ab.actif === 1 ? <button className='flex gap-3 items-center border border-red-400 bg-red-200 text-red-700 px-5 md:py-2 rounded-lg mr-4'>
                                             <FiPause></FiPause>
 
                                         </button> : <button className='flex gap-3 items-center border border-green-400 bg-green-200 text-green-700 px-5 md:py-2 rounded-lg mr-4'>
@@ -117,46 +143,79 @@ const Abonnement = () => {
                     </div>
                 </div>
             </div>
-             {showAddForm && (
-            
-                            <div className='bg-white mx-auto p-5 w-1/2 z-50 fixed top-0 left-0 border rounded-lg border-t-2 border-t-red-500'>
-                                <button className='w-full text-end  flex justify-end'>
-                                    <FiXCircle className='text-red-500 ' size={30} onClick={() => setShowAddForm(false)}></FiXCircle>
-                                </button>
-                                <form action="" onSubmit={handleSubmit}>
-                                    <h1 className='my-5 text-xl font-bold '>Créer une offre</h1>
-            
-                                    <div className='mb-3 flex flex-col'>
-                                        <label htmlFor="" className='text-text-medium font-bold uppercase'>Nom de l'offre <span className='text-red-500'>*</span></label>
-                                        <input type="text" name="nom" id="nom" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.nom} required onChange={(e) => setFormData({ ...formData, nom: e.target.value })} />
-                                    </div>
-                                    <div className='mb-3 flex flex-col'>
-                                        <label htmlFor="" className='text-text-medium font-bold uppercase'>Prix mensuel(FCFA) <span className='text-red-500'>*</span></label>
-                                        <input type="number" name="prixMensuel" id="prixMensuel" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.prixMensuel} required onChange={(e) => setFormData({ ...formData, prixMensuel: e.target.value })} />
-                                    </div>
-                                    <div className='mb-3 flex flex-col'>
-                                        <label htmlFor="" className='text-text-medium font-bold uppercase'>Fonctionnalités * <span className='text-red-500'>*</span></label>
-                                        <textarea name="fonctionnalites" id="fonctionnalites" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.fonctionnalites} required onChange={(e) => setFormData({ ...formData, fonctionnalites: e.target.value })} placeholder='Séparez les fonctionnalités par des virgules'></textarea>
-                                    </div>
-                                   
-                                    <p className='text-sm text-gray-500 flex items-center gap-2'><FiInfo></FiInfo>Les fonctionnalités sont séparées par des virgules</p>
-            
-                                   
-                                    <div className='mt-5 flex gap-10'>
-                                        <button type="submit" className='bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex gap-2 items-center'>
-                                            <FiSave></FiSave>
-                                            Enregistrer
-                                        </button>
-                                        <button type="reset" className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg ml-2 flex gap-2 items-center'>
-                                            <FiRefreshCcw></FiRefreshCcw>
-                                            Annuler
-                                        </button>
-                                    </div>
-            
-                                </form>
-            
-                            </div >
-                        )}
+            {showAddForm && (
+
+                <div className='bg-white mx-auto p-5 w-1/2 z-50 fixed top-0 left-0 border rounded-lg border-t-2 border-t-red-500 overflow-auto h-[99vh]'>
+                    <button className='w-full text-end  flex justify-end'>
+                        <FiXCircle className='text-red-500 ' size={30} onClick={() => setShowAddForm(false)}></FiXCircle>
+                    </button>
+                    <form action="" onSubmit={handleSubmit}>
+                        <h1 className='my-5 text-xl font-bold '>Créer une offre</h1>
+
+                        <div className='mb-3 flex flex-col'>
+                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Nom de l'offre <span className='text-red-500'>*</span></label>
+                            <input type="text" name="name" id="name" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.name} required onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                        </div>
+                        <div className='mb-3 flex flex-col'>
+                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Durée (en mois) <span className='text-red-500'>*</span></label>
+                            <input type="number" name="duration" id="duration" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.duration} required onChange={(e) => setFormData({ ...formData, duration: e.target.value })} />
+                        </div>
+                        <div className='mb-3 flex flex-col'>
+                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Prix mensuel(FCFA) <span className='text-red-500'>*</span></label>
+                            <input type="number" name="price" id="price" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.price} required onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
+                        </div>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+                            <div className='mb-3 flex flex-col'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Max_produits </label>
+                                <input type="number" name="maxProduits" id="maxProduits" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.max_produits} onChange={(e) => setFormData({ ...formData, max_produits: e.target.value })} />
+                            </div>
+
+                            <div className='mb-3 flex flex-col'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Max_users </label>
+                                <input type="number" name="maxUsers" id="maxUsers" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.max_users} onChange={(e) => setFormData({ ...formData, max_users: e.target.value })} />
+                            </div>
+                        </div>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+                            <div className='mb-3 flex items-center gap-5'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Export_pdf </label>
+                                <input type="checkbox" name="exportPdf" id="exportPdf" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' checked={formData.export_pdf} onChange={(e) => setFormData({ ...formData, export_pdf: e.target.checked })} />
+                            </div>
+
+                            <div className='mb-3 flex items-center gap-5'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Rapports_avances </label>
+                                <input type="checkbox" name="rapportsAvances" id="rapportsAvances" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' checked={formData.rapports_avances} onChange={(e) => setFormData({ ...formData, rapports_avances: e.target.checked })} />
+                            </div>
+
+                            <div className='mb-3 flex items-center gap-5'>
+                                <label htmlFor="" className='text-text-medium font-bold uppercase'>Multi-boutiques </label>
+                                <input type="checkbox" name="multiBoutique" id="multiBoutique" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' checked={formData.multi_boutiques} onChange={(e) => setFormData({ ...formData, multi_boutiques: e.target.checked })} />
+                            </div>
+                        </div>
+                        <div className='mb-3 flex flex-col'>
+                            <label htmlFor="" className='text-text-medium font-bold uppercase'>Fonctionnalités * </label>
+                            <textarea name="fonctionnalites" id="fonctionnalites" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.fonctionnalites} onChange={(e) => setFormData({ ...formData, fonctionnalites: e.target.value })} placeholder='Séparez les fonctionnalités par des virgules'></textarea>
+                        </div>
+
+                        <p className='text-sm text-gray-500 flex items-center gap-2'><FiInfo></FiInfo>Les fonctionnalités sont séparées par des virgules</p>
+
+
+                        <div className='mt-5 flex gap-10'>
+                            <button type="submit" className='bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg flex gap-2 items-center'>
+                                <FiSave></FiSave>
+                                Enregistrer
+                            </button>
+                            <button type="reset" className='bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg ml-2 flex gap-2 items-center'>
+                                <FiRefreshCcw></FiRefreshCcw>
+                                Annuler
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div >
+            )}
+
+            <FlashMessage></FlashMessage>
         </div>
     )
 }

@@ -7,6 +7,8 @@ use App\Models\Abonnement;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\commerce_abonnement;
+use Illuminate\Support\Facades\Redirect;
+
 class AbonnementController extends Controller
 {
     //
@@ -16,7 +18,9 @@ class AbonnementController extends Controller
             return Response()->json(["Message"=>"unauthorized"],403);
         }
         $abonnements=Abonnement::all();
-        return Response()->json(["abonnements"=>$abonnements],200);
+        return Inertia::render('Abonnement',[
+            'abonnements'=>$abonnements
+        ]);
     }
 
     public function getAbonnement($id){
@@ -47,17 +51,19 @@ class AbonnementController extends Controller
         }
 
     public function addAbonnement(Request $req){
+        // dd($req->all());
         $validatedata=$req->validate([
             "name"=>"required",
             "price"=>"required|numeric",
-            "description"=>"nullable",
-            "duration"=>"required|integer",
-            "max_produits"=>"integer",
-            "max_users"=>"integer",
-            "export_pdf"=>"boolean",
-            "rapports_avances"=>"boolean",
-            "multi_boutique"=>"boolean"
+            "fonctionnalites"=>"nullable",
+            "duration"=>"nullable|numeric",
+            "max_produits"=>"nullable|numeric",
+            "max_users"=>"nullable|numeric",
+            "export_pdf"=>"nullable|boolean",
+            "rapports_avances"=>"nullable|boolean",
+            "multi_boutiques"=>"nullable|boolean"
         ]);
+
         $user=Auth::user();
         if($user->role!=="admin"){
             return Response()->json(["Message"=>"unauthorized"],403);
@@ -65,8 +71,8 @@ class AbonnementController extends Controller
         $abonnement=new Abonnement();
         $abonnement->name=$validatedata['name'];
         $abonnement->price=$validatedata['price'];
-        $abonnement->description=$validatedata['description'] ?? null;
-        $abonnement->duration=$validatedata['duration'];
+        $abonnement->fonctionnalites=$validatedata['fonctionnalites'] ?? null;
+        $abonnement->duration=$validatedata['duration']?? null;
         $abonnement->max_produits=$validatedata['max_produits'] ?? 50;
         $abonnement->max_users=$validatedata['max_users'] ?? 1;
         $abonnement->export_pdf=$validatedata['export_pdf'] ?? false;
@@ -74,7 +80,7 @@ class AbonnementController extends Controller
         $abonnement->multi_boutique=$validatedata['multi_boutique'] ?? false;
         $abonnement->save();
 
-        return Response()->json(["Message"=>"Abonnement created successfully","abonnement"=>$abonnement],200);
+        return redirect()->back()->with('success','Abonnement created successfully');
     }
 
      public function updateAbonnement(Request $req,$id){
@@ -85,13 +91,13 @@ class AbonnementController extends Controller
             $validatedata=$req->validate([
                 "name"=>"required",
                 "price"=>"required|numeric",
-                "description"=>"nullable",
-                "duration"=>"required|integer",
+                "fonctionnalites"=>"nullable",
+                "duration"=>"nullable|integer",
                 "max_produits"=>"integer",
                 "max_users"=>"integer",
                 "export_pdf"=>"boolean",
                 "rapports_avances"=>"boolean",
-                "multi_boutique"=>"boolean"
+                "multi_boutiques"=>"boolean"
             ]);
             $user=Auth::user();
             if($user->role!=="admin"){
@@ -99,15 +105,15 @@ class AbonnementController extends Controller
             }
             $abonnement->name=$validatedata['name'];
             $abonnement->price=$validatedata['price'];
-            $abonnement->description=$validatedata['description'] ?? null;
-            $abonnement->duration=$validatedata['duration'];
+            $abonnement->fonctionnalites=$validatedata['fonctionnalites'] ?? null;
+            $abonnement->duration=$validatedata['duration'] ?? null;
             $abonnement->max_produits=$validatedata['max_produits'] ?? 50;
             $abonnement->max_users=$validatedata['max_users'] ?? 1;
             $abonnement->export_pdf=$validatedata['export_pdf'] ?? false;
             $abonnement->rapports_avances=$validatedata['rapports_avances'] ?? false;
-            $abonnement->multi_boutique=$validatedata['multi_boutique'] ?? false;
+            $abonnement->multi_boutique=$validatedata['multi_boutiques'] ?? false;
             $abonnement->save();   
-            return Response()->json(["Message"=>"Abonnement updated successfully","abonnement"=>$abonnement],200);
+            return redirect()->back()->with('success','Abonnement updated successfully');
      }
 
      public function deleteAbonnement($id){
@@ -117,9 +123,9 @@ class AbonnementController extends Controller
          }
          $abonnement=Abonnement::find($id);
          if(!$abonnement){
-             return Response()->json(["Message"=>"Abonnement not found"],404);
+             return redirect()->back()->with('error','Abonnement not found');
          }
          $abonnement->delete();
-         return Response()->json(["Message"=>"Abonnement deleted successfully"],200);
+         return redirect()->back()->with('success','Abonnement deleted successfully');
      }
 }

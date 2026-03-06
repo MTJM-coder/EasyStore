@@ -16,11 +16,15 @@ use Illuminate\Container\Attributes\Auth;
 use App\Http\Controllers\EmployeController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\HistoriqueController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\MouvementStockController;
 use App\Http\Controllers\ProduitController;
 use App\Models\Commerce;
 use App\Models\Produit;
 use App\Http\Controllers\RapportController;
+use Illuminate\Container\Attributes\Log;
+use App\Http\Controllers\NotificationController;
+use app\Http\Controllers\AuditController;
 
 Route::get('/', fn() => Inertia::render('Welcome'))->name('login');
 
@@ -103,6 +107,9 @@ Route::delete('/abonnements/{id}',[AbonnementController::class,"deleteAbonnement
 Route::get('/commerce/dashboard',[DashBoardController::class,'getDashboard'])->name('commerce.dashboard');
 Route::get('/employe/dashboard',[DashBoardController::class,'getDashboardEmploye'])->name('employe.dashboard');
 Route::get('/admin/dashboard',[DashBoardController::class,'getDashboardAdmin'])->name('admin.dashboard');
+
+Route::get('/admin/notifications',[NotificationController::class, 'getNotif']);
+Route::get('/admin/logs',[LogController::class,'index']);
 
 });
 
