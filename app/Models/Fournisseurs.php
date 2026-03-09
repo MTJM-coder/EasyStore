@@ -21,4 +21,6 @@ class Fournisseurs extends Model
     {
         return $this->hasMany(MouvementStock::class, 'fournisseur_id');
     }
+
+    
 }

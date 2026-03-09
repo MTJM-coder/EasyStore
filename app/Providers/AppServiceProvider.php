@@ -2,8 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Fournisseurs;
+use App\Models\Produit;
+use App\Observers\FournisseurObserver;
+use App\Observers\ProduitObserver;
+use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +27,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
+        Produit::observe(ProduitObserver::class);
+        Fournisseurs::observe(FournisseurObserver::class);
+        User::observe(UserObserver::class);
     }
 }

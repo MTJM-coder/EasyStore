@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('audits', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('action');
+            $table->string('action'); //creer , modifier,supprimer,connexion
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('entite');
+            $table->unsignedBigInteger('commerce_id')->nullable();
+            $table->foreign('commerce_id')->references('id')->on('commerces')->onDelete('cascade');
+            $table->string('entite'); //produit,fournisseur,employe,session
             $table->unsignedBigInteger('entite_id');
             $table->foreign('entite_id')->references('id')->on('commerces')->onDelete('cascade');
             $table->datetime('date_action')->nullable();
