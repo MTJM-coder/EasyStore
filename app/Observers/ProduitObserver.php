@@ -60,6 +60,7 @@ class ProduitObserver
         $audit->commerce_id=Auth::user()->commerce_id;
         $audit->entite='produit';
         $audit->entite_id=$produit->id;
+        $audit->entite_name=$produit->name;
         $audit->ip_address=request()->ip();
         $audit->save();
 

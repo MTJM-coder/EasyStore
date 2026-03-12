@@ -59,6 +59,7 @@ class FournisseurObserver
         $audit->commerce_id=Auth::user()->commerce_id;
         $audit->entite='Fournisseur';
         $audit->entite_id=$fournisseurs->id;
+        $audit->entite_name=$fournisseurs->name;
         $audit->ip_address=request()->ip();
         $audit->save();
 

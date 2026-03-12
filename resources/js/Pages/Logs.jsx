@@ -5,7 +5,7 @@ import { FiSearch, FiArrowUpRight, FiBox, FiCalendar, FiAlertTriangle, FiArrowDo
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
 import SideBarAdmin from '@/Layouts/SideBarAdmin'
 
-const Logs = () => {
+const Logs = ({logs}) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [active,setActive]=useState(5);
     const [search, setSearch] = useState("");
@@ -13,63 +13,17 @@ const Logs = () => {
     const [userFilter, setUserFilter] = useState("");
     const [periodeFilter, setPeriodeFilter] = useState("");
 
-    const logs = [
-        {
-            id: 1,
-            utilisateur: "admin",
-            action: "Connexion",
-            role:"administrateur",
-            description: "Connexion réussie",
-            dateHeure: "2024-06-01 14:30:00",
-            ip: "192.168.1.1"
-        },
-        {
-            id: 2,
-            utilisateur: "Sam de la biere",
-            role:"employe",
-            action: "Modification",
-            description: "Modification du produit 'Bière Blonde'",
-            dateHeure: "2024-06-01 15:45:00",
-            ip: "192.168.1.2"
-        },
-        {
-            id: 3,
-            utilisateur: "Daniel du jus",
-            role:"Proprietaire",
-            action: "Suppression",
-            description: "Suppression du produit 'Bière Brune'",
-            dateHeure: "2024-06-01 16:20:00",
-            ip: "192.168.1.3"
-        },
-            {
-            id: 4,
-            utilisateur: "sophie roblond",
-            role:"employe",
-            action: "creation",
-            description: "Ajout du produit 'Savon Lifebuoy 150g'",
-            dateHeure: "2024-06-01 17:00:00",
-            ip: "192.168.1.4"
-            },
-                {
-            id: 5,
-            utilisateur: "admin",
-            role:"administrateur",
-            action: "Connexion",
-            description: "Connexion réussie",
-            dateHeure: "2024-06-02 09:00:00",
-            ip: "192.168.1.5"
-    }];
     const filteredLogs = logs.filter(log => {
         return (
             (typeFilter === "" || log.action.toLowerCase() === typeFilter.toLowerCase()) && 
-            (userFilter === "" || log.role.toLowerCase() === userFilter.toLowerCase()) &&
-            (periodeFilter === "" || log.dateHeure.includes(periodeFilter))
+            (userFilter === "" || log.user.role.toLowerCase() === userFilter.toLowerCase()) &&
+            (periodeFilter === "" || log.created_at.includes(periodeFilter))
         );
     }); 
 const totalConnexions = logs.filter(log => log.action.toLowerCase() === "connexion").length;
-const totalCreations = logs.filter(log => log.action.toLowerCase() === "creation").length;
-const totalModifications = logs.filter(log => log.action.toLowerCase() === "modification").length;
-const totalSuppressions = logs.filter(log => log.action.toLowerCase() === "suppression").length;
+const totalCreations = logs.filter(log => log.action.toLowerCase() === "créé").length;
+const totalModifications = logs.filter(log => log.action.toLowerCase() === "modifié").length;
+const totalSuppressions = logs.filter(log => log.action.toLowerCase() === "supprimé").length;
     return (
         <div>
             <div className='flex bg-secondary'>
@@ -109,8 +63,8 @@ const totalSuppressions = logs.filter(log => log.action.toLowerCase() === "suppr
                                     >
                                         <option value="">Tous</option>
                                         <option value="connexion">Connexion</option>
-                                        <option value="creation">Creation</option>
-                                        <option value="modification">Modification</option>
+                                        <option value="créé">Creation</option>
+                                        <option value="modifié">Modification</option>
 
                                     </select>
                                 </div>
@@ -123,23 +77,23 @@ const totalSuppressions = logs.filter(log => log.action.toLowerCase() === "suppr
                                         <option value="">Tous </option>
                                         <option value="admin">Admin</option>
                                         <option value="employe">Employé</option>
-                                        <option value="client">Client</option>
+                                        <option value="commerce">Client</option>
                                     </select>
                                 </div>
 
-                                <div className='md:w-1/4 w-full  flex items-center gap-3'>
+                                {/* <div className='md:w-1/4 w-full  flex items-center gap-3'>
                                     <label htmlFor="">Période:</label>
                                     <select
                                         className='border-[1.5px] border-gray-300 rounded-lg py-2'
                                         onChange={(e) => setPeriodeFilter(e.target.value)}
                                     >
-                                        <option value="">Aujourd'hui</option>
-                                        <option value="">Cette semaine</option>
-                                        <option value="">Ce mois</option>
-                                        <option value="">Cette année</option>
+                                        <option value={''}>Aujourd'hui</option>
+                                        <option value="week">Cette semaine</option>
+                                        <option value="month">Ce mois</option>
+                                        <option value="year">Cette année</option>
                                         <option value="">Tout</option>
                                     </select>
-                                </div>
+                                </div> */}
 
                             </div>
 
@@ -190,8 +144,11 @@ const totalSuppressions = logs.filter(log => log.action.toLowerCase() === "suppr
                             <thead className='bg-secondary'>
                                 <tr>
                                     <th className='text-left p-3 border-b'>Utilisateur</th>
+                                    <th className='text-left p-3 border-b'>Role</th>
+                                    <th className='text-left p-3 border-b'>Magasin</th>
                                     <th className='text-left p-3 border-b'>Action</th>
-                                    <th className='text-left p-3 border-b'>Description</th>
+                                    <th className='text-left p-3 border-b'>Entité</th>
+                                    <th className='text-left p-3 border-b'>Nom de l'entité</th>
                                     <th className='text-left p-3 border-b'>Date & Heure</th>
                                     <th className='text-left p-3 border-b'>IP</th>
                                 </tr>
@@ -200,11 +157,14 @@ const totalSuppressions = logs.filter(log => log.action.toLowerCase() === "suppr
                                 {/* Exemple de ligne */}
                                 {filteredLogs.map((log, index) => (
                                     <tr key={index} className='hover:bg-gray-100 cursor-pointer'>
-                                        <td className='p-3 border-b'>{log.utilisateur}</td>
-                                        <td className='p-3 border-b'>{log.action}</td>
-                                        <td className='p-3 border-b'>{log.description}</td>
-                                        <td className='p-3 border-b'>{log.dateHeure}</td>
-                                        <td className='p-3 border-b'>{log.ip}</td>
+                                        <td className='p-3 border-b'>{log?.user?.name}</td>
+                                        <td className='p-3 border-b'>{log?.user?.role=='commerce'?'Proprietaire':log?.user?.role}</td>
+                                         <td className='p-3 border-b'>{log?.commerce?.name}</td>
+                                        <td className='p-3 border-b'>{log?.action}</td>
+                                        <td className='p-3 border-b'>{log?.entite}</td>
+                                        <td className='p-3 border-b'>{log?.entite_name??''}</td>
+                                        <td className='p-3 border-b'>{new Date(log?.created_at).toLocaleDateString()} à {new Date(log?.created_at).toLocaleTimeString()}</td>
+                                        <td className='p-3 border-b'>{log?.ip_address}</td>
                                 </tr>
                                 ))}
                             </tbody>

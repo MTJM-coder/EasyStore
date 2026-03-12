@@ -10,6 +10,7 @@ class Audit extends Model
     protected $fillable = [
         'action',
         'user_id',
+        'commerce_id',
         'entite',
         'entite_id',
         'date_action',
@@ -24,4 +25,6 @@ class Audit extends Model
     public function commerce(){
         return $this->belongsTo(Commerce::class);
     }
+  
+   
 }

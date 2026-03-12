@@ -60,6 +60,7 @@ class UserObserver
         $audit->commerce_id=Auth::user()->commerce_id;
         $audit->entite='User';
         $audit->entite_id=$user->id;
+        $audit->entite_name=$user->name;
         $audit->ip_address=request()->ip();
         $audit->save();
 
