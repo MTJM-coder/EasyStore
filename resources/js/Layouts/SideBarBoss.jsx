@@ -14,7 +14,7 @@ const SideBarBoss = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
 
     const liens = [
         { id: 1, nom: "Tableau de bord", type: "vue d'ensemble", icon: <FiBarChart2></FiBarChart2>, lien: '/commerce/dashboard' },
-        { id: 2, nom: "Consulter le stock", type: "stock", icon: <FiBox></FiBox>, lien: '/stocks' },
+        // { id: 2, nom: "Consulter le stock", type: "stock", icon: <FiBox></FiBox>, lien: '/stocks' },
         { id: 3, nom: "Entrée en stock", type: "stock", icon: <FiChevronsDown></FiChevronsDown>,lien:'/mouvements/entrees' },
         { id: 4, nom: "Sortie de stock", type: "stock", icon: <FiChevronsUp></FiChevronsUp>,lien:'/mouvements/sorties' },
         { id: 5, nom: "Générer un rapport", type: "rapport", icon: <FiBarChart></FiBarChart>,lien:'/rapports' },

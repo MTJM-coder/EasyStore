@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -11,50 +12,86 @@ use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use App\Models\Abonnement;
+use App\Models\commerce_abonnement;
+use Illuminate\Support\Facades\DB;
+
 
 class AuthController extends Controller
 {
     //
     public function register(Request $req)
     {
+        
+       
         $validateData = $req->validate([
             'email' => 'unique:users',
-            'nom' => 'required',
+            'name' => 'required',
             'telephone' => 'required|unique:users',
-            'password' => 'required|confirmed',
+            'password' => 'required',
             'nom_commerce' => 'required',
         ]);
 
+
         try {
-            $user = new User();
-            $user->name = $validateData['nom'];
-            $user->email = $validateData['email'];
-            $user->telephone = $validateData['telephone'];
-            $user->role = 'commerce';
-            $user->password = Hash::make($validateData['password']);
-            $user->actif = true;
-            $user->save();
+            DB::transaction(function () use ($req) {
+                // Créer l'utilisateur
+                $user = new User();
+                $user->name = $req->name;
+                $user->email = $req->email;
+                $user->telephone = $req->telephone;
+                $user->role = 'commerce';
+                $user->password = Hash::make($req->password);
+                $user->actif = true;
+                $user->save();
 
-            $commerce = new Commerce();
-            $commerce->name = $validateData['nom_commerce'];
-            $commerce->commercant_id = $user->id;
-            $commerce->save();
+                // Créer le commerce
+                $commerce = new Commerce();
+                $commerce->name = $req->nom_commerce;
+                $commerce->commercant_id = $user->id;
+                $commerce->save();
 
-            $user->commerce_id = $commerce->id;
-            $user->save();
+                $user->commerce_id = $commerce->id;
+                $user->save();
 
+                // Abonnement gratuit par défaut
+                $planGratuit = Abonnement::where('price', 0)->first();
+                if ($planGratuit) {
+                    Commerce_abonnement::create([
+                        'commerce_id'   => $commerce->id,
+                        'abonnement_id' => $planGratuit->id,
+                        'status' => 'actif',
+                        'starts_at' => now(),
+                        'ends_at' => now()->addDays(14),
+                    ]);
+                }
 
-            return response()->json([201, 'message' => 'User registered successfully']);
+                // Logger l'inscription
+                Audit::create([
+                    'user_id'          => $user->id,
+                    'commerce_id'      => $commerce->id,
+                    'action'           => 'inscription',
+                    'entite'           => 'utilisateur',
+                    'entite_id'        => $user->id,
+                    'ip_address' => $req->ip(),
+                ]);
+
+                // Connecter automatiquement après inscription
+                Auth::login($user);
+                $req->session()->regenerate();
+            });
+
+             return Inertia::location(route('commerce.dashboard'));
         } catch (Exception $e) {
-            return response()->json([500, 'message' => $e->getMessage()]);
-        };
+            return back()->withErrors(['error' => 'Une erreur est survenue : ' . $e->getMessage()]);
+        }
     }
 
     // login
 
     public function login(Request $req)
     {
-        
+
         $validateData = $req->validate([
             'email' => "required|email",
             'password' => "required",
@@ -70,6 +107,21 @@ class AuthController extends Controller
         // Regénérer la session pour la sécurité
         $req->session()->regenerate();
 
+        // Logger la connexion
+        Audit::create([
+            'user_id'    => Auth::id(),
+            'commerce_id' => Auth::user()->commerce_id,
+            'action'     => 'connexion',
+            'entite'     => 'session',
+            'entite_id'  => null,
+
+            // 'nouvelles_valeurs' => json_encode([
+            //     'name' => Auth::user()->name,
+            //     'role' => Auth::user()->role,
+            // ]),
+            'ip_address' => $req->ip(),
+        ]);
+
         if ($user->role === "commerce") {
 
             return Inertia::location(route('commerce.dashboard'));
@@ -81,15 +133,25 @@ class AuthController extends Controller
     }
 
     // logout
-    public function logout()
+    public function logout(Request $req)
     {
+        // Logger avant de déconnecter
+        Audit::create([
+            'user_id'    => Auth::id(),
+            'commerce_id' => Auth::user()->commerce_id,
+            'action'     => 'déconnexion',
+            'entite'     => 'session',
+            'entite_id' => null,
+            'ip_address' => $req->ip(),
+            // 'nouvelles_valeurs' => json_encode([
+            //     'name' => Auth::user()->name,
+            //     'role' => Auth::user()->role,
+            // ]),
+        ]);
         Auth::logout();
         session()->invalidate();
         session()->regenerateToken();
-        return response()->json([
-            'status' => 200,
-            'message' => 'Logout successful'
-        ]);
+        return redirect('/');
     }
 
     // fontion() getMe pour obtenir les infos d'un de l'utilisateu connecté
@@ -109,13 +171,13 @@ class AuthController extends Controller
 
     public function updatedPassword(Request $req)
     {
-       
+
         $validateData = $req->validate([
             'passwordActuel' => 'required',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required'
         ]);
-         
+
 
         $user = Auth::user()->id;
         $user = User::find($user);
@@ -132,17 +194,17 @@ class AuthController extends Controller
 
     public function updateMe(Request $req)
     {
-         
+
         $user_id = Auth::user()->id;
-        
+
         $validateData = $req->validate([
             'email' => 'required',
             'name' => 'required',
             'telephone' => 'required',
 
         ]);
-        
-       
+
+
         $user = User::find($user_id);
         try {
             $user->name = $validateData['name'];

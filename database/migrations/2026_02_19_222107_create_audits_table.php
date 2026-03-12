@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('commerce_id')->nullable();
             $table->foreign('commerce_id')->references('id')->on('commerces')->onDelete('cascade');
             $table->string('entite'); //produit,fournisseur,employe,session
-            $table->unsignedBigInteger('entite_id');
+            $table->unsignedBigInteger('entite_id')->nullable();
             
             $table->foreign('entite_id')->references('id')->on('produits')->onDelete('cascade');
             $table->datetime('date_action')->nullable();

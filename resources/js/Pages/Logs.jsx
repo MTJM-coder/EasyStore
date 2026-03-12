@@ -5,7 +5,7 @@ import { FiSearch, FiArrowUpRight, FiBox, FiCalendar, FiAlertTriangle, FiArrowDo
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
 import SideBarAdmin from '@/Layouts/SideBarAdmin'
 
-const Logs = ({logs}) => {
+const Logs = ({logs,totalVue}) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [active,setActive]=useState(5);
     const [search, setSearch] = useState("");
@@ -133,7 +133,7 @@ const totalSuppressions = logs.filter(log => log.action.toLowerCase() === "suppr
                             <div className='w-12 h-12 bg-purple-200 flex justify-center items-center rounded-lg'><FiEye size={30} className='text-purple-600'></FiEye></div>
                             <div className='flex flex-col'>
                                 <span className='text-text-medium'>Visites</span>
-                                <span className='text-3xl font-bold'>{0}</span>
+                                <span className='text-3xl font-bold'>{totalVue}</span>
                             </div>
                         </div>
                     </div>

@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { FiBarChart2, FiBell, FiBookmark, FiBox, FiChevronsDown, FiChevronsUp, FiCreditCard, FiDatabase, FiLogOut, FiSettings, FiUser } from 'react-icons/fi'
 import Header from './Header'
 import { FaStore } from 'react-icons/fa'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 
 const SideBarAdmin = ({ sidebarOpen, setSidebarOpen,active,setActive }) => {
     
     const handleLogout = function () {
         if (confirm("Etes-vous sur de vouloir vous deconnecter?")) {
-            alert("disconnected!")
+            router.post('/auth/logout');
         }
     }
 

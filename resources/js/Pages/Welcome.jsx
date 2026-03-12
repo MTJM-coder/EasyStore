@@ -49,7 +49,7 @@ const Welcome = () => {
                             <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#fonctionnalites">Fonctionnalités</a></li>
                             <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#tarifs">Tarifs</a></li>
                             <li className='hover:uppercase hover:text-primary'><a onClick={() => setShowMenu(false)} href="#contact">Contact</a></li>
-                            <li className='border  inline-block text-primary px-6 py-4 rounded-lg'><a className='flex items-center gap-3' onClick={() => {setShowLogin(true),setShowMenu(false),setShowRegister(false)}} href="#contact"><FiLogIn></FiLogIn>Connexion</a></li>
+                            <li className='border  inline-block text-primary px-6 py-4 rounded-lg'><a className='flex items-center gap-3' onClick={() => {setShowLogin(true),setShowMenu(false),setShowRegister(false)}}><FiLogIn></FiLogIn>Connexion</a></li>
                         </ul>
                     </div>
                 )}

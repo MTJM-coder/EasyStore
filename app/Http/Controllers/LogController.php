@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audit;
+use App\Models\Visite;
 use Illuminate\Container\Attributes\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -17,9 +18,10 @@ class LogController extends Controller
             return redirect()->back()->with('error','acces non autorisé');
         }
         $historique=Audit::with('user','commerce')->get();
-        
+        $nbreVue=Visite::count();
         return Inertia::render('Logs',[
-            'logs'=>$historique
+            'logs'=>$historique,
+            'totalVue'=>$nbreVue
 
         ]);
     }

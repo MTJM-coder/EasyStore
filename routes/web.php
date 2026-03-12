@@ -25,8 +25,9 @@ use App\Http\Controllers\RapportController;
 use Illuminate\Container\Attributes\Log;
 use App\Http\Controllers\NotificationController;
 use app\Http\Controllers\AuditController;
+use App\Http\Controllers\VisiteController;
 
-Route::get('/', fn() => Inertia::render('Welcome'))->name('login');
+Route::get('/', [VisiteController::class,'index'])->name('login');
 
 Route::post('/auth/register',[AuthController::class,'register']);
 Route::post('/auth/login',[AuthController::class,'login']);
