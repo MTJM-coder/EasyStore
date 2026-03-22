@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY composer.json composer.lock ./
 
-RUN composer install --no-dev --optimize-autoloader --no-scripts --no-autoloader
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-scripts --no-autoloader
 
 COPY . .
 
