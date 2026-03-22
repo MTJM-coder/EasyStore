@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('produits', function (Blueprint $table) {
             //
-            $table->decimal('selling_price', 8, 2)->nullable()->after('purcharsing_price');
+            $table->decimal('selling_price', 8, 2)->nullable()->after('purchasing_price');
             $table->enum('unit', ['piece', 'kg', 'litre','carton'])->default('piece')->after('selling_price');
         });
     }
