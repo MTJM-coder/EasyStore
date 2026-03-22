@@ -1,5 +1,5 @@
 import SidebarEmploye from '@/Layouts/SidebarEmploye'
-import SideBarBoss from '@/Layouts/SidebarBoss'
+import SideBarBoss from '@/Layouts/SideBarBoss'
 import React from 'react'
 import { FiPlus, FiSearch, FiMenu, FiBox, FiCheck, FiAlertTriangle, FiEdit, FiTrash2, FiSave, FiRefreshCcw, FiXCircle } from 'react-icons/fi';
 import { useState } from 'react';
