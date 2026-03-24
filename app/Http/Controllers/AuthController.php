@@ -23,7 +23,7 @@ class AuthController extends Controller
     public function register(Request $req)
     {
         
-        dd(0);
+        
        
         $validateData = $req->validate([
             'email' => 'unique:users',
@@ -33,6 +33,7 @@ class AuthController extends Controller
             'nom_commerce' => 'required',
         ]);
         
+        dd(0);
 
 
         try {
