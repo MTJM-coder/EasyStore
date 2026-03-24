@@ -53,8 +53,6 @@ class AuthController extends Controller
             $user->commerce_id = $commerce->id;
             $user->save();
 
-            dd("UPDATE USER OK");
-
             $planGratuit = Abonnement::where('price', 0)->first();
             dd($planGratuit);
 
