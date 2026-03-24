@@ -3,9 +3,9 @@ FROM php:8.3-cli
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libfreetype6-dev libjpeg62-turbo-dev nodejs npm \
+    git curl zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev libfreetype6-dev libjpeg62-turbo-dev libpq-dev nodejs npm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip mbstring exif pcntl bcmath gd\
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip mbstring exif pcntl bcmath gd \
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 
