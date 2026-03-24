@@ -45,14 +45,10 @@ class AuthController extends Controller
             $user->actif = true;
             $user->save();
 
-            dd("USER OK");
-
             $commerce = new Commerce();
             $commerce->name = $req->nom_commerce;
             $commerce->commercant_id = $user->id;
             $commerce->save();
-
-            dd("COMMERCE OK");
 
             $user->commerce_id = $commerce->id;
             $user->save();
