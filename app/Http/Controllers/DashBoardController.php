@@ -62,7 +62,7 @@ class DashBoardController extends Controller
         $totalCommerces = Commerce::count();
         $totalAbonnementsActif = commerce_abonnement::where('status', 'actif')->count();
         $totalAbonnementsExpiré = commerce_abonnement::where('status', 'expiré')->count();
-        $abonnementsCritiques = commerce_abonnement::whereRaw('DATEDIFF(ends_at, NOW()) <= 10')->with('commerce','abonnement')->get();
+       $abonnementsCritiques = commerce_abonnement::whereRaw("ends_at <= NOW() + INTERVAL '10 days'")->with('commerce','abonnement')->get();
         $revenuMensuel = commerce_abonnement::where('status', 'actif')
             ->whereMonth('created_at', now()->month)
             ->with('abonnement')
