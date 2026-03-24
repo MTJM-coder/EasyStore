@@ -4,6 +4,7 @@ import { FiBarChart, FiBox, FiUsers, FiAlertTriangle, FiSmartphone, FiShield, Fi
 import { FaWhatsapp } from "react-icons/fa";
 import Register from './Auth/Register';
 import Login from './Auth/Login';
+import FlashMessage from '@/Components/FlashMessage';
 
 
 const Welcome = () => {
@@ -324,6 +325,7 @@ const Welcome = () => {
                     &copy; 2026 EasyStore Technologies. Tous droits réservés. Conçu avec passion pour l'Afrique.
                 </div>
             </div>
+            <FlashMessage></FlashMessage>
         </div>
     )
 }

@@ -54,12 +54,32 @@ class AuthController extends Controller
             $user->save();
 
             $planGratuit = Abonnement::where('price', 0)->first();
-            dd($planGratuit);
+            if ($planGratuit) {
+                Commerce_abonnement::create([
+                    'commerce_id' => $commerce->id, 
+                    'abonnement_id' => $planGratuit->id, 
+                    'status' => 'actif', 
+                    'starts_at' => now(), 
+                    'ends_at' => now()->addDays(14),]);
+            }
+            // Logger l'inscription 
+            Audit::create([
+                'user_id' => $user->id,
+                'commerce_id' => $commerce->id,
+                'action' => 'inscription',
+                'entite' => 'utilisateur',
+                'entite_id' => $user->id,
+                'ip_address' => $req->ip(),
+            ]);
 
-            DB::commit();
+            // Connecter automatiquement après inscription 
+            Auth::login($user);
+            $req->session()->regenerate();
+
+            return Inertia::location(route('commerce.dashboard'));;
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
+            return redirect()->back()->with('error',$e->getMessage());
         }
     }
 
