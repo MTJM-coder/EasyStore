@@ -62,15 +62,23 @@ class DashBoardController extends Controller
         $totalCommerces = Commerce::count();
         $totalAbonnementsActif = commerce_abonnement::where('status', 'actif')->count();
         $totalAbonnementsExpiré = commerce_abonnement::where('status', 'expiré')->count();
-       $abonnementsCritiques = commerce_abonnement::whereRaw("ends_at <= NOW() + INTERVAL '10 days'")->with('commerce','abonnement')->get();
+        $abonnementsCritiques = commerce_abonnement::whereRaw("ends_at <= NOW() + INTERVAL '10 days'")->with('commerce', 'abonnement')->get();
         $revenuMensuel = commerce_abonnement::where('status', 'actif')
-            ->whereMonth('created_at', now()->month)
+            ->whereBetween('created_at', [
+                now()->startOfMonth(),
+                now()->endOfMonth()
+            ])
             ->with('abonnement')
             ->get()
             ->sum(fn($item) => $item->abonnement->price);
 
         $activitesRecente = commerce_abonnement::with('commerce')->orderBy('created_at', 'desc')->take(10)->get();
-        $nouveauxCommerces = Commerce::where('created_at', now()->month)->with('commerce_abonnement.abonnement')->get();
+        $nouveauxCommerces = Commerce::whereBetween('created_at', [
+            now()->startOfMonth(),
+            now()->endOfMonth()
+        ])
+            ->with('commerce_abonnement.abonnement')
+            ->get();
         return Inertia::render('DashboardAdmin', [
             "totalCommerces" => $totalCommerces,
             "totalAbonnementsActif" => $totalAbonnementsActif,
