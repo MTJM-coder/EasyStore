@@ -22,9 +22,9 @@ class AuthController extends Controller
     //
     public function register(Request $req)
     {
-        
-        
-       
+
+
+
         $validateData = $req->validate([
             'email' => 'unique:users',
             'name' => 'required',
@@ -32,58 +32,40 @@ class AuthController extends Controller
             'password' => 'required',
             'nom_commerce' => 'required',
         ]);
-        
+
         try {
-            DB::transaction(function () use ($req) {
-                // Créer l'utilisateur
-                $user = new User();
-                $user->name = $req->name;
-                $user->email = $req->email;
-                $user->telephone = $req->telephone;
-                $user->role = 'commerce';
-                $user->password = Hash::make($req->password);
-                $user->actif = true;
-                $user->save();
+            DB::beginTransaction();
 
-                // Créer le commerce
-                $commerce = new Commerce();
-                $commerce->name = $req->nom_commerce;
-                $commerce->commercant_id = $user->id;
-                $commerce->save();
+            $user = new User();
+            $user->name = $req->name;
+            $user->email = $req->email;
+            $user->telephone = $req->telephone;
+            $user->role = 'commerce';
+            $user->password = Hash::make($req->password);
+            $user->actif = true;
+            $user->save();
 
-                $user->commerce_id = $commerce->id;
-                $user->save();
+            dd("USER OK");
 
-                // Abonnement gratuit par défaut
-                $planGratuit = Abonnement::where('price', 0)->first();
-                if ($planGratuit) {
-                    Commerce_abonnement::create([
-                        'commerce_id'   => $commerce->id,
-                        'abonnement_id' => $planGratuit->id,
-                        'status' => 'actif',
-                        'starts_at' => now(),
-                        'ends_at' => now()->addDays(14),
-                    ]);
-                }
+            $commerce = new Commerce();
+            $commerce->name = $req->nom_commerce;
+            $commerce->commercant_id = $user->id;
+            $commerce->save();
 
-                // Logger l'inscription
-                Audit::create([
-                    'user_id'          => $user->id,
-                    'commerce_id'      => $commerce->id,
-                    'action'           => 'inscription',
-                    'entite'           => 'utilisateur',
-                    'entite_id'        => $user->id,
-                    'ip_address' => $req->ip(),
-                ]);
+            dd("COMMERCE OK");
 
-                // Connecter automatiquement après inscription
-                Auth::login($user);
-                $req->session()->regenerate();
-            });
-    dd(9);
-             return Inertia::location(route('commerce.dashboard'));
-        } catch (Exception $e) {
-            return back()->withErrors(['error' => 'Une erreur est survenue : ' . $e->getMessage()]);
+            $user->commerce_id = $commerce->id;
+            $user->save();
+
+            dd("UPDATE USER OK");
+
+            $planGratuit = Abonnement::where('price', 0)->first();
+            dd($planGratuit);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
         }
     }
 
