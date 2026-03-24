@@ -33,9 +33,6 @@ class AuthController extends Controller
             'nom_commerce' => 'required',
         ]);
         
-        dd(0);
-
-
         try {
             DB::transaction(function () use ($req) {
                 // Créer l'utilisateur
@@ -83,7 +80,7 @@ class AuthController extends Controller
                 Auth::login($user);
                 $req->session()->regenerate();
             });
-
+    dd(9);
              return Inertia::location(route('commerce.dashboard'));
         } catch (Exception $e) {
             return back()->withErrors(['error' => 'Une erreur est survenue : ' . $e->getMessage()]);
