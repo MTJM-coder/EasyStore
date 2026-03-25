@@ -71,7 +71,7 @@ class AuthController extends Controller
                 'entite_id' => null,
                 'ip_address' => $req->ip(),
             ]);
-        dd(9);
+        
             // Connecter automatiquement après inscription 
             Auth::login($user);
             $req->session()->regenerate();
