@@ -67,11 +67,11 @@ class AuthController extends Controller
                 'user_id' => $user->id,
                 'commerce_id' => $commerce->id,
                 'action' => 'inscription',
-                'entite' => 'utilisateur',
-                'entite_id' => $user->id,
+                'entite' => 'utilisate ur',
+                'entite_id' => null,
                 'ip_address' => $req->ip(),
             ]);
-
+        dd(9);
             // Connecter automatiquement après inscription 
             Auth::login($user);
             $req->session()->regenerate();
