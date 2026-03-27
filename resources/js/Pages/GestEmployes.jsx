@@ -245,7 +245,7 @@ const GestEmployes = ({ employes }) => {
             </div>
             {showAddForm && (
 
-                <div className='bg-white mx-auto p-5 w-1/2 z-50 fixed top-0 left-0 border rounded-lg'>
+                <div className='bg-white mx-auto p-5 md:w-1/2 w-full z-50 fixed top-0 left-0 border rounded-lg'>
                     <button className='w-full text-end  flex justify-end'>
                         <FiXCircle className='text-red-500 ' size={30} onClick={() => closeForm()}></FiXCircle>
                     </button>
