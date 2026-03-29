@@ -185,7 +185,7 @@ const Welcome = () => {
                             <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Historique 3 mois</p></div>
                         </div>
 
-                        <button className='border-2 border-primary-dark px-4 py-2 text-xl w-full rounded-2xl text-primary'>Commencer</button>
+                        <button className='border-2 border-primary-dark px-4 py-2 text-xl w-full rounded-2xl text-primary' onClick={()=>setShowRegister(true)}>Commencer</button>
                     </div>
 
                     {/* plan business */}
@@ -212,7 +212,7 @@ const Welcome = () => {
                             <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Alertes SMS</p></div>
                         </div>
 
-                        <button className='border-2 border-primary-dark px-4 py-2 bg-primary text-xl w-full rounded-2xl text-white'>Commencer</button>
+                        <button className='border-2 border-primary-dark px-4 py-2 bg-primary text-xl w-full rounded-2xl text-white' onClick={()=>setShowRegister(true)}>Commencer</button>
                     </div>
 
                     {/* pour entreprise */}
@@ -235,7 +235,7 @@ const Welcome = () => {
                             <div className='my-7 flex items-center gap-10'><FiCheckCircle size={24} className='text-green-600'></FiCheckCircle><p>Manager dédié</p></div>
                         </div>
 
-                        <button className='border-2 border-primary-dark px-4 py-2 text-xl w-full rounded-2xl text-primary'>Commencer</button>
+                        <button className='border-2 border-primary-dark px-4 py-2 text-xl w-full rounded-2xl text-primary' onClick={()=>setShowRegister(true)}>Commencer</button>
                     </div>
 
                 </div>
@@ -256,11 +256,11 @@ const Welcome = () => {
                 </div>
                 <div className=' flex md:flex-row flex-col justify-center m-auto items-center gap-10'>
                     <button className='border px-7 text-primary-dark md:uppercase  bg-white rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl' onClick={()=>{setShowRegister(true),setShowLogin(false)}}>Commencer gratuitement</button>
-                    <button className='border border-white px-7 md:uppercase text-purple-400 bg-transparent  rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl'>Parler à un expert </button>
+                    <a href="https:\\wa.me\652766351"><button className='border border-white px-7 md:uppercase text-purple-400 bg-transparent  rounded-2xl hover:bg-primary-darker hover:text-white transition-all duration-300 ease-in-out py-5 text-2xl'>Parler à un expert </button></a>
                 </div>
             </div>
 
-            {/* footer */}
+            {/* footer */}f
             <div className='bg-black px-10 py-10'>
                 <div className='flex md:flex-row flex-col gap-16'>
                     <div className='md:w-1/4'>
