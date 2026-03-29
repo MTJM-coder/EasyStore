@@ -3,6 +3,7 @@ import { FaKey } from 'react-icons/fa'
 import { FiHome, FiKey, FiLock, FiMail, FiPhone, FiShoppingCart, FiUser, FiXOctagon } from 'react-icons/fi'
 import { useEffect, useState } from 'react'
 import { router } from '@inertiajs/react'
+import { usePage } from '@inertiajs/react'
 
 const Login = ({ showLogin, setShowLogin, showRegister, setShowRegister }) => {
 
@@ -10,6 +11,7 @@ const Login = ({ showLogin, setShowLogin, showRegister, setShowRegister }) => {
         email: '',
         password: ''
     })
+    const { errors } = usePage().props
     const handleSubmit = (e) => {
         e.preventDefault();
         router.post('/auth/login', formData, {
@@ -52,9 +54,9 @@ const Login = ({ showLogin, setShowLogin, showRegister, setShowRegister }) => {
                     <h1 className="text-primary font-bold text-2xl">EasyStore</h1>
 
                     <div>
-                        <h2 className="text-2xl font-bold">Bienvenue de retour</h2>
+                        <h2 className="text-2xl font-bold">Bienvenue </h2>
                         <p className="text-text-medium">
-                            Connectez-vous à votre espace en sécurité
+                            Connectez-vous à votre espace en toute sécurité
                         </p>
                     </div>
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -70,6 +72,7 @@ const Login = ({ showLogin, setShowLogin, showRegister, setShowRegister }) => {
                                     onChange={(e)=>setFormData({...formData,email:e.target.value})}
                                 />
                             </div>
+                            {errors.email && <span className="text-red-500 text-sm">{errors.email}</span> }
                         </div>
 
                         {/* Password */}
@@ -85,6 +88,7 @@ const Login = ({ showLogin, setShowLogin, showRegister, setShowRegister }) => {
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 />
                             </div>
+                            {errors.password && <span className="text-red-500 text-sm">{errors.password}</span> }
                         </div>
 
                         <span className="text-right text-primary cursor-pointer">

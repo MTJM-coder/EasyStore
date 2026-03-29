@@ -3,6 +3,7 @@ import { FaKey } from 'react-icons/fa'
 import { FiHome, FiKey, FiLock, FiMail, FiPhone, FiShoppingCart, FiUser, FiXOctagon } from 'react-icons/fi'
 import { useEffect } from 'react'
 import { router } from '@inertiajs/react'
+import { usePage } from '@inertiajs/react'
 
 const Register = ({ showRegister, setShowRegister, showLogin, setShowLogin }) => {
     const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ const Register = ({ showRegister, setShowRegister, showLogin, setShowLogin }) =>
         nom_commerce: "",
         password: "",
     })
-
+const { errors } = usePage().props
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -56,6 +57,7 @@ const Register = ({ showRegister, setShowRegister, showLogin, setShowLogin }) =>
                                     <FiUser className='absolute left-3 top-1/2 -translate-y-1/2 text-text-medium'></FiUser>
                                     <input className='w-full rounded-lg border pl-10  focus:border-primary-dark' value={formData.name} onChange={(e)=>setFormData({...formData,name:e.target.value})} required type="text" />
                                 </div>
+                                 {errors.name && <span className="text-red-500 text-sm">{errors.name}</span> }
                             </div>
                             {/* <div className='md:flex flex-col gap-2  hidden'>
                             <label className='font-bold text-text-medium' htmlFor="">Prénom</label>
@@ -75,6 +77,7 @@ const Register = ({ showRegister, setShowRegister, showLogin, setShowLogin }) =>
                                     value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 />
                             </div>
+                            {errors.email && <span className="text-red-500 text-sm">{errors.email}</span> }
                         </div>
 
                         <div className='flex flex-col gap-2 w-full'>
@@ -86,6 +89,7 @@ const Register = ({ showRegister, setShowRegister, showLogin, setShowLogin }) =>
                                     value={formData.telephone} onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
                                 />
                             </div>
+                            {errors.telephone && <span className="text-red-500 text-sm">{errors.telephone}</span> }
                         </div>
 
                         <div className='flex flex-col gap-2 w-full'>
@@ -96,6 +100,7 @@ const Register = ({ showRegister, setShowRegister, showLogin, setShowLogin }) =>
                                     value={formData.nom_commerce} onChange={(e) => setFormData({ ...formData, nom_commerce: e.target.value })}
                                 />
                             </div>
+                            {errors.nom_commerce && <span className="text-red-500 text-sm">{errors.nom_commerce}</span> }
                         </div>
 
                         <div className='flex flex-col gap-2 w-ful'>
@@ -107,6 +112,7 @@ const Register = ({ showRegister, setShowRegister, showLogin, setShowLogin }) =>
                                     value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 />
                             </div>
+                            {errors.password && <span className="text-red-500 text-sm">{errors.password}</span> }
                         </div>
                         <div className='flex justify-between items-center'>
                             <div className='border-2 border-x-text-medium w-1/12'></div>
