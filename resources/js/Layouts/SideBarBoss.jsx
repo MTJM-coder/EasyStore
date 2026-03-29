@@ -5,9 +5,9 @@ import { Link, router, usePage } from '@inertiajs/react'
 
 const SideBarBoss = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
     // const [active, setActive] = useState(1)
-    const {auth}=usePage().props;
+    const { auth } = usePage().props;
     const handleLogout = function () {
-        if (confirm("Etes-vous sur de vouloir vous deconnecter?")) {
+        if (confirm("Etes-vous sur de vouloir vous déconnecter?")) {
             router.post('/auth/logout');
         }
     }
@@ -15,15 +15,15 @@ const SideBarBoss = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
     const liens = [
         { id: 1, nom: "Tableau de bord", type: "vue d'ensemble", icon: <FiBarChart2></FiBarChart2>, lien: '/commerce/dashboard' },
         // { id: 2, nom: "Consulter le stock", type: "stock", icon: <FiBox></FiBox>, lien: '/stocks' },
-        { id: 3, nom: "Entrée en stock", type: "stock", icon: <FiChevronsDown></FiChevronsDown>,lien:'/mouvements/entrees' },
-        { id: 4, nom: "Sortie de stock", type: "stock", icon: <FiChevronsUp></FiChevronsUp>,lien:'/mouvements/sorties' },
-        { id: 5, nom: "Générer un rapport", type: "rapport", icon: <FiBarChart></FiBarChart>,lien:'/rapports' },
-        { id: 6, nom: "Historique", type: "rapport", icon: <FiDatabase></FiDatabase>,lien:'/historique' },
-        { id: 7, nom: "Parametre", type: "parametre", icon: <FiSettings></FiSettings>,lien:'/auth/me' },
-        { id: 8, nom: "Produit", type: "gestion", icon: <FiBox></FiBox>,lien:'/products'},
-        { id: 9, nom: "Fournisseur", type: "gestion", icon: <FiTruck></FiTruck> ,lien:'/suppliers'},
+        { id: 3, nom: "Entrée en stock", type: "stock", icon: <FiChevronsDown></FiChevronsDown>, lien: '/mouvements/entrees' },
+        { id: 4, nom: "Sortie de stock", type: "stock", icon: <FiChevronsUp></FiChevronsUp>, lien: '/mouvements/sorties' },
+        { id: 5, nom: "Générer un rapport", type: "rapport", icon: <FiBarChart></FiBarChart>, lien: '/rapports' },
+        { id: 6, nom: "Historique", type: "rapport", icon: <FiDatabase></FiDatabase>, lien: '/historique' },
+        { id: 7, nom: "Parametre", type: "parametre", icon: <FiSettings></FiSettings>, lien: '/auth/me' },
+        { id: 8, nom: "Produit", type: "gestion", icon: <FiBox></FiBox>, lien: '/products' },
+        { id: 9, nom: "Fournisseur", type: "gestion", icon: <FiTruck></FiTruck>, lien: '/suppliers' },
         // { id: 10, nom: "Employe", type: "gestion", icon: <FiUsers></FiUsers>,lien:'employes' },
-        { id: 11, nom: "Abonnement", type: "parametre", icon: <FiCreditCard></FiCreditCard>,lien:'/commerce/abonnements' }
+        { id: 11, nom: "Abonnement", type: "parametre", icon: <FiCreditCard></FiCreditCard>, lien: '/commerce/abonnements' }
 
     ]
 
@@ -107,9 +107,13 @@ const SideBarBoss = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
                     )}
                     <hr />
                 </div>
-                <Link className='py-2 flex items-center justify-center'>
-                    <button onClick={() => handleLogout()} className='rounded-lg text-text-medium bg-white  flex items-center gap-4 border-[1.5px] border-gray-300 py-2 px-5  hover:border-red-600 hover:bg-red-200 hover:text-red-600'><FiLogOut></FiLogOut> Déconnexion</button>
-                </Link>
+                <div className='py-2 flex items-center justify-center'>
+                    <button
+                        onClick={() => handleLogout()}
+                        className='rounded-lg text-text-medium bg-white flex items-center gap-4 border-[1.5px] border-gray-300 py-2 px-5 hover:border-red-600 hover:bg-red-200 hover:text-red-600'>
+                        <FiLogOut /> Déconnexion
+                    </button>
+                </div>
             </div>
         </div>
     )

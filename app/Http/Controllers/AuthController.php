@@ -141,10 +141,7 @@ class AuthController extends Controller
             'entite'     => 'session',
             'entite_id' => null,
             'ip_address' => $req->ip(),
-            // 'nouvelles_valeurs' => json_encode([
-            //     'name' => Auth::user()->name,
-            //     'role' => Auth::user()->role,
-            // ]),
+            
         ]);
         Auth::logout();
         session()->invalidate();

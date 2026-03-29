@@ -7,7 +7,7 @@ import { Link, router } from '@inertiajs/react'
 const SideBarAdmin = ({ sidebarOpen, setSidebarOpen,active,setActive }) => {
     
     const handleLogout = function () {
-        if (confirm("Etes-vous sur de vouloir vous deconnecter?")) {
+        if (confirm("Etes-vous sur de vouloir vous déconnecter?")) {
             router.post('/auth/logout');
         }
     }
