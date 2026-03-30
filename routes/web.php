@@ -63,6 +63,7 @@ Route::get('/admin/commerces',[CommerceController::class,'getCommerces']);
 Route::get('/commerces/{id}',[CommerceController::class,'getCommerce']);
 Route::put('/commerces/{id}',[CommerceController::class,'updateCommerce']);
 Route::put('/commerces/{id}/abonnement',[CommerceController::class,'abonnement']);
+Route::delete('/commerces/{id}',[CommerceController::class,'deleteCommerce']);
 
 // Endpoints Produits
 

@@ -14,17 +14,17 @@ const ProduitsBoss = ({ produits }) => {
     const [selectedProduit, setSelectedProduit] = useState(null);
 
     const getBadge = (produit) => {
-       if(produit.current_quantity==0){
-        return "rupture"
-       }
-       else if(produit.current_quantity<=produit.seuil){
-        return "faible"
-       }
-       else{
-        return "suffisant"
-       }
-       
-        
+        if (produit.current_quantity == 0) {
+            return "rupture"
+        }
+        else if (produit.current_quantity <= produit.seuil) {
+            return "faible"
+        }
+        else {
+            return "suffisant"
+        }
+
+
     }
     const TotalProduits = produits.length
     const TotalProduitsSuffisant = produits.filter(p => p.current_quantity > p.seuil).length
@@ -201,61 +201,77 @@ const ProduitsBoss = ({ produits }) => {
                         </div>
 
                         <hr />
-                        <div className='w-full'>
-                            <table className='w-full border-collapse overflow-x-auto'>
+                        <div className='w-full overflow-x-auto'>
+                            <table className='w-full border-collapse min-w-[900px]'>
                                 <thead className='bg-gray-50 border-b-[2px]'>
-                                    <tr className=''>
-                                        <th className='text-text-medium py-[1rem] px-[1.5rem] text-left font-bold'>PRODUIT</th>
-                                        <th className='text-text-medium py-[1rem] px-[1.5rem] text-left font-bold'>REFERENCE</th>
-                                        <th className='text-text-medium py-[1rem] px-[1.5rem] text-left font-bold'>QUANTITE DISPONNIBLE</th>
-                                        <th className='text-text-medium py-[1rem] px-[1.5rem] text-left font-bold'>SEUIL DE REAPPRO.</th>
-                                        <th className='text-text-medium py-[1rem] px-[1.5rem] text-left font-bold'>STATUT</th>
-                                        <th className='text-text-medium py-[1rem] px-[1.5rem] text-left font-bold' colSpan={2}>ACTION</th>
+                                    <tr>
+                                        <th className='text-text-medium py-4 px-6 text-left font-bold'>PRODUIT</th>
+                                        <th className='text-text-medium py-4 px-6 text-left font-bold'>REFERENCE</th>
+                                        <th className='text-text-medium py-4 px-6 text-left font-bold'>QUANTITE</th>
+                                        <th className='text-text-medium py-4 px-6 text-left font-bold'>PRIX ACHAT</th>
+                                        <th className='text-text-medium py-4 px-6 text-left font-bold'>PRIX VENTE</th>
+                                        <th className='text-text-medium py-4 px-6 text-left font-bold'>SEUIL</th>
+                                        <th className='text-text-medium py-4 px-6 text-left font-bold'>STATUT</th>
+                                        <th className='text-text-medium py-4 px-6 text-left font-bold' colSpan={2}>ACTION</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {produitsAfficher.map(produit => (
-                                        <tr key={produit.reference} className=''>
-                                            <td className='border-b-2 py-[1.25rem] px-[1.5rem]  flex flex-col items-center '>
-                                                <span className='text-text-dark font-bold'>{produit.name}</span>
-                                                {/* <span className='text-xs text-text-medium'>{produit.categorie}</span> */}
+                                        <tr key={produit.ref} className='hover:bg-gray-50'>
+                                            {/* Correction ici — supprime flex flex-col */}
+                                            <td className='border-b py-4 px-6'>
+                                                <span className='text-text-dark font-bold block'>{produit.name}</span>
                                             </td>
-                                            <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
+                                            <td className='border-b py-4 px-6'>
                                                 <span className='text-text-medium'>{produit.ref}</span>
                                             </td>
-                                            <td className='border-b-2 py-[1.25rem] px-[1.5rem] '>
-
-                                                {getBadge(produit) == "suffisant" && (
-                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-green-200 text-green-800 font-bold max-w-max px-5'>
-
+                                            <td className='border-b py-4 px-6'>
+                                                {getBadge(produit) === "suffisant" && (
+                                                    <div className='inline-flex items-center rounded border py-1 bg-green-200 text-green-800 font-bold px-5'>
                                                         <span>{produit.current_quantity} unités</span>
                                                     </div>
                                                 )}
-
-                                                {getBadge(produit) == "faible" && (
-                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-yellow-100 text-yellow-800 font-bold max-w-max px-5'>
+                                                {getBadge(produit) === "faible" && (
+                                                    <div className='inline-flex items-center rounded border py-1 bg-yellow-100 text-yellow-800 font-bold px-5'>
                                                         <span>{produit.current_quantity} unités</span>
                                                     </div>
                                                 )}
-
-                                                {getBadge(produit) == "rupture" && (
-                                                    <div className='flex items-center gap-4 rounded border justify-center py-1 bg-red-200 text-red-800 font-bold max-w-max px-5'>
+                                                {getBadge(produit) === "rupture" && (
+                                                    <div className='inline-flex items-center rounded border py-1 bg-red-200 text-red-800 font-bold px-5'>
                                                         <span>{produit.current_quantity ?? 0} unité</span>
                                                     </div>
                                                 )}
-
-
                                             </td>
-
-                                            <td className='border-b-2 py-[1.25rem] px-[1.5rem] text-sm text-text-medium '>{produit.seuil} unités</td>
-                                            <td className='border-b-2 py-[1.25rem] px-[1.5rem]  '>
-                                                <span className={`${getBadge(produit) == "suffisant" ? "text-green-500" : getBadge(produit) == "faible" ? "text-yellow-500" : "text-red-500"} font-bold`}>{getBadge(produit)}</span>
+                                            <td className='border-b py-4 px-6 text-sm text-text-medium whitespace-nowrap'>
+                                                {produit.purchasing_price ?? '-'} FCFA
                                             </td>
-                                            <td className='border-b-2 px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark '>
-                                                <button onClick={() => { setSelectedProduit(produit); handleEdit(produit) }} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'><FiEdit className="text-primary-dark" /></button>
+                                            <td className='border-b py-4 px-6 text-sm text-text-medium whitespace-nowrap'>
+                                                {produit.selling_price ?? '-'} FCFA
                                             </td>
-                                            <td className='border-b-2 px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark '>
-                                                <button onClick={() => handleDelete(produit.id)} className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark ml-2'><FiTrash2 className="text-red-500" /></button>
+                                            <td className='border-b py-4 px-6 text-sm text-text-medium whitespace-nowrap'>
+                                                {produit.seuil} unités
+                                            </td>
+                                            <td className='border-b py-4 px-6'>
+                                                <span className={`font-bold ${getBadge(produit) === "suffisant" ? "text-green-500" :
+                                                        getBadge(produit) === "faible" ? "text-yellow-500" :
+                                                            "text-red-500"
+                                                    }`}>
+                                                    {getBadge(produit)}
+                                                </span>
+                                            </td>
+                                            <td className='border-b py-4 px-2'>
+                                                <button
+                                                    onClick={() => { setSelectedProduit(produit); handleEdit(produit) }}
+                                                    className='border px-4 py-1 rounded-lg bg-white text-text-medium hover:border-primary-darker hover:text-primary-dark'>
+                                                    <FiEdit className="text-primary-dark" />
+                                                </button>
+                                            </td>
+                                            <td className='border-b py-4 px-2'>
+                                                <button
+                                                    onClick={() => handleDelete(produit.id)}
+                                                    className='border px-4 py-1 rounded-lg bg-white hover:border-red-500 ml-2'>
+                                                    <FiTrash2 className="text-red-500" />
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
@@ -283,7 +299,6 @@ const ProduitsBoss = ({ produits }) => {
             </div>
 
             {showAddForm && (
-
                 <div className='bg-white mx-auto p-5 md:w-1/2 w-full z-50 fixed top-0 left-0 border rounded-lg'>
                     <button className='w-full text-end  flex justify-end'>
                         <FiXCircle className='text-red-500 ' size={30} onClick={() => closeForm()}></FiXCircle>
@@ -312,27 +327,27 @@ const ProduitsBoss = ({ produits }) => {
                                 </select>
                             </div>
                         </div>
-                        {selectedProduit?(
+                        {selectedProduit ? (
                             <div className='mb-3 flex flex-col'>
                                 <label htmlFor="" className='text-text-medium font-bold uppercase'>Seuil de réapprovisionnement <span className='text-red-500'>*</span></label>
                                 <input type="number" name="seuilReapprovisionnement" id="seuilReapprovisionnement" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.seuil} onChange={(e) => setFormData({ ...formData, seuil: e.target.value })} required />
                             </div>
 
                         ) :
-                        (
-                            <div className='flex flex-col md:flex-row md:gap-5 md:mb-3'>
-                                <div className='mb-3 flex flex-col md:w-1/2'>
-                                    <label htmlFor="" className='text-text-medium font-bold uppercase'>Quantite initiale <span className='text-red-500'>*</span></label>
-                                    <input type="number" name="quantiteInitiale" id="quantiteInitiale" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.current_quantity} onChange={(e) => setFormData({ ...formData, current_quantity: e.target.value })} required />
+                            (
+                                <div className='flex flex-col md:flex-row md:gap-5 md:mb-3'>
+                                    <div className='mb-3 flex flex-col md:w-1/2'>
+                                        <label htmlFor="" className='text-text-medium font-bold uppercase'>Quantite initiale <span className='text-red-500'>*</span></label>
+                                        <input type="number" name="quantiteInitiale" id="quantiteInitiale" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.current_quantity} onChange={(e) => setFormData({ ...formData, current_quantity: e.target.value })} required />
+                                    </div>
+                                    <div className='mb-3 flex flex-col md:w-1/2'>
+                                        <label htmlFor="" className='text-text-medium font-bold uppercase'>Seuil de réapprovisionnement <span className='text-red-500'>*</span></label>
+                                        <input type="number" name="seuilReapprovisionnement" id="seuilReapprovisionnement" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.seuil} onChange={(e) => setFormData({ ...formData, seuil: e.target.value })} required />
+                                    </div>
                                 </div>
-                                <div className='mb-3 flex flex-col md:w-1/2'>
-                                    <label htmlFor="" className='text-text-medium font-bold uppercase'>Seuil de réapprovisionnement <span className='text-red-500'>*</span></label>
-                                    <input type="number" name="seuilReapprovisionnement" id="seuilReapprovisionnement" className='border-[1.5px] border-gray-300 rounded-lg bg-gray-50' value={formData.seuil} onChange={(e) => setFormData({ ...formData, seuil: e.target.value })} required />
-                                </div>
-                            </div>
-            )}
-            
-            
+                            )}
+
+
 
                         <div className='flex flex-col md:flex-row md:gap-5 md:mb-3'>
                             <div className='mb-3 flex flex-col md:w-1/2'>

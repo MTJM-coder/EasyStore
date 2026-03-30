@@ -100,8 +100,8 @@ const MonAbonnement = ({historiqueAbonnement,abonnementActuel}) => {
                         </div>
 
                         <hr />
-                        <div className='w-full'>
-                            <table className='w-full border-collapse overflow-x-auto'>
+                        <div className='w-full overflow-x-auto'>
+                            <table className='w-full border-collapse'>
                                 <thead className='bg-gray-50 border-b-[2px]'>
                                     <tr className=''>
                                         <th className='text-text-medium py-[1rem] px-[1.5rem] text-left font-bold'>DATE</th>

@@ -187,8 +187,8 @@ const GestEmployes = ({ employes }) => {
                         </div>
 
                         <hr />
-                        <div className='w-full'>
-                            <table className='w-full border-collapse overflow-x-auto'>
+                        <div className='w-full overflow-x-auto'>
+                            <table className='w-full border-collapse min-w-[800px]'>
                                 <thead className='bg-gray-50 border-b-[2px]'>
                                     <tr className=''>
                                         <th className='text-text-medium py-[1rem] px-[1.5rem] text-left font-bold'>Nom</th>
@@ -202,7 +202,7 @@ const GestEmployes = ({ employes }) => {
                                 <tbody>
                                     {filteredEmployes.map(emploi => (
                                         <tr key={emploi.id} className=''>
-                                            <td className='border-b-2 py-[1.25rem] px-[1.5rem]  flex items-center gap-2'>
+                                            <td className='border-b-2 py-[1.25rem] px-[1.5rem] gap-2'>
 
                                                 <div className='w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-2'>
                                                     <span className='text-text-dark font-bold'>{emploi.name.charAt(0)}</span>

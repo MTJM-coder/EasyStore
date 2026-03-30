@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commerce;
-use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Contracts\Support\ValidatedData;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class CommerceController extends Controller
 {
@@ -22,21 +20,6 @@ class CommerceController extends Controller
         return Inertia::render('GestCommerce',["commerces"=>$commerces]);
     }
 
-    public function getCommerce($id){
-       $user=Auth::user();
-        if($user->role !== "admin"){
-            return response()->json(["Message"=>"Unhautorized"],403);
-        }
-
-        $commerce=Commerce::find($id);
-        if(!$commerce){
-            return response()->json(["Message"=>"commerce not found"],404);
-        }
-        else{
-           
-            return response()->json(["Message"=>"commerce found successfully","commerce"=>$commerce],200);
-        }
-    }
 
     public function updateCommerce(Request $req,$id){
         $validateData=$req->validate([
@@ -64,16 +47,17 @@ class CommerceController extends Controller
     public function deleteCommerce($id){
        $user=Auth::user();
         if($user->role !== "admin"){
-            return response()->json(["Message"=>"Unhautorized"],403);
+            return redirect()->back()->with('error', 'Unauthorized');
         }
 
         $commerce=Commerce::find($id);
         if(!$commerce){
-            return response()->json(["Message"=>"commerce not found"],404);
+            return redirect()->back()->with('error', 'Commerce not found.');
         }
         else{
+        
             $commerce->delete();
-            return response()->json(["Message"=>"commerce deleted successfully"],200);
+            return Redirect()->back()->with('success', 'Commerce deleted successfully.');
         }
 
     }
