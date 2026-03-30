@@ -101,7 +101,7 @@ const HistoriqueEmploye = ({ historiqueMouvements }) => {
                                         <option value="out">Sorties uniquement</option>
                                     </select>
 
-                                    <input type="date" className='md:w-1/4 w-full border-[1.5px] border-gray-300 rounded-lg py-2'
+                                    <input type="date" placeholder='entrez une date' className='md:w-1/4 w-full border-[1.5px] border-gray-300 rounded-lg py-2'
                                         onChange={(e) => setDateFilter(e.target.value)}
                                     />
 {/* 

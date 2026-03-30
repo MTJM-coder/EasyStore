@@ -34,7 +34,7 @@ const SideBarBoss = ({ sidebarOpen, setSidebarOpen, active, setActive }) => {
                 <hr />
                 <div className='flex items-center gap-3 py-3 px-3'>
                     <div className='flex justify-center items-center p-3  rounded-full bg-primary-darker'>
-                        <span>JM</span>
+                        <span>{auth.user.name[0].toLocaleUpperCase()}{auth.user.name[1].toLocaleUpperCase()}</span>
                     </div>
                     <div className='flex flex-col items-center'>
                         <span className='font-bold max-w-max inline-block'>{auth.user.name}</span>

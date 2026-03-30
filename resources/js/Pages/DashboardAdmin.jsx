@@ -16,19 +16,12 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
         year: "numeric",
     })
 
-    // const activitesRecentes = [
-    //     { id: 1, activite: "Nouvel abonnement", message: "Super Market Dupont a souscrit au plan Professionnel", date: "2025-01-15", icon: <FiCheck className="text-green-500" /> },
-    //     { id: 2, activite: "Modification d'abonnement", message: "Boulangerie du Centre a modifié son abonnement", date: "2025-02-10", icon: <FiArrowUpRight className="text-blue-500" /> },
-    //     { id: 3, activite: "Expiration d'abonnement", message: "Librairie Saint-Michel a expiré son abonnement", date: "2025-03-05", icon: <FiAlertTriangle className="text-yellow-500" /> },
-    //     { id: 4, activite: "Nouveau commerçant", message: "Pharmacie de la Gare a été ajoutée à la plateforme", date: "2025-04-15", icon: <FiPlus className="text-purple-500" /> },
-    //     { id: 5, activite: "Compte suspendu", message: "Compte de Super Market Dupont suspendu pour non-paiement", date: "2025-05-10", icon: <FiThumbsDown className="text-red-500" /> }
-    // ]
-
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [active,setActive]=useState(1)
     return (
+
         <div>
-            <div className='flex bg-secondary'>
+            <div className='flex bg-secondary w-full'>
                 {sidebarOpen && (
                     <div
                         className="fixed inset-0 bg-black/40 z-40 md:hidden"
@@ -36,7 +29,7 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
                     ></div>
                 )}
                 <SideBarAdmin sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} active={active} setActive={setActive}></SideBarAdmin>
-                <div className='relative md:ml-64 bg-secondary max-w-max mb-20'>
+                <div className='relative md:ml-64 w-full mb-20'>
                     <div className='fixed flex items-center w-full gap-5 pl-5 md:pr-64 justify-between bg-white p-5'>
                         <div className='flex justify-between items-center md:hidden shadow-md' onClick={() => setSidebarOpen(!sidebarOpen)}>
                             <button className='bg-primary text-white px-4 py-4 rounded-lg'><FiMenu></FiMenu></button>
@@ -131,7 +124,7 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
                             <div className='rounded-lg border bg-white  md:p-5 p-2 md:w-2/3'>
                                 <h1 className='font-bold text-xl'>Activité récente</h1>
                                 <div className='mt-4'>
-                                    {/* {activitesRecentes.map((activite) => (
+                                    {activitesRecentes.map((activite) => (
                                         <div key={activite.id} className='flex items-center gap-3 py-5 border-b'>
                                             <div className='w-10 h-10 bg-blue-100 flex justify-center items-center rounded-lg'>
                                                 {activite.icon}
@@ -142,7 +135,7 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
                                             </div>
                                         </div>
                                         
-                                    ))} */}
+                                    ))}
                                 </div>
 
                             </div>
@@ -187,7 +180,7 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {abonnementsCritiques.map(a => (
+                                        {/* {abonnementsCritiques.map(a => (
                                             <tr key={a.id} className=''>
                                                 <td className='border-b-2 py-[1.25rem] px-[1.5rem]'>
                                                     <span className='text-text-dark font-bold'>{a?.commerce?.name}</span>
@@ -209,7 +202,7 @@ const DashboardAdmin = ({totalCommerces,totalAbonnementsActif, totalAbonnementsE
                                                     </button>
                                                 </td>
                                             </tr>
-                                        ))}
+                                        ))} */}
                                     </tbody>
                                 </table>
                             </div>

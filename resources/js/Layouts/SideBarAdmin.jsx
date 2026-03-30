@@ -3,9 +3,10 @@ import { FiBarChart2, FiBell, FiBookmark, FiBox, FiChevronsDown, FiChevronsUp, F
 import Header from './Header'
 import { FaStore } from 'react-icons/fa'
 import { Link, router } from '@inertiajs/react'
+import { usePage } from '@inertiajs/react'
 
 const SideBarAdmin = ({ sidebarOpen, setSidebarOpen,active,setActive }) => {
-    
+    const { auth } = usePage().props;
     const handleLogout = function () {
         if (confirm("Etes-vous sur de vouloir vous déconnecter?")) {
             router.post('/auth/logout');
@@ -29,11 +30,11 @@ const SideBarAdmin = ({ sidebarOpen, setSidebarOpen,active,setActive }) => {
                 <hr />
                 <div className='flex items-center gap-3 py-3 px-3'>
                     <div className='flex justify-center items-center p-3  rounded-full bg-primary-darker'>
-                        <span>JM</span>
+                        <span>{auth.user.name[0].toLocaleUpperCase()}{auth.user.name[1].toLocaleUpperCase()}</span>
                     </div>
                     <div className='flex flex-col items-center'>
-                        <span className='font-bold max-w-max inline-block'>Jaudel Merlando</span>
-                        <span className='text-sm text-text-medium flex items-center gap-2'><FiUser></FiUser>Employé</span>
+                        <span className='font-bold max-w-max inline-block'>{auth?.user?.name}</span>
+                        <span className='text-sm text-text-medium flex items-center gap-2'><FiUser></FiUser>{auth?.user?.role}</span>
                     </div>
                 </div>
                 <hr />
